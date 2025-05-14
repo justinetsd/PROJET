@@ -3,7 +3,7 @@ import sqlite3
 
 app = Flask(__name__)
 
-def get_recipes():
+def get_recipes(): #recette
     conn = sqlite3.connect('recipes.db')
     conn.row_factory = sqlite3.Row
     recipes = conn.execute('SELECT * FROM recipes').fetchall()
