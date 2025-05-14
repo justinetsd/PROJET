@@ -10,7 +10,7 @@ def get_recipes():
     conn.close()
     return recipes
 
-@app.route('/')
+@app.route('/') #route par défaut
 def index():
     recipes = get_recipes()
     return render_template('index.html', recipes=recipes)
