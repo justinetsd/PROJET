@@ -18,6 +18,23 @@ def index():
     recipes = get_recipes()
     return render_template('index.html', recipes=recipes)
 
+@app.route('/recettes') #route des recettes
+def recettes():
+    recipes = get_recipes()
+    return render_template('recettes.html', recipes=recipes)
+
+@app.route('/recette/<int:recipe_id>') #route d'une recette
+def recette(recipe_id):
+    conn = sqlite3.connect('recipes.db')
+    conn.row_factory = sqlite3.Row
+    recipe = conn.execute('SELECT * FROM recipes WHERE id = ?', (recipe_id,)).fetchone()
+    conn.close()
+    
+    if recipe is None:
+        return "Recipe not found", 404
+    
+    return render_template('Unerecette.html', recipe=recipe)
+
 
 def hashage(password, rand, salt):
     combined = f"{password}{rand}{salt}"
