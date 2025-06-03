@@ -1,5 +1,13 @@
 {% extends "base.html" %}
-{% block title %}Recettes{% endblock %}
 {% block content %}
-<!-- Contenu spécifique à la page recettes ici -->
+    <h1>Liste des recettes</h1>
+    <ul>
+        {% for recipe in recipes %}
+            <li>
+                <a href="{{ url_for('recette', recipe_id=recipe.id) }}">
+                    {{ recipe.nom }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
