@@ -7,9 +7,9 @@ import sqlite3
 app = Flask(__name__)
 
 def get_recipes(): #recette
-    conn = sqlite3.connect('recipes.db')
+    conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-    recipes = conn.execute('SELECT * FROM recipes').fetchall()
+    recipes = conn.execute('SELECT * FROM recettes').fetchall()
     conn.close()
     return recipes
 
@@ -25,15 +25,16 @@ def recettes():
 
 @app.route('/recette/<int:recipe_id>') #route d'une recette
 def recette(recipe_id):
-    conn = sqlite3.connect('recipes.db')
+    conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-    recipe = conn.execute('SELECT * FROM recipes WHERE id = ?', (recipe_id,)).fetchone()
+    recipe = conn.execute('SELECT * FROM recettes WHERE id = ?', (recipe_id,)).fetchone()
     conn.close()
     
     if recipe is None:
-        return "Recipe not found", 404
+        return "recettes not found", 404
     
     return render_template('Unerecette.html', recipe=recipe)
+
 
 
 def hashage(password, rand, salt):
@@ -41,7 +42,7 @@ def hashage(password, rand, salt):
     return hashlib.sha256(combined.encode()).hexdigest()
 
 @app.route('/signin', methods=['GET', 'POST']) #route d'inscription
-def signin(db_name="users.db"):
+def signin(db_name="BDD.db"):
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -97,14 +98,11 @@ def login():
 
     return render_template("login.html")
 
-#page à propos
+
 
 @app.route('/apropos')
 def apropos():
-    return render_template('apropos.html')
-
-
-
+  return render_template("apropos.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
