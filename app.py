@@ -22,7 +22,7 @@ def accueil():
 def recettes():
     recipes = get_recipes()
     return render_template('recettes.html', recipes=recipes)
-
+#ce bout de code permet de récupérer l'une des recettes sur laquelle on a cliqué
 @app.route('/recette/<int:recipe_id>') #route d'une recette
 def recette(recipe_id):
     conn = sqlite3.connect('BDD.db')
