@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}ENAC'ppetit{% endblock %}</title>
+    <!-- Ajout de Google Fonts pour Open Sans -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
     <style>
         body {
             background: #fff;
             margin: 0;
             padding: 0;
+            font-family: 'Open Sans', Arial, sans-serif; /* Utilisation de Open Sans */
         }
         .top-bar {
             position: fixed;
@@ -36,6 +39,7 @@
             text-decoration: none;
             font-weight: bold;
             transition: color 0.2s;
+            font-family: 'Open Sans', Arial, sans-serif;
         }
         .nav-links a:hover {
             color: #ad1457;
@@ -44,20 +48,22 @@
         .content {
             margin-top: 2cm;
             padding: 20px;
+            font-family: 'Open Sans', Arial, sans-serif;
         }
     </style>
 </head>
 <body>
     <div class="top-bar">
-        <img src="{{ url_for('static', filename='logoconnexion.png') }}" alt="Logo Connexion" style="height:1cm; margin-left:10px; margin-right:10px;">
         <img src="{{ url_for('static', filename='enacppetit.png') }}" alt="Logo ENAC'ppetit">
         <nav class="nav-links">
             <a href="{{ url_for('accueil') }}">ACCUEIL</a>
             <a href="{{ url_for('recettes') }}">RECETTES</a>
             <a href="{{ url_for('apropos') }}">A PROPOS</a>
         </nav>
-        <a href="{{ url_for('login') }}" style="margin-left:auto; margin-right:30px; color:#c2185b; font-weight:bold; font-size:1.1em; text-decoration:none; display:flex; align-items:center;">
-    <img src="{{ url_for('static', filename='logoconnexion.png') }}" alt="Logo Connexion" style="height:0.9cm; margin-right:8px;">CONNEXION</a>
+        <a href="{{ url_for('login') }}" style="margin-left:auto; margin-right:30px; color:#c2185b; font-weight:bold; font-size:1.1em; text-decoration:none; display:flex; align-items:center; font-family:'Open Sans',Arial,sans-serif;">
+            <img src="{{ url_for('static', filename='logoconnexion.png') }}" alt="Logo Connexion" style="height:0.9cm; margin-right:8px;">
+            CONNEXION
+        </a>
     </div>
     <div class="content">
         {% block content %}{% endblock %}
