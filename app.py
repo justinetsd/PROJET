@@ -14,9 +14,9 @@ def get_recipes(): #recette
     return recipes
 
 @app.route('/') #route par défaut
-def base():
+def accueil():
     recipes = get_recipes()
-    return render_template('base.html', recipes=recipes)
+    return render_template('accueil.html', recipes=recipes)
 
 @app.route('/recettes') #route des recettes
 def recettes():
@@ -100,6 +100,9 @@ def login():
 
 
 
+@app.route('/apropos')
+def apropos():
+  return render_template("apropos.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
