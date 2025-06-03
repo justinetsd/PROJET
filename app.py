@@ -7,16 +7,16 @@ import sqlite3
 app = Flask(__name__)
 
 def get_recipes(): #recette
-    conn = sqlite3.connect('recipes.db')
+    conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-    recipes = conn.execute('SELECT * FROM recipes').fetchall()
+    recipes = conn.execute('SELECT * FROM recettes').fetchall()
     conn.close()
     return recipes
 
 @app.route('/') #route par défaut
-def accueil():
+def index():
     recipes = get_recipes()
-    return render_template('accueil.html', recipes=recipes)
+    return render_template('base.html', recipes=recipes)
 
 @app.route('/recettes') #route des recettes
 def recettes():
@@ -25,15 +25,16 @@ def recettes():
 
 @app.route('/recette/<int:recipe_id>') #route d'une recette
 def recette(recipe_id):
-    conn = sqlite3.connect('recipes.db')
+    conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-    recipe = conn.execute('SELECT * FROM recipes WHERE id = ?', (recipe_id,)).fetchone()
+    recipe = conn.execute('SELECT * FROM recettes WHERE id = ?', (recipe_id,)).fetchone()
     conn.close()
     
     if recipe is None:
-        return "Recipe not found", 404
+        return "recettes not found", 404
     
     return render_template('Unerecette.html', recipe=recipe)
+
 
 
 def hashage(password, rand, salt):
@@ -96,12 +97,6 @@ def login():
         return render_template("login.html", error="Invalid credentials")
 
     return render_template("login.html")
-
-#page à propos
-
-@app.route('/apropos')
-def apropos():
-    return render_template('apropos.html')
 
 
 
