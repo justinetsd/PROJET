@@ -1,0 +1,16 @@
+
+{% extends "base.html" %}
+{% block title %}Connexion{% endblock %}
+{% block content %}
+    <form method="post">
+    <div>
+        <label for="identifiant">Identifiant</label>
+        <input type="text" id="identifiant" name="identifiant" required>
+    </div>
+    <div>
+        <label for="motdepasse">Mot de passe</label>
+        <input type="password" id="motdepasse" name="motdepasse" required>
+    </div>
+    <button type="submit">Se connecter</button>
+</form>
+{% endblock %}
