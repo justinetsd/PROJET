@@ -14,7 +14,7 @@ def get_recipes(): #recette
     return recipes
 
 @app.route('/') #route par défaut
-def index():
+def base():
     recipes = get_recipes()
     return render_template('base.html', recipes=recipes)
 
@@ -42,7 +42,7 @@ def hashage(password, rand, salt):
     return hashlib.sha256(combined.encode()).hexdigest()
 
 @app.route('/signin', methods=['GET', 'POST']) #route d'inscription
-def signin(db_name="users.db"):
+def signin(db_name="BDD.db"):
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
