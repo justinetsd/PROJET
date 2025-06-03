@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipes Home</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Recipes Website</h1>
+        <input type="text" placeholder="Search recipes...">
+    </header>
+
+    <main class="grid">
+        {% for recipe in recipes %}
+        <div class="card">
+            <img src="{{ recipe.image }}" alt="Image of {{ recipe.title }}">
+            <div class="info">
+                <h2>{{ recipe.title }}</h2>
+                <p>{{ recipe.category }}</p>
+                <p>{{ recipe.duration }} | {{ recipe.ingredients }} ingredients</p>
+                <p>⭐ {{ recipe.rating }}%</p>
+            </div>
+        </div>
+        {% endfor %}
+    </main>
+</body>
+</html>

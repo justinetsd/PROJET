@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}ENAC'ppetit{% endblock %}</title>
+    <style>
+        body {
+            background: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2cm;
+            background: #ffd1e3; /* rose très clair */
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .top-bar img {
+            height: 1.6cm;
+            margin-left: 20px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            margin-left: 40px;
+            font-size: 1.2em;
+        }
+        .nav-links a {
+            color: #c2185b;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover {
+            color: #ad1457;
+            text-decoration: underline;
+        }
+        .content {
+            margin-top: 2cm;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <img src="{{ url_for('static', filename='enacppetit.png') }}" alt="Logo ENAC'ppetit">
+        <nav class="nav-links">
+            <a href="{{ url_for('accueil') }}">ACCUEIL</a>
+            <a href="{{ url_for('recettes') }}">RECETTES</a>
+            <a href="{{ url_for('apropos') }}">A PROPOS</a>
+        </nav>
+    </div>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

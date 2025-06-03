@@ -14,9 +14,9 @@ def get_recipes(): #recette
     return recipes
 
 @app.route('/') #route par défaut
-def index():
+def accueil():
     recipes = get_recipes()
-    return render_template('index.html', recipes=recipes)
+    return render_template('accueil.html', recipes=recipes)
 
 @app.route('/recettes') #route des recettes
 def recettes():
@@ -96,6 +96,12 @@ def login():
         return render_template("login.html", error="Invalid credentials")
 
     return render_template("login.html")
+
+#page à propos
+
+@app.route('/apropos')
+def apropos():
+    return render_template('apropos.html')
 
 
 
