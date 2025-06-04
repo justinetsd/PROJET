@@ -1,64 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <meta charset="UTF-8">
     <title>{% block title %}ENAC'ppetit{% endblock %}</title>
     <!-- Ajout de Google Fonts pour Open Sans -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background: #fff;
-            margin: 0;
-            padding: 0;
-            font-family: 'Open Sans', Arial, sans-serif; /* Utilisation de Open Sans */
-        }
-        .top-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2cm;
-            background: #ffd1e3; /* rose très clair */
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .top-bar img {
-            height: 1.6cm;
-            margin-left: 20px;
-        }
-        .nav-links {
-            display: flex;
-            gap: 40px;
-            margin-left: 40px;
-            font-size: 1.2em;
-        }
-        .nav-links a {
-            color: #c2185b;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.2s;
-            font-family: 'Open Sans', Arial, sans-serif;
-        }
-        .nav-links a:hover {
-            color: #ad1457;
-            text-decoration: underline;
-        }
-        .content {
-            margin-top: 2cm;
-            padding: 20px;
-            font-family: 'Open Sans', Arial, sans-serif;
-        }
-        .bottom-bar {
-            
-            width: 100%;
-            height: 2cm;
-            background: #ffd1e3; /* même rose très clair que la top-bar */
-            z-index: 1000;
-            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
-        }
-    </style>
+
 </head>
 <body>
     <div class="top-bar">
@@ -73,9 +22,30 @@
             CONNEXION
         </a>
     </div>
+    
     <div class="content">
         {% block content %}{% endblock %}
     </div>
-     <div class="bottom-bar"></div>
+   
+    <div class="bottom-bar">
+    <span class="footer-left">&nbsp;&nbsp;© 2025 ENAC'PPETIT.org - Tous droits réservés</span>
+    <button class="scroll-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+        &#8593;
+    </button>
+    <div class="footer-social">
+    <div class="social-logos">
+        <a href="https://instagram.com/ton_compte" target="_blank">
+            <img src="{{ url_for('static', filename='insta.png') }}" alt="Instagram" class="social-icon">
+        </a>
+        <a href="https://facebook.com/ton_compte" target="_blank">
+            <img src="{{ url_for('static', filename='facebook.png') }}" alt="Facebook" class="social-icon">
+        </a>
+    </div>
+    <div class="footer-links-row">
+        <a href="/confidentialite">Politique de confidentialité</a>
+        <span class="footer-sep">|</span>
+        <a href="/conditions">Conditions d'utilisation</a>
+    </div>
+</div>
 </body>
 </html>

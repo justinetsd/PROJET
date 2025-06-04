@@ -1,48 +1,165 @@
+
 body {
-    font-family: sans-serif;
-    background: #f9f9f9;
+    overflow-x: hidden;
+    background: #fff;
     margin: 0;
     padding: 0;
+    font-family: 'Open Sans', Arial, sans-serif; /* Utilisation de Open Sans */
 }
-header {
-    background: #333;
-    color: white;
-    padding: 2rem;
-    text-align: center;
+html {
+    box-sizing: border-box;
+    width: 100vw;
+    overflow-x: hidden;
 }
-input[type="text"] {
-    padding: 10px;
-    width: 50%;
-    font-size: 1rem;
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
 }
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1rem;
-    padding: 1rem;
-}
-.card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #ccc;
-    overflow: hidden;
-}
-.card img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-}
-.card .info {
-    padding: 1rem;
-}
-.bottom-bar {
+.top-bar {
     position: fixed;
+    top: 0;
     left: 0;
-    bottom: 0;
     width: 100%;
     height: 2cm;
-    background: #ffd1e3; /* même rose très clair que la top-bar */
+    /* Dégradé linéaire pour la bicolore */
+    background: linear-gradient(
+        to bottom,
+        #ffffff 0%,           /* rose très clair */
+        #ffe3ce calc(100% - 0.05cm),
+        #ffd1ad calc(100% - 0.05cm),
+        #ffd1ad 100%           /* rose foncé sur 0.2cm */
+    );
     z-index: 1000;
-    box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 
+}
+.top-bar img {
+    height: 1.6cm;
+    margin-left: 20px;
+}
+.nav-links {
+    display: flex;
+    gap: 40px;
+    margin-left: 40px;
+    font-size: 1.2em;
+}
+.nav-links a {
+    color: #c2185b;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s;
+    font-family: 'Open Sans', Arial, sans-serif;
+}
+.nav-links a:hover {
+    color: #ad1457;
+    text-decoration: underline;
+}
+.content {
+    margin-top: 2cm;
+    padding: 20px;
+    font-family: 'Open Sans', Arial, sans-serif;
+}
+.bottom-bar {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    height: 2cm;
+    background: linear-gradient(
+        to top,
+
+        #ffffff 0.2cm,              /* puis rose très clair */
+        #ffe3ce 2cm                 /* jusqu'en bas */
+    );
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+    padding: 0 20px 10px 20px;
+    border-top: 2px solid #ff7171;
+
+}
+
+.scroll-top-btn {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -24px; /* moitié de la hauteur du bouton (48px/2) */
+    background: #ff7171; /* <-- choisis ta couleur ici */
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 50%;      /* Cercle parfait */
+    width: 48px;
+    height: 48px;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: background 0.2s;
+    z-index: 2;
+}
+.scroll-top-btn:hover {
+    background: #ad1457; /* couleur au survol */
+}
+
+.footer-social {
+    display: flex;
+    align-items: flex-end;
+    gap: 18px;           /* espace entre les logos */
+    margin-left: 10px;   /* espace à gauche de la barre */
+    margin-right: 20px;  /* espace à droite des logos */
+}
+
+.social-icon {
+    width: 30px ;
+    height: 30px ;
+    object-fit: contain;
+    filter: grayscale(1);
+    transition: filter 0.2s;
+}
+.footer-left {
+    color: #222;
+    font-size: 1em;
+    align-self: flex-end;
+    margin-left: 10px; /* espace à gauche */
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.footer-social {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.social-logos {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 2px;
+}
+
+.footer-links-row {
+    display: flex;
+    gap: 16px;
+    font-size: 0.7em;
+}
+
+.footer-links-row a {
+    color: #222;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-links-row a:hover {
+    color: #c2185b;
+}
+
+.footer-sep {
+    color: #bbb;
+    font-weight: bold;
 }
