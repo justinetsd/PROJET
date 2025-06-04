@@ -123,7 +123,7 @@ html {
 }
 .footer-left {
     color: #222;
-    font-size: 1em;
+    font-size: 0.7em;
     align-self: flex-end;
     margin-left: 10px; /* espace à gauche */
     margin-bottom: 4px;
