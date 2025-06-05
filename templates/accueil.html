@@ -12,25 +12,27 @@
         <button type="submit">Rechercher</button>
     </form>
 </div>
-<p>
-    Nos recettes<br>
-   <br><br>
-  Venez découvrir nos recettes estivales et le menu du jour conseillé..<br>
-  <br>Voir toutes les recettes...</br>
-<div class="encadre-recettes align-milieu-droit">
-    <a href="{{ url_for('recettes') }}" class="lien-recettes">Recettes</a>
-</div>
-    <br><br>
-    Qui sommes-nous?<br><br>
-    </br>
-    Nous sommes des élèves de l’ENAC ayant eu l’idée de créer une application de recettes estivales faciles à mettre en oeuvre et rapides. <br>
-    <br>
-    <!--Il faut modifier le nom d el'url pour que ca pointe vers "nous contacter"-->
-    <div class="encadre-recettes align-milieu-droit">
-    <a href="{{ url_for('contact') }}" class="lien-contact">Nous contacter</a>
-    <br>
+
+<div class="bloc-recettes-avec-image">
+    <div>
+        <h1 class="titre-section">Nos recettes</h1>
+        Venez découvrir nos recettes estivales et le menu du jour conseillé..<br><br>
+        <div class="encadre-recettes">
+            <a href="{{ url_for('recettes') }}" class="lien-recettes">Voir toutes les recettes</a>
+        </div>
     </div>
-</p>
+    <img src="{{ url_for('static', filename='imageacc.jpg') }}" 
+         alt="Description de l'image"
+         class="image-recette-droite">
+</div>
+
+<h1 class="titre-section">Qui sommes-nous?</h1>
+Nous sommes des élèves de l’ENAC ayant eu l’idée de créer une application de recettes estivales faciles à mettre en oeuvre et rapides.<br><br>
+
+<div class="encadre-recettes align-milieu-droit">
+    <a href="{{ url_for('contact') }}" class="lien-contact">Nous contacter</a>
+</div>
+
 <img src="{{ url_for('static', filename='enacppetit.png') }}" alt="Description de l'image" style="display:block; margin:40px auto; max-width:90%; border-radius:16px;">
 
 {% endblock %}
