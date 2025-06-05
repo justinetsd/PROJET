@@ -14,25 +14,23 @@
 </div>
 <p>
     Nos recettes<br>
-    Venez découvrir nos recettes estivales et le menu du jour conseillé..<br>
+   <br><br>
+  Venez découvrir nos recettes estivales et le menu du jour conseillé..<br>
+  <br>Voir toutes les recettes...</br>
+<div class="encadre-recettes align-milieu-droit">
+    <a href="{{ url_for('recettes') }}" class="lien-recettes">Recettes</a>
+</div>
+    <br><br>
+    Qui sommes-nous?<br><br>
+    </br>
+    Nous sommes des élèves de l’ENAC ayant eu l’idée de créer une application de recettes estivales faciles à mettre en oeuvre et rapides. <br>
     <br>
-     <div class="encadre-recettes">
-    <a href="{{ url_for('recettes') }}" class="lien-recettes">Voir toutes les recettes</a>
+    <!--Il faut modifier le nom d el'url pour que ca pointe vers "nous contacter"-->
+    <div class="encadre-recettes align-milieu-droit">
+    <a href="{{ url_for('recettes') }}" class="lien-recettes">Nous contacter</a>
+    <br>
     </div>
-    ENAC'ppetit, c'est bien plus qu'un simple site de recettes.<br>
-    C'est un lieu d'échange, de partage et de découverte.<br>
-    Que vous soyez débutant ou chef confirmé, vous trouverez votre bonheur.<br>
-    <br>
-    Rejoignez-nous et commencez à cuisiner dès aujourd'hui !<br>
-    <br>
-    Bon appétit et bonne visite sur notre site !<br>
-    <br>
-    N'hésitez pas à parcourir nos différentes rubriques.<br>
-    Découvrez les recettes les plus populaires du moment.<br>
-    Ajoutez vos propres créations et faites-les découvrir à tous.<br>
-    <br>
-    ENAC'ppetit, la passion de la cuisine partagée.<br>
-    <br>
-    Merci de faire partie de notre communauté gourmande !<br>
 </p>
+<img src="{{ url_for('static', filename='enacppetit.png') }}" alt="Description de l'image" style="display:block; margin:40px auto; max-width:90%; border-radius:16px;">
+
 {% endblock %}
