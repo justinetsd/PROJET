@@ -163,3 +163,17 @@ html {
     color: #bbb;
     font-weight: bold;
 }
+
+.saisons-links {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 900px;
+    margin: 30px auto;
+}
+.saisons-links a {
+    font-weight: bold;
+    color: #111;
+    text-decoration: none;
+    font-size: 1.2em;
+}

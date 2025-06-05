@@ -98,7 +98,21 @@ def login():
 
     return render_template("login.html")
 
+@app.route('/ete')
+def ete():
+    return render_template('été.html')
 
+@app.route('/automne')
+def automne():
+    return render_template('automne.html')
+
+@app.route('/hiver')
+def hiver():
+    return render_template('hiver.html')
+
+@app.route('/printemps')
+def printemps():
+    return render_template('printemps.html')
 
 @app.route('/apropos')
 def apropos():
