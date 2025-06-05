@@ -785,24 +785,44 @@ CREATE TABLE Recette_Equipment (
 
 # Ingrédients communs (ajoutés une seule fois)
 ingredients = [
-    ("Fraises", 0),
-    ("Pêches", 0),
-    ("Abricots", 0),
-    ("Pastèque", 0),
-    ("Myrtilles", 0),
-    ("Sucre", 0),
-    ("Crème fraîche", 1),
-    ("Yaourt", 1),
-    ("Menthe", 0),
-    ("Citron", 0)
+    "Fraises", "Pêches", "Abricots", "Pastèque", "Myrtilles", "Sucre",
+    "Crème fraîche", "Yaourt", "Menthe", "Citron"
 ]
-for name, allergene in ingredients:
-    cursor.execute("INSERT OR IGNORE INTO Ingredients (Name, Allergene) VALUES (?, ?)", (name, allergene))
+allergenes = {
+    "Crème fraîche": 1,
+    "Yaourt": 1
+}
+
+# Générer des identifiants uniques à 5 chiffres pour chaque ingrédient
+ingredient_ids = {}
+used_ing_ids = set()
+for name in ingredients:
+    while True:
+        new_id = random.randint(10000, 99999)
+        if new_id not in used_ing_ids:
+            used_ing_ids.add(new_id)
+            ingredient_ids[name] = new_id
+            break
+    cursor.execute(
+        "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+        (ingredient_ids[name], name, allergenes.get(name, 0))
+    )
 
 # Équipements communs
 equipments = ["Saladier", "Couteau", "Cuillère", "Mixeur", "Verres"]
+equipment_ids = {}
+used_equip_ids = set()
 for equip in equipments:
-    cursor.execute("INSERT OR IGNORE INTO Equipment (Name) VALUES (?)", (equip,))
+    while True:
+        new_id = random.randint(10000, 99999)
+        if new_id not in used_equip_ids:
+            used_equip_ids.add(new_id)
+            equipment_ids[equip] = new_id
+            break
+    cursor.execute(
+        "INSERT OR IGNORE INTO Equipment (Id_equipement, Name) VALUES (?, ?)",
+        (equipment_ids[equip], equip)
+    )
 
 # Recettes d'été
 desserts = [
@@ -905,8 +925,7 @@ for idx, dessert in enumerate(desserts):
 
     # Ajout ingrédients et quantités
     for name, valeur, unite in dessert["fruits"] + dessert["autres"]:
-        cursor.execute("SELECT Id_ingredient FROM Ingredients WHERE Name = ?", (name,))
-        id_ing = cursor.fetchone()[0]
+        id_ing = ingredient_ids[name]
         cursor.execute("""
             INSERT INTO Quantity (Recette_id, Id_ingredient, Valeur, Unite)
             VALUES (?, ?, ?, ?)
@@ -914,8 +933,7 @@ for idx, dessert in enumerate(desserts):
 
     # Ajout équipements
     for equip in dessert["equip"]:
-        cursor.execute("SELECT Id_equipement FROM Equipment WHERE Name = ?", (equip,))
-        id_equip = cursor.fetchone()[0]
+        id_equip = equipment_ids[equip]
         cursor.execute("""
             INSERT INTO Recette_Equipment (Recette_id, Id_equipement)
             VALUES (?, ?)
