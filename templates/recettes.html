@@ -7,5 +7,13 @@
         <a href="{{ url_for('hiver') }}">Hiver</a>
         <a href="{{ url_for('printemps') }}">Printemps</a>
     </div>
-    <!-- ...le reste de ta page recettes... -->
+    <ul>
+        {% for recipe in recipes %}
+            <li>
+                <a href="{{ url_for('recette', recette_id=recette.id) }}">
+                    {{ recipe.nom }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
