@@ -153,7 +153,7 @@ mail = Mail(app)
 
 @app.route('/apropos')
 def apropos():
-  return render_template("apropos.html")
+    return render_template('apropos.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
