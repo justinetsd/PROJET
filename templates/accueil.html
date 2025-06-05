@@ -16,7 +16,11 @@
 <div class="bloc-recettes-avec-image">
     <div>
         <h1 class="titre-section">Nos recettes</h1>
-        Venez découvrir nos recettes estivales et le menu du jour conseillé..<br><br>
+       <div class="encadre-apropos align-droite">
+    Venez découvrir nos recettes estivales et le menu du jour conseillé..<br><br>
+    </div>
+
+        
         <div class="encadre-recettes">
             <a href="{{ url_for('recettes') }}" class="lien-recettes">Voir toutes les recettes</a>
         </div>
@@ -25,14 +29,21 @@
          alt="Description de l'image"
          class="image-recette-droite">
 </div>
+<br><br>
 
-<h1 class="titre-section">Qui sommes-nous?</h1>
-Nous sommes des élèves de l’ENAC ayant eu l’idée de créer une application de recettes estivales faciles à mettre en oeuvre et rapides.<br><br>
-
-<div class="encadre-recettes align-milieu-droit">
-    <a href="{{ url_for('contact') }}" class="lien-contact">Nous contacter</a>
+<div class="apropos-layout">
+    <img src="{{ url_for('static', filename='enacppetit.png') }}" alt="Logo ENAC'ppetit" class="apropos-logo-grand">
+    <div class="apropos-colonne">
+        <h1 class="titre-section align-droite">Qui sommes-nous?</h1>
+        <div class="encadre-apropos align-droite">
+            Nous sommes des élèves de l’ENAC ayant eu l’idée de créer une application de recettes estivales faciles à mettre en oeuvre et rapides.
+        </div>
+        <div class="align-droite" style="margin-top: 8px;">
+            <div class="encadre-recettes">
+                <a href="{{ url_for('apropos') }}" class="lien-apropos">Notre histoire</a>
+            </div>
+        </div>
+    </div>
 </div>
-
-<img src="{{ url_for('static', filename='enacppetit.png') }}" alt="Description de l'image" style="display:block; margin:40px auto; max-width:90%; border-radius:16px;">
 
 {% endblock %}

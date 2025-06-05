@@ -939,6 +939,547 @@ for idx, dessert in enumerate(desserts):
             VALUES (?, ?)
         """, (recette_id, id_equip))
 
+# DESSERTS AUTOMNE
+
+ingredients_automne = [
+    "Pommes", "Poires", "Noix", "Châtaignes", "Raisins", "Farine", "Beurre", "Sucre", "Oeufs", "Cannelle", "Crème fraîche"
+]
+allergenes_automne = {
+    "Crème fraîche": 1,
+    "Oeufs": 1,
+    "Noix": 1,
+    "Farine": 1,
+    "Beurre": 1
+}
+
+# Ajoute les nouveaux ingrédients d'automne avec gestion des allergènes
+for name in ingredients_automne:
+    if name not in ingredient_ids:
+        while True:
+            new_id = random.randint(10000, 99999)
+            if new_id not in used_ing_ids:
+                used_ing_ids.add(new_id)
+                ingredient_ids[name] = new_id
+                break
+        cursor.execute(
+            "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+            (ingredient_ids[name], name, allergenes_automne.get(name, 0))
+        )
+
+equipments_automne = ["Saladier", "Couteau", "Four", "Poêle", "Moule à tarte", "Mixeur"]
+for equip in equipments_automne:
+    if equip not in equipment_ids:
+        while True:
+            new_id = random.randint(10000, 99999)
+            if new_id not in used_equip_ids:
+                used_equip_ids.add(new_id)
+                equipment_ids[equip] = new_id
+                break
+        cursor.execute(
+            "INSERT OR IGNORE INTO Equipment (Id_equipement, Name) VALUES (?, ?)",
+            (equipment_ids[equip], equip)
+        )
+
+desserts_automne = [
+    {
+        "title": "Tarte aux pommes et noix",
+        "description": "Tarte rustique garnie de pommes fondantes et de noix croquantes.",
+        "fruits": [("Pommes", 3, "pcs")],
+        "autres": [("Noix", 50, "g"), ("Farine", 200, "g"), ("Beurre", 100, "g"), ("Sucre", 80, "g"), ("Oeufs", 2, "pcs")],
+        "equip": ["Moule à tarte", "Saladier", "Four", "Couteau"],
+        "steps": [
+            "Préparez la pâte avec farine, beurre, sucre et œufs.",
+            "Étalez la pâte dans un moule à tarte.",
+            "Disposez les pommes tranchées et parsemez de noix.",
+            "Saupoudrez de sucre.",
+            "Faites cuire au four 35 minutes à 180°C."
+        ]
+    },
+    {
+        "title": "Poêlée de poires aux raisins et noix",
+        "description": "Poires poêlées avec raisins secs et éclats de noix, parfumées à la cannelle.",
+        "fruits": [("Poires", 2, "pcs"), ("Raisins", 40, "g")],
+        "autres": [("Noix", 30, "g"), ("Beurre", 20, "g"), ("Sucre", 20, "g"), ("Cannelle", 1, "c. à café")],
+        "equip": ["Poêle", "Couteau"],
+        "steps": [
+            "Épluchez et coupez les poires en quartiers.",
+            "Faites fondre le beurre dans une poêle.",
+            "Ajoutez les poires, raisins, noix et sucre.",
+            "Saupoudrez de cannelle et faites revenir 10 minutes.",
+            "Servez tiède."
+        ]
+    },
+    {
+        "title": "Moelleux aux châtaignes",
+        "description": "Gâteau moelleux à la farine de châtaigne et éclats de marrons.",
+        "fruits": [("Châtaignes", 100, "g")],
+        "autres": [("Farine", 120, "g"), ("Beurre", 80, "g"), ("Sucre", 80, "g"), ("Oeufs", 3, "pcs")],
+        "equip": ["Saladier", "Four", "Mixeur"],
+        "steps": [
+            "Mixez les châtaignes en purée.",
+            "Mélangez avec farine, sucre, œufs et beurre fondu.",
+            "Versez dans un moule beurré.",
+            "Faites cuire 30 minutes à 180°C.",
+            "Laissez tiédir avant de démouler."
+        ]
+    },
+    {
+        "title": "Pommes rôties à la crème",
+        "description": "Pommes rôties au four, servies avec une crème fraîche sucrée.",
+        "fruits": [("Pommes", 4, "pcs")],
+        "autres": [("Sucre", 30, "g"), ("Crème fraîche", 80, "g")],
+        "equip": ["Four", "Saladier", "Couteau"],
+        "steps": [
+            "Évidez les pommes et disposez-les dans un plat.",
+            "Saupoudrez de sucre.",
+            "Faites rôtir 25 minutes à 180°C.",
+            "Servez avec la crème fraîche sucrée."
+        ]
+    },
+    {
+        "title": "Clafoutis aux raisins",
+        "description": "Dessert fondant aux raisins frais dans une pâte à clafoutis.",
+        "fruits": [("Raisins", 200, "g")],
+        "autres": [("Farine", 100, "g"), ("Sucre", 60, "g"), ("Oeufs", 3, "pcs"), ("Beurre", 40, "g")],
+        "equip": ["Four", "Saladier", "Moule à tarte"],
+        "steps": [
+            "Mélangez farine, sucre, œufs et beurre fondu.",
+            "Ajoutez les raisins.",
+            "Versez dans un moule beurré.",
+            "Faites cuire 35 minutes à 180°C.",
+            "Servez tiède ou froid."
+        ]
+    }
+]
+
+# Générer des identifiants uniques à 5 chiffres pour chaque dessert d'automne
+used_ids_automne = set()
+while len(used_ids_automne) < len(desserts_automne):
+    new_id = random.randint(10000, 99999)
+    if new_id not in used_ids and new_id not in used_ids_automne:
+        used_ids_automne.add(new_id)
+dessert_ids_automne = list(used_ids_automne)
+
+for idx, dessert in enumerate(desserts_automne):
+    recette_id = dessert_ids_automne[idx]
+
+    # Ajout recette
+    cursor.execute("""
+        INSERT INTO Recettes (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        recette_id,
+        dessert["title"],
+        15,  # Preptime
+        30,  # Cooktime
+        "Dessert",
+        "Automne",
+        dessert["description"],
+        4,
+        ""
+    ))
+
+    # Ajout étapes
+    for num, step in enumerate(dessert["steps"], start=1):
+        cursor.execute("""
+            INSERT INTO Steps (Recette_id, Num_step, Contenu)
+            VALUES (?, ?, ?)
+        """, (recette_id, num, step))
+
+    # Ajout ingrédients et quantités
+    for name, valeur, unite in dessert["fruits"] + dessert["autres"]:
+        id_ing = ingredient_ids[name]
+        cursor.execute("""
+            INSERT INTO Quantity (Recette_id, Id_ingredient, Valeur, Unite)
+            VALUES (?, ?, ?, ?)
+        """, (recette_id, id_ing, valeur, unite))
+
+    # Ajout équipements
+    for equip in dessert["equip"]:
+        id_equip = equipment_ids[equip]
+        cursor.execute("""
+            INSERT INTO Recette_Equipment (Recette_id, Id_equipement)
+            VALUES (?, ?)
+        """, (recette_id, id_equip))
+
+# DESSERTS HIVER
+
+ingredients_hiver = [
+    "Pommes", "Poires", "Orange", "Chocolat", "Noisettes", "Farine", "Beurre", "Sucre", "Oeufs", "Cannelle", "Crème fraîche", "Lait"
+]
+allergenes_hiver = {
+    "Crème fraîche": 1,
+    "Oeufs": 1,
+    "Noisettes": 1,
+    "Farine": 1,
+    "Beurre": 1,
+    "Lait": 1,
+    "Chocolat": 1  # si tu veux considérer le chocolat comme allergène (lait)
+}
+
+# Ajoute les nouveaux ingrédients d'hiver avec gestion des allergènes
+for name in ingredients_hiver:
+    if name not in ingredient_ids:
+        while True:
+            new_id = random.randint(10000, 99999)
+            if new_id not in used_ing_ids:
+                used_ing_ids.add(new_id)
+                ingredient_ids[name] = new_id
+                break
+        cursor.execute(
+            "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+            (ingredient_ids[name], name, allergenes_hiver.get(name, 0))
+        )
+
+equipments_hiver = ["Saladier", "Couteau", "Four", "Poêle", "Moule à cake", "Mixeur", "Casserole"]
+for equip in equipments_hiver:
+    if equip not in equipment_ids:
+        while True:
+            new_id = random.randint(10000, 99999)
+            if new_id not in used_equip_ids:
+                used_equip_ids.add(new_id)
+                equipment_ids[equip] = new_id
+                break
+        cursor.execute(
+            "INSERT OR IGNORE INTO Equipment (Id_equipement, Name) VALUES (?, ?)",
+            (equipment_ids[equip], equip)
+        )
+
+desserts_hiver = [
+    {
+        "title": "Moelleux au chocolat",
+        "description": "Gâteau fondant au chocolat, parfait pour les journées froides.",
+        "fruits": [],
+        "autres": [("Chocolat", 200, "g"), ("Beurre", 100, "g"), ("Sucre", 80, "g"), ("Farine", 50, "g"), ("Oeufs", 4, "pcs")],
+        "equip": ["Moule à cake", "Four", "Saladier", "Casserole"],
+        "steps": [
+            "Faites fondre le chocolat et le beurre au bain-marie.",
+            "Ajoutez le sucre, la farine puis les œufs un à un.",
+            "Versez dans un moule beurré.",
+            "Faites cuire 20 minutes à 180°C.",
+            "Servez tiède."
+        ]
+    },
+    {
+        "title": "Compote de pommes et poires à la cannelle",
+        "description": "Compote maison réconfortante, parfumée à la cannelle.",
+        "fruits": [("Pommes", 3, "pcs"), ("Poires", 2, "pcs")],
+        "autres": [("Sucre", 40, "g"), ("Cannelle", 1, "c. à café")],
+        "equip": ["Casserole", "Couteau", "Saladier"],
+        "steps": [
+            "Épluchez et coupez pommes et poires en morceaux.",
+            "Mettez-les dans une casserole avec le sucre et la cannelle.",
+            "Faites cuire à feu doux 25 minutes.",
+            "Écrasez ou mixez selon la texture désirée.",
+            "Servez tiède ou froid."
+        ]
+    },
+    {
+        "title": "Crêpes à l'orange",
+        "description": "Crêpes moelleuses servies avec un sirop d'orange.",
+        "fruits": [("Orange", 2, "pcs")],
+        "autres": [("Farine", 150, "g"), ("Oeufs", 2, "pcs"), ("Lait", 300, "ml"), ("Beurre", 30, "g"), ("Sucre", 30, "g")],
+        "equip": ["Saladier", "Poêle", "Couteau"],
+        "steps": [
+            "Préparez la pâte à crêpes avec farine, œufs, lait, beurre fondu et sucre.",
+            "Laissez reposer 30 minutes.",
+            "Faites cuire les crêpes dans une poêle chaude.",
+            "Préparez un sirop avec le jus d'orange et un peu de sucre.",
+            "Servez les crêpes nappées de sirop d'orange."
+        ]
+    },
+    {
+        "title": "Riz au lait à la cannelle",
+        "description": "Dessert crémeux et doux, parfumé à la cannelle.",
+        "fruits": [],
+        "autres": [("Lait", 500, "ml"), ("Riz rond", 100, "g"), ("Sucre", 60, "g"), ("Cannelle", 1, "c. à café")],
+        "equip": ["Casserole", "Saladier"],
+        "steps": [
+            "Faites chauffer le lait dans une casserole.",
+            "Ajoutez le riz et laissez cuire à feu doux 30 minutes.",
+            "Ajoutez le sucre et la cannelle en fin de cuisson.",
+            "Versez dans un saladier.",
+            "Servez tiède ou froid."
+        ]
+    },
+    {
+        "title": "Gâteau noisettes et pommes",
+        "description": "Gâteau moelleux aux noisettes et morceaux de pommes.",
+        "fruits": [("Pommes", 2, "pcs")],
+        "autres": [("Noisettes", 80, "g"), ("Farine", 120, "g"), ("Beurre", 80, "g"), ("Sucre", 80, "g"), ("Oeufs", 2, "pcs")],
+        "equip": ["Moule à cake", "Four", "Saladier", "Couteau"],
+        "steps": [
+            "Mélangez farine, noisettes en poudre, sucre, œufs et beurre fondu.",
+            "Ajoutez les pommes coupées en dés.",
+            "Versez dans un moule beurré.",
+            "Faites cuire 35 minutes à 180°C.",
+            "Laissez tiédir avant de démouler."
+        ]
+    }
+]
+
+# Générer des identifiants uniques à 5 chiffres pour chaque dessert d'hiver
+used_ids_hiver = set()
+while len(used_ids_hiver) < len(desserts_hiver):
+    new_id = random.randint(10000, 99999)
+    if new_id not in used_ids and new_id not in used_ids_automne and new_id not in used_ids_hiver:
+        used_ids_hiver.add(new_id)
+dessert_ids_hiver = list(used_ids_hiver)
+
+for idx, dessert in enumerate(desserts_hiver):
+    recette_id = dessert_ids_hiver[idx]
+
+    # Ajout recette
+    cursor.execute("""
+        INSERT INTO Recettes (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        recette_id,
+        dessert["title"],
+        15,  # Preptime
+        30,  # Cooktime
+        "Dessert",
+        "Hiver",
+        dessert["description"],
+        4,
+        ""
+    ))
+
+    # Ajout étapes
+    for num, step in enumerate(dessert["steps"], start=1):
+        cursor.execute("""
+            INSERT INTO Steps (Recette_id, Num_step, Contenu)
+            VALUES (?, ?, ?)
+        """, (recette_id, num, step))
+
+    # Ajout ingrédients et quantités
+    for name, valeur, unite in dessert["fruits"] + dessert["autres"]:
+        # Pour le riz au lait, ajoute l'ingrédient si besoin
+        if name not in ingredient_ids:
+            while True:
+                new_id = random.randint(10000, 99999)
+                if new_id not in used_ing_ids:
+                    used_ing_ids.add(new_id)
+                    ingredient_ids[name] = new_id
+                    break
+            cursor.execute(
+                "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+                (ingredient_ids[name], name, 0)
+            )
+        id_ing = ingredient_ids[name]
+        cursor.execute("""
+            INSERT INTO Quantity (Recette_id, Id_ingredient, Valeur, Unite)
+            VALUES (?, ?, ?, ?)
+        """, (recette_id, id_ing, valeur, unite))
+
+    # Ajout équipements
+    for equip in dessert["equip"]:
+        if equip not in equipment_ids:
+            while True:
+                new_id = random.randint(10000, 99999)
+                if new_id not in used_equip_ids:
+                    used_equip_ids.add(new_id)
+                    equipment_ids[equip] = new_id
+                    break
+            cursor.execute(
+                "INSERT OR IGNORE INTO Equipment (Id_equipement, Name) VALUES (?, ?)",
+                (equipment_ids[equip], equip)
+            )
+        id_equip = equipment_ids[equip]
+        cursor.execute("""
+            INSERT INTO Recette_Equipment (Recette_id, Id_equipement)
+            VALUES (?, ?)
+        """, (recette_id, id_equip))
+
+# DESSERTS PRINTEMPS
+
+ingredients_printemps = [
+    "Fraises", "Rhubarbe", "Citron", "Menthe", "Fromage blanc", "Sucre", "Farine", "Beurre", "Oeufs", "Lait", "Vanille"
+]
+allergenes_printemps = {
+    "Fromage blanc": 1,
+    "Oeufs": 1,
+    "Farine": 1,
+    "Beurre": 1,
+    "Lait": 1
+}
+
+# Ajoute les nouveaux ingrédients de printemps avec gestion des allergènes
+for name in ingredients_printemps:
+    if name not in ingredient_ids:
+        while True:
+            new_id = random.randint(10000, 99999)
+            if new_id not in used_ing_ids:
+                used_ing_ids.add(new_id)
+                ingredient_ids[name] = new_id
+                break
+        cursor.execute(
+            "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+            (ingredient_ids[name], name, allergenes_printemps.get(name, 0))
+        )
+
+equipments_printemps = ["Saladier", "Couteau", "Four", "Moule à cake", "Mixeur", "Casserole", "Moule à tarte"]
+for equip in equipments_printemps:
+    if equip not in equipment_ids:
+        while True:
+            new_id = random.randint(10000, 99999)
+            if new_id not in used_equip_ids:
+                used_equip_ids.add(new_id)
+                equipment_ids[equip] = new_id
+                break
+        cursor.execute(
+            "INSERT OR IGNORE INTO Equipment (Id_equipement, Name) VALUES (?, ?)",
+            (equipment_ids[equip], equip)
+        )
+
+desserts_printemps = [
+    {
+        "title": "Tarte fraises-rhubarbe",
+        "description": "Tarte acidulée et sucrée aux fraises et à la rhubarbe.",
+        "fruits": [("Fraises", 200, "g"), ("Rhubarbe", 150, "g")],
+        "autres": [("Farine", 200, "g"), ("Beurre", 100, "g"), ("Sucre", 80, "g"), ("Oeufs", 2, "pcs")],
+        "equip": ["Moule à tarte", "Four", "Couteau", "Saladier"],
+        "steps": [
+            "Préparez la pâte avec farine, beurre, sucre et œufs.",
+            "Étalez la pâte dans un moule à tarte.",
+            "Disposez la rhubarbe en tronçons et les fraises coupées.",
+            "Saupoudrez de sucre.",
+            "Faites cuire au four 35 minutes à 180°C."
+        ]
+    },
+    {
+        "title": "Clafoutis fraises-menthe",
+        "description": "Clafoutis moelleux aux fraises fraîches et parfum de menthe.",
+        "fruits": [("Fraises", 250, "g")],
+        "autres": [("Farine", 100, "g"), ("Sucre", 60, "g"), ("Oeufs", 3, "pcs"), ("Lait", 200, "ml"), ("Menthe", 5, "feuilles")],
+        "equip": ["Four", "Saladier", "Moule à cake"],
+        "steps": [
+            "Mélangez farine, sucre, œufs, lait et menthe ciselée.",
+            "Ajoutez les fraises coupées.",
+            "Versez dans un moule beurré.",
+            "Faites cuire 30 minutes à 180°C.",
+            "Servez tiède ou froid."
+        ]
+    },
+    {
+        "title": "Compote rhubarbe-vanille",
+        "description": "Compote douce et parfumée à la rhubarbe et à la vanille.",
+        "fruits": [("Rhubarbe", 300, "g")],
+        "autres": [("Sucre", 60, "g"), ("Vanille", 1, "gousse")],
+        "equip": ["Casserole", "Saladier", "Couteau"],
+        "steps": [
+            "Épluchez et coupez la rhubarbe en tronçons.",
+            "Faites cuire avec le sucre et la vanille fendue.",
+            "Laissez compoter 20 minutes à feu doux.",
+            "Retirez la gousse de vanille.",
+            "Servez frais."
+        ]
+    },
+    {
+        "title": "Verrines fromage blanc, fraises et citron",
+        "description": "Verrines fraîches au fromage blanc, fraises et zeste de citron.",
+        "fruits": [("Fraises", 150, "g"), ("Citron", 1, "pcs")],
+        "autres": [("Fromage blanc", 200, "g"), ("Sucre", 30, "g")],
+        "equip": ["Saladier", "Couteau"],
+        "steps": [
+            "Mélangez le fromage blanc avec le sucre et le zeste de citron.",
+            "Coupez les fraises en morceaux.",
+            "Alternez couches de fromage blanc et fraises dans des verrines.",
+            "Terminez par un peu de zeste de citron.",
+            "Servez bien frais."
+        ]
+    },
+    {
+        "title": "Gâteau moelleux citron-menthe",
+        "description": "Gâteau léger et parfumé au citron et à la menthe.",
+        "fruits": [("Citron", 2, "pcs")],
+        "autres": [("Farine", 150, "g"), ("Beurre", 80, "g"), ("Sucre", 80, "g"), ("Oeufs", 2, "pcs"), ("Menthe", 5, "feuilles")],
+        "equip": ["Four", "Saladier", "Moule à cake"],
+        "steps": [
+            "Mélangez farine, sucre, œufs, beurre fondu, jus et zeste de citron.",
+            "Ajoutez la menthe ciselée.",
+            "Versez dans un moule beurré.",
+            "Faites cuire 30 minutes à 180°C.",
+            "Laissez tiédir avant de démouler."
+        ]
+    }
+]
+
+# Générer des identifiants uniques à 5 chiffres pour chaque dessert de printemps
+used_ids_printemps = set()
+while len(used_ids_printemps) < len(desserts_printemps):
+    new_id = random.randint(10000, 99999)
+    if (new_id not in used_ids and
+        new_id not in used_ids_automne and
+        new_id not in used_ids_hiver and
+        new_id not in used_ids_printemps):
+        used_ids_printemps.add(new_id)
+dessert_ids_printemps = list(used_ids_printemps)
+
+for idx, dessert in enumerate(desserts_printemps):
+    recette_id = dessert_ids_printemps[idx]
+
+    # Ajout recette
+    cursor.execute("""
+        INSERT INTO Recettes (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        recette_id,
+        dessert["title"],
+        15,  # Preptime
+        30,  # Cooktime
+        "Dessert",
+        "Printemps",
+        dessert["description"],
+        4,
+        ""
+    ))
+
+    # Ajout étapes
+    for num, step in enumerate(dessert["steps"], start=1):
+        cursor.execute("""
+            INSERT INTO Steps (Recette_id, Num_step, Contenu)
+            VALUES (?, ?, ?)
+        """, (recette_id, num, step))
+
+    # Ajout ingrédients et quantités
+    for name, valeur, unite in dessert["fruits"] + dessert["autres"]:
+        if name not in ingredient_ids:
+            while True:
+                new_id = random.randint(10000, 99999)
+                if new_id not in used_ing_ids:
+                    used_ing_ids.add(new_id)
+                    ingredient_ids[name] = new_id
+                    break
+            cursor.execute(
+                "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+                (ingredient_ids[name], name, allergenes_printemps.get(name, 0))
+            )
+        id_ing = ingredient_ids[name]
+        cursor.execute("""
+            INSERT INTO Quantity (Recette_id, Id_ingredient, Valeur, Unite)
+            VALUES (?, ?, ?, ?)
+        """, (recette_id, id_ing, valeur, unite))
+
+    # Ajout équipements
+    for equip in dessert["equip"]:
+        if equip not in equipment_ids:
+            while True:
+                new_id = random.randint(10000, 99999)
+                if new_id not in used_equip_ids:
+                    used_equip_ids.add(new_id)
+                    equipment_ids[equip] = new_id
+                    break
+            cursor.execute(
+                "INSERT OR IGNORE INTO Equipment (Id_equipement, Name) VALUES (?, ?)",
+                (equipment_ids[equip], equip)
+            )
+        id_equip = equipment_ids[equip]
+        cursor.execute("""
+            INSERT INTO Recette_Equipment (Recette_id, Id_equipement)
+            VALUES (?, ?)
+        """, (recette_id, id_equip))
+
 # Sauvegarde les changements et ferme la connexion
 conn.commit()
 conn.close()
