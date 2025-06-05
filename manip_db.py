@@ -63,9 +63,7 @@ CREATE TABLE Quantity (
 
 CREATE TABLE Equipment (
     Id_equipement INTEGER PRIMARY KEY,
-    Name TEXT,
-    Recette_id INTEGER,
-    FOREIGN KEY (Recette_id) REFERENCES Recettes(Recette_id)
+    Name TEXT UNIQUE
 );
 
 CREATE TABLE Rating (
@@ -84,77 +82,26 @@ CREATE TABLE Recette_Favoris (
     FOREIGN KEY (User_id) REFERENCES Users(User_id),
     FOREIGN KEY (Recette_id) REFERENCES Recettes(Recette_id)
 );
+                     
+CREATE TABLE Recette_Equipment (
+    Recette_id INTEGER,
+    Id_equipement INTEGER,
+    PRIMARY KEY (Recette_id, Id_equipement),
+    FOREIGN KEY (Recette_id) REFERENCES Recettes(Recette_id),
+    FOREIGN KEY (Id_equipement) REFERENCES Equipment(Id_equipement)
+);
+
+CREATE TABLE Recette_Ingredient (
+    Recette_id INTEGER,
+    Id_ingredient INTEGER,
+    Valeur INTEGER,
+    Unite TEXT,
+    PRIMARY KEY (Recette_id, Id_ingredient),
+    FOREIGN KEY (Recette_id) REFERENCES Recettes(Recette_id),
+    FOREIGN KEY (Id_ingredient) REFERENCES Ingredients(Id_ingredient)
+);
 """)
 
-# Sauvegarde et ferme la connexion
-conn.commit()
-conn.close()
-
-# Réouvre la connexion
-conn = sqlite3.connect("BDD.db")
-cursor = conn.cursor()
-
-# Insère la recette
-cursor.execute("""
-INSERT INTO Recettes (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-""", (1, "Salade fraîcheur à la pastèque, feta et menthe", 15, 0, "Entrée", "Été",
-      "Une salade légère et rafraîchissante, parfaite pour les journées chaudes.", 4, "salade_pasteque.jpg"))
-
-# Étapes de préparation
-steps = [
-    "Coupez la pastèque en cubes.",
-    "Émiettez la feta et ciselez la menthe.",
-    "Mélangez tous les ingrédients dans un saladier.",
-    "Arrosez d’un filet d’huile d’olive et ajoutez une pincée de sel.",
-    "Servez bien frais."
-]
-for i, contenu in enumerate(steps, start=1):
-    cursor.execute("""
-    INSERT INTO Steps (Recette_id, Num_step, Contenu)
-    VALUES (?, ?, ?)
-    """, (1, i, contenu))
-
-# Ingrédients (ajoute-les s'ils n'existent pas déjà)
-ingredients = [
-    (1, "Pastèque", False),
-    (2, "Feta", True),
-    (3, "Menthe", False),
-    (4, "Huile d'olive", False),
-    (5, "Sel", False)
-]
-for ing in ingredients:
-    cursor.execute("INSERT INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)", ing)
-
-# Quantités pour la recette (table Quantity)
-quantities = [
-    (1, 1, 500, "grammes"),
-    (1, 2, 150, "grammes"),
-    (1, 3, 10, "feuilles"),
-    (1, 4, 2, "cuillères à soupe"),
-    (1, 5, 1, "pincée")
-]
-for q in quantities:
-    cursor.execute("""
-    INSERT INTO Quantity (Recette_id, Id_ingredient, Valeur, Unite)
-    VALUES (?, ?, ?, ?)
-    """, q)
-
-# Matériel (Equipment) lié à la recette 1
-equipments = [
-    (1, "Saladier", 1),
-    (2, "Couteau", 1),
-    (3, "Cuillère", 1)
-]
-for eq in equipments:
-    cursor.execute("INSERT INTO Equipment (Id_equipement, Name, Recette_id) VALUES (?, ?, ?)", eq)
-
-# Exemple d'ajout d'une note (Rating)
-cursor.execute("""
-INSERT INTO Rating (User_id, Recette_id, Rating, Commentaire)
-VALUES (?, ?, ?, ?)
-""", (1, 1, 5, "Délicieux et rafraîchissant !"))
-
-# Sauvegarde et fermeture
+# Sauvegarde les changements et ferme la connexion
 conn.commit()
 conn.close()
