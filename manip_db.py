@@ -828,6 +828,7 @@ for equip in equipments:
 desserts = [
     {
         "title": "Salade de fraises à la menthe",
+        "description": "Une salade fraîche et légère alliant fraises sucrées et menthe parfumée.",
         "fruits": [("Fraises", 250, "g")],
         "autres": [("Sucre", 30, "g"), ("Menthe", 5, "feuilles"), ("Citron", 1, "pcs")],
         "equip": ["Saladier", "Couteau", "Cuillère"],
@@ -840,6 +841,7 @@ desserts = [
     },
     {
         "title": "Smoothie pêche-abricot",
+        "description": "Un smoothie fruité et onctueux, parfait pour une pause vitaminée.",
         "fruits": [("Pêches", 2, "pcs"), ("Abricots", 3, "pcs")],
         "autres": [("Yaourt", 1, "pot"), ("Sucre", 20, "g")],
         "equip": ["Mixeur", "Verres", "Couteau"],
@@ -852,6 +854,7 @@ desserts = [
     },
     {
         "title": "Pastèque glacée",
+        "description": "Une douceur glacée et rafraîchissante à base de pastèque et de menthe.",
         "fruits": [("Pastèque", 400, "g")],
         "autres": [("Menthe", 5, "feuilles")],
         "equip": ["Couteau", "Saladier"],
@@ -864,6 +867,7 @@ desserts = [
     },
     {
         "title": "Abricots rôtis au yaourt",
+        "description": "Des abricots caramélisés au four, servis avec une touche de yaourt frais.",
         "fruits": [("Abricots", 4, "pcs")],
         "autres": [("Yaourt", 1, "pot"), ("Sucre", 15, "g")],
         "equip": ["Saladier", "Cuillère"],
@@ -875,6 +879,7 @@ desserts = [
     },
     {
         "title": "Myrtilles à la crème",
+        "description": "Un dessert simple et gourmand mêlant myrtilles fraîches et crème sucrée.",
         "fruits": [("Myrtilles", 150, "g")],
         "autres": [("Crème fraîche", 50, "g"), ("Sucre", 10, "g")],
         "equip": ["Saladier", "Cuillère"],
@@ -906,7 +911,7 @@ for idx, dessert in enumerate(desserts):
         0,   # Cooktime
         "Dessert",
         "Été",
-        dessert["title"],
+        dessert["description"],
         4,
         ""
     ))
@@ -937,3 +942,5 @@ for idx, dessert in enumerate(desserts):
 # Sauvegarde les changements et ferme la connexion
 conn.commit()
 conn.close()
+
+
