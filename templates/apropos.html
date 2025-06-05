@@ -1,5 +1,31 @@
 {% extends "base.html" %}
-{% block title %}Recettes{% endblock %}
+{% block title %}À propos de nous{% endblock %}
 {% block content %}
-<!-- Contenu spécifique à la page recettes ici -->
+<div class="apropos-layout">
+    <div class="apropos-logo-col">
+        <img src="{{ url_for('static', filename='enacppetit - Copie.png') }}" alt="Logo ENAC'ppetit" class="apropos-logo">
+    </div>
+    <div class="apropos-colonne">
+        <div class="apropos-titre1-box">
+            <h2 class="apropos-titre1">À propos de nous</h2>
+        </div>
+        <div class="apropos-box">
+            <div class="apropos-texte">
+                Nous sommes 4 étudiantes en première année à l'École Nationale de l'Aviation Civile.<br>
+                Dans le cadre de nos études, nous avons dû créer un site web.<br>
+                Aimant toutes les 4 cuisiner et partager nos recettes, notre choix s'est dirigé vers la création d'un site de recettes.
+            </div>
+        </div>
+        <div class="apropos-titre2-box" style="margin-top:40px;">
+            <h2 class="apropos-titre2">Notre histoire</h2>
+        </div>
+        <div class="apropos-box">
+            <div class="apropos-texte">
+                Nous sommes 4 étudiantes en première année à l'École Nationale de l'Aviation Civile.<br>
+                Dans le cadre de nos études, nous avons dû créer un site web.<br>
+                Aimant toutes les 4 cuisiner et partager nos recettes, notre choix s'est dirigé vers la création d'un site de recettes.
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
