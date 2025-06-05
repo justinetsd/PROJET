@@ -212,6 +212,16 @@ html {
     z-index: 2;
 }
 
+.titre-section {
+    color: #c2185b; /* même couleur que les liens */
+    font-weight: bold;
+    text-decoration: underline;
+    text-decoration-color: #c2185b; /* souligné de la même couleur */
+    text-underline-offset: 6px;     /* espace entre le texte et le soulignement */
+    font-size: 2.2em;
+    margin-bottom: 18px;
+    margin-top: 40px;
+}
 .accueil-slogan {
    
     background: none; /* ou supprime la ligne background */
@@ -259,32 +269,35 @@ html {
 .search-bar button:hover {
     background: #ad1457;
 }
-.encadre-recettes.align-milieu-droit {
-    display: flex;
-    justify-content: flex-end;
-    background: #ffe3ce;
+.encadre-recettes {
+    display: inline-block;
+    background: #fff;
     border: 2px solid #111;
     border-radius: 16px;
     padding: 12px 28px;
     margin: 18px 0 24px 0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    width: fit-content;      /* largeur auto selon le contenu */
-    margin-left: auto;
-    margin-right: 70vw;
-    text-align: right;
+    text-align: center;
 }
-.lien-recettes {
-    color: #111;
+
+.lien-recettes,
+.lien-contact {
+    color:#c2185b  !important;      /* noir */
     font-weight: bold;
     font-size: 1.15em;
-    text-decoration: none;
+    text-decoration: none !important; /* pas de soulignement */
+    background: #fff;            /* fond blanc */
+    padding: 6px 18px;           /* un peu d'espace autour du texte */
+    border-radius: 8px;          /* coins arrondis pour l'esthétique */
+    transition: background 0.2s;
 }
 
-.lien-recettes:hover {
-    color: #c2185b;
-    text-decoration: underline;
+.lien-recettes:hover,
+.lien-contact:hover {
+    color: #c2185b!important;
+    text-decoration: none !important;
+    background: #fff;         /* léger fond au survol, optionnel */
 }
-
 .nav-links {
     display: flex;
     align-items: center;
@@ -498,4 +511,27 @@ html {
     display: flex;
     align-items: center;
     margin-bottom: 0;
+}
+
+.bloc-recettes-avec-image {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 40px; /* espace entre texte et image */
+    margin: 40px 0;
+}
+
+.bloc-texte-recettes {
+    flex: 1;
+    min-width: 220px;
+    font-size: 1.15em;
+}
+
+.image-recette-droite {
+    max-width: 380px;      /* un peu plus grande */
+    height: 280px;         /* un peu plus grande */
+    object-fit: cover;
+    border-radius: 16px;
+    margin-left: 100px;     /* à peine décalée sur la droite */
+    margin-right: 0;
 }
