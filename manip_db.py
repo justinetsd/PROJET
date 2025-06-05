@@ -48,7 +48,7 @@ CREATE TABLE Steps (
 
 CREATE TABLE Ingredients (
     Id_ingredient INTEGER PRIMARY KEY,
-    Name TEXT,
+    Name TEXT UNIQUE,
     Allergene BOOLEAN
 );
 
@@ -63,9 +63,7 @@ CREATE TABLE Quantity (
 
 CREATE TABLE Equipment (
     Id_equipement INTEGER PRIMARY KEY,
-    Name TEXT,
-    Recette_id INTEGER,
-    FOREIGN KEY (Recette_id) REFERENCES Recettes(Recette_id)
+    Name TEXT UNIQUE
 );
 
 CREATE TABLE Rating (
@@ -84,77 +82,148 @@ CREATE TABLE Recette_Favoris (
     FOREIGN KEY (User_id) REFERENCES Users(User_id),
     FOREIGN KEY (Recette_id) REFERENCES Recettes(Recette_id)
 );
+                     
+CREATE TABLE Recette_Equipment (
+    Recette_id INTEGER,
+    Id_equipement INTEGER,
+    PRIMARY KEY (Recette_id, Id_equipement),
+    FOREIGN KEY (Recette_id) REFERENCES Recettes(Recette_id),
+    FOREIGN KEY (Id_equipement) REFERENCES Equipment(Id_equipement)
+);
+
 """)
 
-# Sauvegarde et ferme la connexion
-conn.commit()
-conn.close()
+# AJOUT DESSERTS ETE
+import sqlite3
 
-# Réouvre la connexion
 conn = sqlite3.connect("BDD.db")
 cursor = conn.cursor()
 
-# Insère la recette
-cursor.execute("""
-INSERT INTO Recettes (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-""", (1, "Salade fraîcheur à la pastèque, feta et menthe", 15, 0, "Entrée", "Été",
-      "Une salade légère et rafraîchissante, parfaite pour les journées chaudes.", 4, "salade_pasteque.jpg"))
-
-# Étapes de préparation
-steps = [
-    "Coupez la pastèque en cubes.",
-    "Émiettez la feta et ciselez la menthe.",
-    "Mélangez tous les ingrédients dans un saladier.",
-    "Arrosez d’un filet d’huile d’olive et ajoutez une pincée de sel.",
-    "Servez bien frais."
-]
-for i, contenu in enumerate(steps, start=1):
-    cursor.execute("""
-    INSERT INTO Steps (Recette_id, Num_step, Contenu)
-    VALUES (?, ?, ?)
-    """, (1, i, contenu))
-
-# Ingrédients (ajoute-les s'ils n'existent pas déjà)
+# Ingrédients communs (ajoutés une seule fois)
 ingredients = [
-    (1, "Pastèque", False),
-    (2, "Feta", True),
-    (3, "Menthe", False),
-    (4, "Huile d'olive", False),
-    (5, "Sel", False)
+    ("Fraises", 0),
+    ("Pêches", 0),
+    ("Abricots", 0),
+    ("Pastèque", 0),
+    ("Myrtilles", 0),
+    ("Sucre", 0),
+    ("Crème fraîche", 1),
+    ("Yaourt", 1),
+    ("Menthe", 0),
+    ("Citron", 0)
 ]
-for ing in ingredients:
-    cursor.execute("INSERT INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)", ing)
+for name, allergene in ingredients:
+    cursor.execute("INSERT OR IGNORE INTO Ingredients (Name, Allergene) VALUES (?, ?)", (name, allergene))
 
-# Quantités pour la recette (table Quantity)
-quantities = [
-    (1, 1, 500, "grammes"),
-    (1, 2, 150, "grammes"),
-    (1, 3, 10, "feuilles"),
-    (1, 4, 2, "cuillères à soupe"),
-    (1, 5, 1, "pincée")
+# Équipements communs
+equipments = ["Saladier", "Couteau", "Cuillère", "Mixeur", "Verres"]
+for equip in equipments:
+    cursor.execute("INSERT OR IGNORE INTO Equipment (Name) VALUES (?)", (equip,))
+
+# Recettes d'été
+desserts = [
+    {
+        "title": "Salade de fraises à la menthe",
+        "fruits": [("Fraises", 250, "g")],
+        "autres": [("Sucre", 30, "g"), ("Menthe", 5, "feuilles"), ("Citron", 1, "pcs")],
+        "equip": ["Saladier", "Couteau", "Cuillère"],
+        "steps": [
+            "Laver et couper les fraises.",
+            "Ciseler la menthe.",
+            "Mélanger fraises, sucre, menthe et jus de citron dans un saladier.",
+            "Servir frais."
+        ]
+    },
+    {
+        "title": "Smoothie pêche-abricot",
+        "fruits": [("Pêches", 2, "pcs"), ("Abricots", 3, "pcs")],
+        "autres": [("Yaourt", 1, "pot"), ("Sucre", 20, "g")],
+        "equip": ["Mixeur", "Verres", "Couteau"],
+        "steps": [
+            "Laver, dénoyauter et couper les fruits.",
+            "Mettre les fruits, le yaourt et le sucre dans le mixeur.",
+            "Mixer jusqu'à consistance lisse.",
+            "Verser dans des verres et servir frais."
+        ]
+    },
+    {
+        "title": "Pastèque glacée",
+        "fruits": [("Pastèque", 400, "g")],
+        "autres": [("Menthe", 5, "feuilles")],
+        "equip": ["Couteau", "Saladier"],
+        "steps": [
+            "Couper la pastèque en cubes.",
+            "Ciseler la menthe.",
+            "Mélanger et placer au congélateur 30 minutes.",
+            "Servir très frais."
+        ]
+    },
+    {
+        "title": "Abricots rôtis au yaourt",
+        "fruits": [("Abricots", 4, "pcs")],
+        "autres": [("Yaourt", 1, "pot"), ("Sucre", 15, "g")],
+        "equip": ["Saladier", "Cuillère"],
+        "steps": [
+            "Couper les abricots en deux et les saupoudrer de sucre.",
+            "Les faire rôtir au four 10 minutes.",
+            "Servir avec du yaourt."
+        ]
+    },
+    {
+        "title": "Myrtilles à la crème",
+        "fruits": [("Myrtilles", 150, "g")],
+        "autres": [("Crème fraîche", 50, "g"), ("Sucre", 10, "g")],
+        "equip": ["Saladier", "Cuillère"],
+        "steps": [
+            "Mélanger les myrtilles avec la crème et le sucre.",
+            "Servir frais."
+        ]
+    }
 ]
-for q in quantities:
+
+for idx, dessert in enumerate(desserts, start=1):
+    # Ajout recette
     cursor.execute("""
-    INSERT INTO Quantity (Recette_id, Id_ingredient, Valeur, Unite)
-    VALUES (?, ?, ?, ?)
-    """, q)
+        INSERT INTO Recettes (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        idx,
+        dessert["title"],
+        10,  # Preptime
+        0,   # Cooktime
+        "Dessert",
+        "Été",
+        dessert["title"],
+        4,
+        ""
+    ))
 
-# Matériel (Equipment) lié à la recette 1
-equipments = [
-    (1, "Saladier", 1),
-    (2, "Couteau", 1),
-    (3, "Cuillère", 1)
-]
-for eq in equipments:
-    cursor.execute("INSERT INTO Equipment (Id_equipement, Name, Recette_id) VALUES (?, ?, ?)", eq)
+    # Ajout étapes
+    for num, step in enumerate(dessert["steps"], start=1):
+        cursor.execute("""
+            INSERT INTO Steps (Recette_id, Num_step, Contenu)
+            VALUES (?, ?, ?)
+        """, (idx, num, step))
 
-# Exemple d'ajout d'une note (Rating)
-cursor.execute("""
-INSERT INTO Rating (User_id, Recette_id, Rating, Commentaire)
-VALUES (?, ?, ?, ?)
-""", (1, 1, 5, "Délicieux et rafraîchissant !"))
+    # Ajout ingrédients et quantités
+    for name, valeur, unite in dessert["fruits"] + dessert["autres"]:
+        cursor.execute("SELECT Id_ingredient FROM Ingredients WHERE Name = ?", (name,))
+        id_ing = cursor.fetchone()[0]
+        cursor.execute("""
+            INSERT INTO Quantity (Recette_id, Id_ingredient, Valeur, Unite)
+            VALUES (?, ?, ?, ?)
+        """, (idx, id_ing, valeur, unite))
 
-# Sauvegarde et fermeture
+    # Ajout équipements
+    for equip in dessert["equip"]:
+        cursor.execute("SELECT Id_equipement FROM Equipment WHERE Name = ?", (equip,))
+        id_equip = cursor.fetchone()[0]
+        cursor.execute("""
+            INSERT INTO Recette_Equipment (Recette_id, Id_equipement)
+            VALUES (?, ?)
+        """, (idx, id_equip))
+
+
+# Sauvegarde les changements et ferme la connexion
 conn.commit()
 conn.close()
