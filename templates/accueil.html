@@ -31,16 +31,18 @@
 </div>
 <br><br>
 
-<h1 class="titre-section align-droite">Qui sommes-nous?</h1>
 <div class="apropos-layout">
     <img src="{{ url_for('static', filename='enacppetit.png') }}" alt="Logo ENAC'ppetit" class="apropos-logo-grand">
-    <div class="encadre-apropos align-droite">
-        Nous sommes des élèves de l’ENAC ayant eu l’idée de créer une application de recettes estivales faciles à mettre en oeuvre et rapides.
-    </div>
-</div>
-<div class="align-droite">
-    <div class="encadre-recettes">
-        <a href="{{ url_for('contact') }}" class="lien-contact">Nous contacter</a>
+    <div class="apropos-colonne">
+        <h1 class="titre-section align-droite">Qui sommes-nous?</h1>
+        <div class="encadre-apropos align-droite">
+            Nous sommes des élèves de l’ENAC ayant eu l’idée de créer une application de recettes estivales faciles à mettre en oeuvre et rapides.
+        </div>
+        <div class="align-droite" style="margin-top: 8px;">
+            <div class="encadre-recettes">
+                <a href="{{ url_for('apropos') }}" class="lien-apropos">Notre histoire</a>
+            </div>
+        </div>
     </div>
 </div>
 
