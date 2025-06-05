@@ -12,10 +12,22 @@
 <body>
     <div class="top-bar">
         <img src="{{ url_for('static', filename='enacppetit.png') }}" alt="Logo ENAC'ppetit">
-        <nav class="nav-links">
-            <a href="{{ url_for('accueil') }}">ACCUEIL</a>
-            <a href="{{ url_for('recettes') }}">RECETTES</a>
-            <a href="{{ url_for('apropos') }}">A PROPOS</a>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('accueil') }}">ACCUEIL</a></li>
+                <li><a href="{{ url_for('recettes') }}">RECETTES</a></li>
+                <li class="nav-dropdown">
+                    <span class="apropos-link">
+                        <span class="apropos-arrow" style="font-size:1em; margin-right:10px; display:inline-block; transform:rotate(270deg);">⟨</span>
+                        A PROPOS
+                    </span>
+                    <div class="dropdown-content">
+                        <a href="/contact">Nous contacter</a>
+                        <div class="dropdown-separator"></div>
+                        <a href="/apropos">À propos de nous</a>
+                    </div>
+                </li>
+            </ul>
         </nav>
         <a href="{{ url_for('login') }}" style="margin-left:auto; margin-right:30px; color:#c2185b; font-weight:bold; font-size:1.1em; text-decoration:none; display:flex; align-items:center; font-family:'Open Sans',Arial,sans-serif;">
             <img src="{{ url_for('static', filename='logoconnexion.png') }}" alt="Logo Connexion" style="height:0.9cm; margin-right:8px;">
@@ -47,5 +59,15 @@
         <a href="/conditions">Conditions d'utilisation</a>
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const flashMsg = document.getElementById('flash-message');
+    if (flashMsg) {
+        document.querySelector('.contact-form').addEventListener('click', function() {
+            flashMsg.style.display = 'none';
+        });
+    }
+});
+</script>
 </body>
 </html>

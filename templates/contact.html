@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Contact{% endblock %}
+{% block content %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash-message success" id="flash-message">
+      <span class="checkmark">&#10003;</span>
+      {{ messages[0] }}
+    </div>
+  {% endif %}
+{% endwith %}
+
+
+
+<form action="{{ url_for('contact') }}" method="post" class="contact-form">
+    <label for="email">Adresse mail :</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="objet">Objet de la demande :</label>
+    <select id="objet" name="objet" required>
+        <option value="">-- Choisir un objet --</option>
+        <option value="Proposition d'amélioration(s) du site">Proposition d'amélioration(s) du site</option>
+        <option value="Proposition d'une nouvelle recette">Proposition d'une nouvelle recette</option>
+        <option value="Autre(s) demande(s)">Autre(s) demande(s)</option>
+    </select>
+
+
+    <label for="message">Votre message :</label>
+    <textarea id="message" name="message" rows="6" required placeholder="Expliquez votre demande ici..."></textarea>
+
+    <button type="submit">Envoyer</button>
+</form>
+
+
+
+{% endblock %}
