@@ -785,29 +785,50 @@ CREATE TABLE Recette_Equipment (
 
 # Ingrédients communs (ajoutés une seule fois)
 ingredients = [
-    ("Fraises", 0),
-    ("Pêches", 0),
-    ("Abricots", 0),
-    ("Pastèque", 0),
-    ("Myrtilles", 0),
-    ("Sucre", 0),
-    ("Crème fraîche", 1),
-    ("Yaourt", 1),
-    ("Menthe", 0),
-    ("Citron", 0)
+    "Fraises", "Pêches", "Abricots", "Pastèque", "Myrtilles", "Sucre",
+    "Crème fraîche", "Yaourt", "Menthe", "Citron"
 ]
-for name, allergene in ingredients:
-    cursor.execute("INSERT OR IGNORE INTO Ingredients (Name, Allergene) VALUES (?, ?)", (name, allergene))
+allergenes = {
+    "Crème fraîche": 1,
+    "Yaourt": 1
+}
+
+# Générer des identifiants uniques à 5 chiffres pour chaque ingrédient
+ingredient_ids = {}
+used_ing_ids = set()
+for name in ingredients:
+    while True:
+        new_id = random.randint(10000, 99999)
+        if new_id not in used_ing_ids:
+            used_ing_ids.add(new_id)
+            ingredient_ids[name] = new_id
+            break
+    cursor.execute(
+        "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+        (ingredient_ids[name], name, allergenes.get(name, 0))
+    )
 
 # Équipements communs
 equipments = ["Saladier", "Couteau", "Cuillère", "Mixeur", "Verres"]
+equipment_ids = {}
+used_equip_ids = set()
 for equip in equipments:
-    cursor.execute("INSERT OR IGNORE INTO Equipment (Name) VALUES (?)", (equip,))
+    while True:
+        new_id = random.randint(10000, 99999)
+        if new_id not in used_equip_ids:
+            used_equip_ids.add(new_id)
+            equipment_ids[equip] = new_id
+            break
+    cursor.execute(
+        "INSERT OR IGNORE INTO Equipment (Id_equipement, Name) VALUES (?, ?)",
+        (equipment_ids[equip], equip)
+    )
 
 # Recettes d'été
 desserts = [
     {
         "title": "Salade de fraises à la menthe",
+        "description": "Une salade fraîche et légère alliant fraises sucrées et menthe parfumée.",
         "fruits": [("Fraises", 250, "g")],
         "autres": [("Sucre", 30, "g"), ("Menthe", 5, "feuilles"), ("Citron", 1, "pcs")],
         "equip": ["Saladier", "Couteau", "Cuillère"],
@@ -820,6 +841,7 @@ desserts = [
     },
     {
         "title": "Smoothie pêche-abricot",
+        "description": "Un smoothie fruité et onctueux, parfait pour une pause vitaminée.",
         "fruits": [("Pêches", 2, "pcs"), ("Abricots", 3, "pcs")],
         "autres": [("Yaourt", 1, "pot"), ("Sucre", 20, "g")],
         "equip": ["Mixeur", "Verres", "Couteau"],
@@ -832,6 +854,7 @@ desserts = [
     },
     {
         "title": "Pastèque glacée",
+        "description": "Une douceur glacée et rafraîchissante à base de pastèque et de menthe.",
         "fruits": [("Pastèque", 400, "g")],
         "autres": [("Menthe", 5, "feuilles")],
         "equip": ["Couteau", "Saladier"],
@@ -844,6 +867,7 @@ desserts = [
     },
     {
         "title": "Abricots rôtis au yaourt",
+        "description": "Des abricots caramélisés au four, servis avec une touche de yaourt frais.",
         "fruits": [("Abricots", 4, "pcs")],
         "autres": [("Yaourt", 1, "pot"), ("Sucre", 15, "g")],
         "equip": ["Saladier", "Cuillère"],
@@ -855,6 +879,7 @@ desserts = [
     },
     {
         "title": "Myrtilles à la crème",
+        "description": "Un dessert simple et gourmand mêlant myrtilles fraîches et crème sucrée.",
         "fruits": [("Myrtilles", 150, "g")],
         "autres": [("Crème fraîche", 50, "g"), ("Sucre", 10, "g")],
         "equip": ["Saladier", "Cuillère"],
@@ -886,7 +911,7 @@ for idx, dessert in enumerate(desserts):
         0,   # Cooktime
         "Dessert",
         "Été",
-        dessert["title"],
+        dessert["description"],
         4,
         ""
     ))
@@ -900,8 +925,7 @@ for idx, dessert in enumerate(desserts):
 
     # Ajout ingrédients et quantités
     for name, valeur, unite in dessert["fruits"] + dessert["autres"]:
-        cursor.execute("SELECT Id_ingredient FROM Ingredients WHERE Name = ?", (name,))
-        id_ing = cursor.fetchone()[0]
+        id_ing = ingredient_ids[name]
         cursor.execute("""
             INSERT INTO Quantity (Recette_id, Id_ingredient, Valeur, Unite)
             VALUES (?, ?, ?, ?)
@@ -909,8 +933,7 @@ for idx, dessert in enumerate(desserts):
 
     # Ajout équipements
     for equip in dessert["equip"]:
-        cursor.execute("SELECT Id_equipement FROM Equipment WHERE Name = ?", (equip,))
-        id_equip = cursor.fetchone()[0]
+        id_equip = equipment_ids[equip]
         cursor.execute("""
             INSERT INTO Recette_Equipment (Recette_id, Id_equipement)
             VALUES (?, ?)
@@ -919,3 +942,5 @@ for idx, dessert in enumerate(desserts):
 # Sauvegarde les changements et ferme la connexion
 conn.commit()
 conn.close()
+
+
