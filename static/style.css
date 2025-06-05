@@ -41,6 +41,9 @@ html {
     height: 1.6cm;
     margin-left: 20px;
 }
+.top-bar img[alt="Logo ENAC'ppetit"] {
+    margin-right: 40px;
+}
 .nav-links {
     display: flex;
     gap: 40px;
