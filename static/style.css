@@ -284,7 +284,7 @@ html {
 
 
 .lien-recettes,
-.lien-contact {
+.lien-apropos {
     color:#c2185b  !important;      /* noir */
     font-weight: bold;
     font-size: 1.15em;
@@ -463,15 +463,23 @@ html {
 .apropos-layout {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* espace image à gauche, texte à droite */
+    justify-content: space-between;
     gap: 32px;
     margin-bottom: 32px;
     margin-top: 24px;
 }
 
+.apropos-colonne {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 1;
+    gap: 0;
+}
+
 .apropos-logo-grand {
-    max-width: 220px;   /* image plus grande */
-    height: 220px;
+    max-width: 320px;   /* image plus grande */
+    height: 320px;
     object-fit: contain;
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
