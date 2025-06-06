@@ -127,7 +127,12 @@ def login():
 
 @app.route('/ete')
 def ete():
-    return render_template('été.html')
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Été' AND category = 'Plat'").fetchall()
+    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Été' AND category = 'Dessert'").fetchall()
+    conn.close()
+    return render_template('ete.html', plats=plats, desserts=desserts)
 
 @app.route('/automne')
 def automne():
@@ -180,3 +185,6 @@ def recherche():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
