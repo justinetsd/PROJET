@@ -18,6 +18,7 @@ mail = Mail(app)
 
 def get_recipes(): #recette
     conn = sqlite3.connect('BDD.db')
+    
     conn.row_factory = sqlite3.Row
     recipes = conn.execute('SELECT * FROM recettes').fetchall()
     conn.close()
