@@ -34,19 +34,33 @@ def recettes():
     recipes = get_recipes()
     return render_template('recettes.html', recipes=recipes)
 #ce bout de code permet de récupérer l'une des recettes sur laquelle on a cliqué
-
-
-@app.route('/recette/<int:recipe_id>') #route d'une recette
+@app.route('/recette/<int:recipe_id>')
 def recette(recipe_id):
     conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-    recipe = conn.execute('SELECT * FROM recettes WHERE id = ?', (recipe_id,)).fetchone()
+
+    # Récupère la recette
+    recipe = conn.execute('SELECT * FROM Recettes WHERE Recette_id = ?', (recipe_id,)).fetchone()
+
+    # Récupère les étapes (steps)
+    steps = conn.execute('SELECT Num_step, Contenu FROM Steps WHERE Recette_id = ? ORDER BY Num_step', (recipe_id,)).fetchall()
+
+    # Récupère les équipements (Name)
+    equipements = conn.execute('SELECT Name FROM Equipment WHERE id_equipement IN (SELECT id_equipement FROM Recette_Equipment WHERE Recette_id = ?)', (recipe_id,)).fetchall()
+
     conn.close()
-    
+
     if recipe is None:
-        return "recettes not found", 404
+        return "recette not found", 404
+
+    return render_template(
+        'Unerecette.html',
+        recipe=recipe,
+        steps=steps,
+        equipements=equipements
+    )
     
-    return render_template('Unerecette.html', recipe=recipe)
+
 
 
 
