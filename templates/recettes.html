@@ -9,11 +9,13 @@
     </div>
    {% set noms_vus = [] %}
 {% for recette in recipes %}
-    {% if recette['Recette_id'] not in noms_vus %}
+    {% if recette['title'] not in noms_vus %}
         <div class="encadre-nom-recette">
-            {{ recette['Recette_id'] }}
+            <a href="{{ url_for('recette', recipe_id=recette['Recette_id']) }}" class="lien-recette-nom">
+                {{ recette['title'] }}
+            </a>
         </div>
-        {% set _ = noms_vus.append(recette['Recette_id']) %}
+        {% set _ = noms_vus.append(recette['title']) %}
     {% endif %}
 {% endfor %}
 {% endblock %}

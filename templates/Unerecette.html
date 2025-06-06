@@ -1,28 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Recipes Home</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <header>
-        <h1>Welcome to the Recipes Website</h1>
-        <input type="text" placeholder="Search recipes...">
-    </header>
+{% extends "base.html" %}
+{% block content %}
+    <h1>{{ recipe['title'] }}</h1>
+    <p><strong>Temps de préparation :</strong> {{ recipe['Preptime'] }}</p>
+    <p><strong>Temps de cuisson :</strong> {{ recipe['Cooktime'] }}</p>
+    <p><strong>Catégorie :</strong> {{ recipe['Categorie'] }}</p>
+    <p><strong>Description :</strong> {{ recipe['description'] }}</p>
 
-    <main class="grid">
-        {% for recipe in recipes %}
-        <div class="card">
-            <img src="{{ recipe.image }}" alt="Image of {{ recipe.title }}">
-            <div class="info">
-                <h2>{{ recipe.title }}</h2>
-                <p>{{ recipe.category }}</p>
-                <p>{{ recipe.duration }} | {{ recipe.ingredients }} ingredients</p>
-                <p>⭐ {{ recipe.rating }}%</p>
-            </div>
-        </div>
+    <h2>Équipements nécessaires</h2>
+    <ul>
+        {% for eq in equipements %}
+            <li>{{ eq['Name'] }}</li>
         {% endfor %}
-    </main>
-</body>
-</html>
+    </ul>
+
+    <h2>Étapes</h2>
+    <ol>
+        {% for step in steps %}
+            <li>
+                <strong>Étape {{ step['Num_step'] }} :</strong> {{ step['Contenu'] }}
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock %}
