@@ -35,9 +35,6 @@ def recettes():
     return render_template('recettes.html', recipes=recipes)
 #ce bout de code permet de récupérer l'une des recettes sur laquelle on a cliqué
 
-@app.route('/recettes/ete')
-def recettes_ete():
-
 
 @app.route('/recette/<int:recipe_id>') #route d'une recette
 def recette(recipe_id):
@@ -121,7 +118,7 @@ def ete():
     plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Été' AND category = 'Plat'").fetchall()
     desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Été' AND category = 'Dessert'").fetchall()
     conn.close()
-    return render_template('ete.html', plats=plats, desserts=desserts)
+    return render_template('été.html', plats=plats, desserts=desserts)
 
 @app.route('/automne')
 def automne():

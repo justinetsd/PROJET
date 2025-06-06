@@ -3,14 +3,12 @@
 {% block content %}
 <h1>Recettes d'été</h1>
 
-<div class="saisons-links">
-    <a href="{{ url_for('ete') }}">Été</a>
-    <a href="{{ url_for('automne') }}">Automne</a>
-    <a href="{{ url_for('hiver') }}">Hiver</a>
-    <a href="{{ url_for('printemps') }}">Printemps</a>
+<div class="categories-links">
+    <a href="#plats">Plats</a>
+    <a href="#desserts">Desserts</a>
 </div>
 
-<h2>Plats</h2>
+<h2 id="plats">Plats</h2>
 {% if plats %}
     {% for plat in plats %}
         <div class="encadre-nom-recette">
@@ -21,7 +19,7 @@
     <p>Aucun plat d'été trouvé.</p>
 {% endif %}
 
-<h2>Desserts</h2>
+<h2 id="desserts">Desserts</h2>
 {% if desserts %}
     {% for dessert in desserts %}
         <div class="encadre-nom-recette">
