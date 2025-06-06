@@ -27,7 +27,7 @@ html {
     background: linear-gradient(
         to bottom,
         #ffffff 0%,           /* rose très clair */
-        #ffffff calc(100% - 0.05cm),
+        #f9e4ec calc(100% - 0.05cm),
         #ff7171 calc(100% - 0.05cm),
         #ff7171 100%           /* rose foncé sur 0.2cm */
     );
@@ -77,7 +77,7 @@ html {
         to top,
 
         #ffffff 0.2cm,              /* puis rose très clair */
-        #ffe3ce 2cm                 /* jusqu'en bas */
+        #ff7171 2cm                 /* jusqu'en bas */
     );
     box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
     padding: 0 20px 10px 20px;
@@ -180,17 +180,37 @@ html {
     text-decoration: none;
     font-size: 1.2em;
 }
+.accueil-titre {
+    color: #fff !important;
+    font-size: 3em;
+    font-weight: bold;
+    text-shadow: 2px 2px 8px #000;
+    margin: 0 0 18px 0;
+    width: 100%;
+    text-align: center;
+    z-index: 2;
+}
+.accueil-slogan {
+    color: #fff !important;
+    font-size: 1.5em;
+    text-shadow: 1px 1px 6px #000;
+    margin-bottom: 24px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 8px;
+    padding: 8px 24px;
+    text-align: center;
+}
 .accueil-image-container {
     position: relative;
     width: 100vw;
+    height: 550px;
+    overflow: hidden;
     left: 50%;
     right: 50%;
     margin-left: -50vw;
     margin-right: -50vw;
     max-width: 100vw;
-    overflow: hidden;
     text-align: center;
-    min-height: 550px;
 }
 
 .accueil-image {
@@ -198,23 +218,37 @@ html {
     height: 550px;
     object-fit: cover;
     display: block;
-}
-
-.accueil-titre {
     position: absolute;
-    top: 18%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #fff;
-    font-size: 3em;
-    font-weight: bold;
-    text-shadow: 2px 2px 8px #000;
-    margin: 0;
-    width: 100%;
-    text-align: center;
-    z-index: 2;
+    top: 0;
+    left: 0;
+    z-index: 1;
 }
 
+.accueil-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.search-bar {
+    position: static;
+    margin-top: 18px;
+    z-index: 2;
+    min-width: 220px;
+    max-width: 600px;   /* ← augmente la largeur maximale */
+    width: 80vw;        /* ← augmente la largeur relative */
+    background: rgba(255,255,255,0.85);
+    border-radius: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    padding: 8px 16px;
+}
 .titre-section {
     color: #c2185b; /* même couleur que les liens */
     font-weight: bold;
@@ -231,22 +265,20 @@ html {
 }
 
 /* Agrandit la barre de recherche */
-.search-bar {
+..search-bar {
     position: absolute;
-    top: 50%;
+    top: 60%;
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
-    background:  rgba(255,255,255,0.85);
-    padding: 16px 32px;           /* plus de hauteur et largeur */
-    border-radius: 32px;          /* arrondi plus large */
+    background: rgba(255,255,255,0.85);
+    padding: 8px 16px;         /* réduit la hauteur et largeur */
+    border-radius: 24px;       /* arrondi plus petit */
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    min-width: 500px;             /* largeur minimale plus grande */
-    max-width: 800px;             /* largeur maximale plus grande */
-    width: 60vw;                  /* largeur relative plus grande */
-    z-index: 3;
+    min-width: 250px;          /* largeur minimale plus petite */
+    max-width: 400px;          /* largeur maximale plus petite */
+    width: 30vw;               /* largeur relative plus petite */
 }
-
 .search-bar input[type="text"] {
     border: none;
     outline: none;

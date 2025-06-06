@@ -155,5 +155,11 @@ mail = Mail(app)
 def apropos():
     return render_template('apropos.html')
 
+@app.route('/recherche', methods=['GET'])
+def recherche():
+    query = request.args.get('q', '')
+    # Ajoute ici le code pour traiter la recherche et afficher les résultats
+    return render_template('recherche.html', query=query)
+
 if __name__ == '__main__':
     app.run(debug=True)
