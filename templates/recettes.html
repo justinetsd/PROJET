@@ -7,13 +7,13 @@
         <a href="{{ url_for('hiver') }}">Hiver</a>
         <a href="{{ url_for('printemps') }}">Printemps</a>
     </div>
-    <ul>
-        {% for recipe in recipes %}
-            <li>
-                <a href="{{ url_for('recette', recette_id=recette.id) }}">
-                    {{ recipe.nom }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+   {% set noms_vus = [] %}
+{% for recette in recipes %}
+    {% if recette['Recette_id'] not in noms_vus %}
+        <div class="encadre-nom-recette">
+            {{ recette['Recette_id'] }}
+        </div>
+        {% set _ = noms_vus.append(recette['Recette_id']) %}
+    {% endif %}
+{% endfor %}
 {% endblock %}

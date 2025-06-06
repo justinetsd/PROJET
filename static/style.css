@@ -605,3 +605,13 @@ html {
     display: block;
     text-align: right;
 }
+.encadre-nom-recette {
+    background: #fff;
+    border: 2px solid #c2185b;
+    border-radius: 12px;
+    padding: 16px 32px;
+    font-size: 1.3em;
+    font-weight: bold;
+    display: inline-block;
+    margin: 20px 10px 10px 0;
+}
