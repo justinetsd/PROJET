@@ -51,37 +51,51 @@ def hashage(password, rand, salt):
     combined = f"{password}{rand}{salt}"
     return hashlib.sha256(combined.encode()).hexdigest()
 
-@app.route('/signin', methods=['GET', 'POST']) #route d'inscription
-def signin(db_name="BDD.db"):
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
+import random
 
-        conn = sqlite3.connect(db_name)
-        cur = conn.cursor()
+from flask import session
 
-        # Check if the username already exists
-        cur.execute("SELECT * FROM users WHERE username = ?", (username,))
-        if cur.fetchone():
+@app.route('/signin', methods=['GET', 'POST'])
+def signin():
+    error = None
+    success = None
+    if request.method == 'POST':
+        nom = request.form['LastName']
+        prenom = request.form['FirstName']
+        username = request.form['Username']
+        email = request.form['EmailAddress']
+        password = request.form['password']
+
+        conn = sqlite3.connect('BDD.db')
+        c = conn.cursor()
+
+        c.execute("SELECT * FROM Users WHERE Username=?", (username,))
+        if c.fetchone():
+            session['signin_error'] = "Cet identifiant est déjà utilisé."
             conn.close()
-            return render_template("signin.html", error="Username already exists")
+            return redirect(url_for('signin'))
+        else:
+            # Générer un user_id unique à 5 chiffres
+            while True:
+                user_id = str(random.randint(10000, 99999))
+                c.execute("SELECT * FROM Users WHERE user_id = ?", (user_id,))
+                if not c.fetchone():
+                    break
+            rand = os.urandom(16).hex()
+            salt = os.urandom(16).hex()
+            hashed_password = hashlib.sha256(password.encode()).hexdigest()
+            c.execute("INSERT INTO Users (User_id, Username, FirstName, LastName, EmailAddress, Salt, Random, Hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                      (user_id, username, prenom, nom, email, salt, rand, hashed_password))
+            conn.commit()
+            conn.close()
+            session['signin_success'] = "Inscription réussie ! Vous pouvez maintenant vous connecter."
+            return redirect(url_for('signin'))
 
-        # Generate random values for salt and rand
-        rand = os.urandom(16).hex()
-        salt = os.urandom(16).hex()
+    # Ici, on affiche la page en GET (après redirection)
+    error = session.pop('signin_error', None)
+    success = session.pop('signin_success', None)
+    return render_template('signin.html', error=error, success=success)
 
-        # Hash the password with the random values
-        hashed_password = hashage(password, rand, salt)
-
-        # Insert the new user into the database
-        cur.execute("INSERT INTO users (username, rand, salt, hash) VALUES (?, ?, ?, ?)",
-                    (username, rand, salt, hashed_password))
-        conn.commit()
-        conn.close()
-
-        return redirect("/login")
-
-    return render_template("signin.html")
 
 @app.route('/login', methods=['GET', 'POST']) #route de connexion
 def login():
