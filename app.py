@@ -18,6 +18,7 @@ mail = Mail(app)
 
 def get_recipes(): #recette
     conn = sqlite3.connect('BDD.db')
+    
     conn.row_factory = sqlite3.Row
     recipes = conn.execute('SELECT * FROM recettes').fetchall()
     conn.close()
@@ -33,6 +34,15 @@ def recettes():
     recipes = get_recipes()
     return render_template('recettes.html', recipes=recipes)
 #ce bout de code permet de récupérer l'une des recettes sur laquelle on a cliqué
+
+@app.route('/recettes/ete')
+def recettes_ete():
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    recipes = conn.execute("SELECT * FROM recettes WHERE saison = 'Été'").fetchall()
+    conn.close()
+    return render_template('ete.html', recipes=recipes)
+
 @app.route('/recette/<int:recipe_id>') #route d'une recette
 def recette(recipe_id):
     conn = sqlite3.connect('BDD.db')
@@ -154,6 +164,12 @@ mail = Mail(app)
 @app.route('/apropos')
 def apropos():
     return render_template('apropos.html')
+
+@app.route('/recherche', methods=['GET'])
+def recherche():
+    query = request.args.get('q', '')
+    # Ajoute ici le code pour traiter la recherche et afficher les résultats
+    return render_template('recherche.html', query=query)
 
 if __name__ == '__main__':
     app.run(debug=True)
