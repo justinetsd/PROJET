@@ -17,9 +17,14 @@
 
 <div class="bloc-recettes-avec-image">
     <div class="bloc-texte-recettes">
-        <h1 class="titre-section">Nos recettes</h1>
-        <div class="encadre-apropos align-droite">
+        <h1 class="titre-section centre-titre">Nos recettes</h1>
+        <div class="encadre-apropos">
             Venez découvrir nos recettes et le menu du jour conseillé..<br><br>
+        </div>
+        <div style="margin-top: 8px;">
+            <div class="encadre-recettes">
+                <a href="{{ url_for('recettes') }}" class="lien-apropos">Voir plus</a>
+            </div>
         </div>
     </div>
     <img src="{{ url_for('static', filename='imageacc.jpg') }}" alt="Recette" class="image-recette-droite">
@@ -27,14 +32,14 @@
 
 <br><br>
 
-<div class="apropos-layout">
-    <img src="{{ url_for('static', filename='enacppetit.png') }}" alt="Logo ENAC'ppetit" class="apropos-logo-grand">
-    <div class="apropos-colonne">
-        <h1 class="titre-section align-droite">Qui sommes-nous?</h1>
-        <div class="encadre-apropos align-droite">
+<div class="apropos-layout" style="display: flex; align-items: center; justify-content: center; gap: 60px; margin: 60px auto; max-width: 1100px;">
+    <img src="{{ url_for('static', filename='enacppetit - Copie.png') }}" alt="Logo ENAC'ppetit" class="apropos-logo-grand">
+    <div class="apropos-colonne" style="display: flex; flex-direction: column; align-items: flex-start; min-width: 320px; max-width: 500px;">
+        <h1 class="titre-section centre-titre" style="text-align: left; width: 100%; margin-bottom: 18px; margin-top: 0;">Qui sommes-nous?</h1>
+        <div class="encadre-apropos">
             Nous sommes des élèves de l’ENAC ayant eu l’idée de créer une application de recettes pour chaque saison, faciles à mettre en oeuvre et rapides.
         </div>
-        <div class="align-droite" style="margin-top: 8px;">
+        <div style="margin-top: 8px;">
             <div class="encadre-recettes">
                 <a href="{{ url_for('apropos') }}" class="lien-apropos">Notre histoire</a>
             </div>

@@ -514,18 +514,15 @@ html {
 }
 
 .apropos-logo-grand {
-    max-width: 320px;   /* image plus grande */
+    max-width: 320px;
     height: 320px;
     object-fit: contain;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
     background: none;
 }
 
-.encadre-apropos.align-droite {
-    margin-left: auto;
-    text-align: right;
-}
 
 .apropos-colonne {
     display: flex;
@@ -568,29 +565,41 @@ html {
 .bloc-recettes-avec-image {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: 40px; /* espace entre texte et image */
-    margin: 40px 0;
+    justify-content: center;      /* centre le bloc sur la page */
+    gap: 60px;                    /* espace entre texte et image */
+    margin: 60px auto;
+    max-width: 1100px;            /* limite la largeur totale */
 }
 
 .bloc-texte-recettes {
-    flex: 1;
-    min-width: 220px;
-    font-size: 1.15em;
-    margin-left: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;   /* aligne tout à gauche */
+    min-width: 320px;
+    max-width: 500px;
+    margin-left: 0;
+}
+
+.titre-section.centre-titre {
+    text-align: left;          /* titre aligné à gauche */
+    width: 100%;
+    margin-bottom: 18px;
+    margin-top: 0;
 }
 
 .image-recette-droite {
     max-width: 380px;
     height: 280px;
     object-fit: cover;
-    border-radius: 0;   /* Plus de coins arrondis */
-    margin-left: 100px;
-    margin-right: 0;
+    border-radius: 0;
+    margin: 0;
 }
 
 .encadre-apropos {
-    background: #fff8f2; /* blanc transparent */
+    text-align: left;             /* texte du cadre aligné à gauche */
+    margin: 0 auto;
+    width: 100%;
+    background: #fffdfc; /* blanc transparent */
     border: none;                     /* pas de bordure */
     border-radius: 12px;
     padding: 18px 28px;
@@ -598,15 +607,10 @@ html {
     font-size: 1.1em;
     font-weight: 500;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    margin: 18px 0 24px 0;
+    margin: 18px 10px 10px 0;
 }
 
-.align-droite {
-    margin-left: auto;
-    margin-right: 0;
-    display: block;
-    text-align: right;
-}
+
 .encadre-nom-recette {
     background: #fff;
     border: 2px solid #c2185b;
