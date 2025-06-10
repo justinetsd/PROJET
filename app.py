@@ -35,15 +35,13 @@ def recettes():
     return render_template('recettes.html', recipes=recipes)
 #ce bout de code permet de récupérer l'une des recettes sur laquelle on a cliqué
 
-@app.route('/recettes/ete')
-def recettes_ete():
 
 
 @app.route('/recette/<int:recipe_id>') #route d'une recette
 def recette(recipe_id):
     conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-    recipe = conn.execute('SELECT * FROM recettes WHERE id = ?', (recipe_id,)).fetchone()
+    recipe = conn.execute('SELECT * FROM recettes WHERE Recette_id = ?', (recipe_id,)).fetchone()
     conn.close()
     
     if recipe is None:
@@ -124,15 +122,31 @@ def ete():
 
 @app.route('/automne')
 def automne():
-    return render_template('automne.html')
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Automne' AND category = 'Plat'").fetchall()
+    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Automne' AND category = 'Dessert'").fetchall()
+    conn.close()
+    return render_template('automne.html', plats=plats, desserts=desserts)
 
 @app.route('/hiver')
 def hiver():
-    return render_template('hiver.html')
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Hiver' AND category = 'Plat'").fetchall()
+    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Hiver' AND category = 'Dessert'").fetchall()
+    conn.close()
+    return render_template('hiver.html', plats=plats, desserts=desserts)
 
 @app.route('/printemps')
 def printemps():
-    return render_template('printemps.html')
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Printemps' AND category = 'Plat'").fetchall()
+    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Printemps' AND category = 'Dessert'").fetchall()
+    conn.close()
+    return render_template('printemps.html', plats=plats, desserts=desserts)
+
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
