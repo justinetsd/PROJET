@@ -151,15 +151,33 @@ def ete():
 
 @app.route('/automne')
 def automne():
-    return render_template('automne.html')
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Automne' AND category = 'Plat'").fetchall()
+    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Automne' AND category = 'Dessert'").fetchall()
+    conn.close()
+    return render_template('automne.html', plats=plats, desserts=desserts)
+
 
 @app.route('/hiver')
 def hiver():
-    return render_template('hiver.html')
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Hiver' AND category = 'Plat'").fetchall()
+    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Hiver' AND category = 'Dessert'").fetchall()
+    conn.close()
+    return render_template('hiver.html', plats=plats, desserts=desserts)
+
 
 @app.route('/printemps')
 def printemps():
-    return render_template('printemps.html')
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Printemps' AND category = 'Plat'").fetchall()
+    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Printemps' AND category = 'Dessert'").fetchall()
+    conn.close()
+    return render_template('printemps.html', plats=plats, desserts=desserts)
+
 
 
 @app.route("/contact", methods=["GET", "POST"])
