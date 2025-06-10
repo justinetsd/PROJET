@@ -774,7 +774,7 @@ for idx, dessert in enumerate(desserts_printemps):
                     ingredient_ids[name] = new_id
                     break
             cursor.execute(
-                "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+                "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
                 (ingredient_ids[name], name, allergenes_printemps.get(name, 0))
             )
         id_ing = ingredient_ids[name]
@@ -1284,7 +1284,7 @@ for idx, plat in enumerate(plats_automne):
                     ingredient_ids[name] = new_id
                     break
             cursor.execute(
-                "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+                "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
                 (ingredient_ids[name], name, allergenes_automne_plats.get(name, 0))
             )
         id_ing = ingredient_ids[name]
@@ -1799,7 +1799,7 @@ for idx, plat in enumerate(plats_printemps):
                     ingredient_ids[name] = new_id
                     break
             cursor.execute(
-                "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+                "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
                 (ingredient_ids[name], name, allergenes_printemps_plats.get(name, 0))
             )
         id_ing = ingredient_ids[name]
