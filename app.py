@@ -36,14 +36,12 @@ def recettes():
 #ce bout de code permet de récupérer l'une des recettes sur laquelle on a cliqué
 
 
-
 @app.route('/recette/<int:recette_id>')
 def recette(recette_id):
     conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-    recipe = conn.execute('SELECT * FROM Recette WHERE Recette_id = ?', (recipe_id,)).fetchone()
-    conn.close()
-    
+    recipe = conn.execute('SELECT * FROM Recette WHERE Recette_id = ?', (recette_id,)).fetchone()
+
     if recipe is None:
         conn.close()
         return "Recette non trouvée", 404
@@ -56,12 +54,14 @@ def recette(recette_id):
     ).fetchall()
 
     steps = conn.execute(
-        "SELECT Num_step,Contenu FROM Steps WHERE Recette_id = ? ORDER BY Num_step",
+        "SELECT Num_step,Contenu FROM Step WHERE Recette_id = ? ORDER BY Num_step",
         (recette_id,)
     ).fetchall()
 
     conn.close()
     return render_template('Unerecette.html', recipe=recipe, equipements=equipements, steps=steps)
+
+
 def hashage(password, rand, salt):
     combined = f"{password}{rand}{salt}"
     return hashlib.sha256(combined.encode()).hexdigest()
