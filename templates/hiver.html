@@ -1,7 +1,32 @@
 {% extends "base.html" %}
 {% block title %}Accueil{% endblock %}
 {% block content %}
-<h1>hiver</h1>
-<!-- Ajoute ici le contenu spécifique à la page d'accueil -->
-{% endblock %}
+<h1>Plats d'hiver</h1>
 
+<div class="categories-links">
+    <a href="#plats">Plats</a>
+    <a href="#desserts">Desserts</a>
+</div>
+
+<h2 id="plats">Plats</h2>
+{% if plats %}
+    {% for plat in plats %}
+        <div class="encadre-nom-recette">
+            <a href="{{ url_for('recette', recipe_id=plat['Recette_id']) }}">{{ plat['Title'] }}</a>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>Aucun plat d'été trouvé.</p>
+{% endif %}
+
+<h2 id="desserts">Desserts</h2>
+{% if desserts %}
+    {% for dessert in desserts %}
+        <div class="encadre-nom-recette">
+            <a href="{{ url_for('recette', recipe_id=dessert['Recette_id']) }}">{{ dessert['Title'] }}</a>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>Aucun dessert d'hiver trouvé.</p>
+{% endif %}
+{% endblock %}
