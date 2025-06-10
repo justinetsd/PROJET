@@ -20,7 +20,7 @@ def get_recipes(): #recette
     conn = sqlite3.connect('BDD.db')
     
     conn.row_factory = sqlite3.Row
-    recipes = conn.execute('SELECT * FROM recettes').fetchall()
+    recipes = conn.execute('SELECT * FROM Recette').fetchall()
     conn.close()
     return recipes
 
@@ -41,7 +41,9 @@ def recettes():
 def recette(recette_id):
     conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-    recipe = conn.execute('SELECT * FROM recettes WHERE Recette_id = ?', (recette_id,)).fetchone()
+    recipe = conn.execute('SELECT * FROM Recette WHERE Recette_id = ?', (recipe_id,)).fetchone()
+    conn.close()
+    
     if recipe is None:
         conn.close()
         return "Recette non trouvée", 404
@@ -82,7 +84,7 @@ def signin():
         conn = sqlite3.connect('BDD.db')
         c = conn.cursor()
 
-        c.execute("SELECT * FROM Users WHERE Username=?", (username,))
+        c.execute("SELECT * FROM User WHERE Username=?", (username,))
         if c.fetchone():
             session['signin_error'] = "Cet identifiant est déjà utilisé."
             conn.close()
@@ -91,13 +93,13 @@ def signin():
             # Générer un user_id unique à 5 chiffres
             while True:
                 user_id = str(random.randint(10000, 99999))
-                c.execute("SELECT * FROM Users WHERE user_id = ?", (user_id,))
+                c.execute("SELECT * FROM User WHERE user_id = ?", (user_id,))
                 if not c.fetchone():
                     break
             rand = os.urandom(16).hex()
             salt = os.urandom(16).hex()
             hashed_password = hashlib.sha256(password.encode()).hexdigest()
-            c.execute("INSERT INTO Users (User_id, Username, FirstName, LastName, EmailAddress, Salt, Random, Hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            c.execute("INSERT INTO User (User_id, Username, FirstName, LastName, EmailAddress, Salt, Random, Hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                       (user_id, username, prenom, nom, email, salt, rand, hashed_password))
             conn.commit()
             conn.close()
@@ -119,7 +121,7 @@ def login():
         conn = sqlite3.connect("users.db")
         cur = conn.cursor()
 
-        cur.execute("SELECT rand, salt, hash FROM users WHERE username = ?", (username,))
+        cur.execute("SELECT rand, salt, hash FROM User WHERE username = ?", (username,))
         row = cur.fetchone()
         conn.close()
 
@@ -139,8 +141,8 @@ def login():
 def ete():
     conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Été' AND category = 'Plat'").fetchall()
-    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Été' AND category = 'Dessert'").fetchall()
+    plats = conn.execute("SELECT * FROM Recette WHERE saison = 'Été' AND category = 'Plat'").fetchall()
+    desserts = conn.execute("SELECT * FROM Recette WHERE saison = 'Été' AND category = 'Dessert'").fetchall()
     conn.close()
     return render_template('ete.html', plats=plats, desserts=desserts)
 
@@ -148,8 +150,8 @@ def ete():
 def automne():
     conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Automne' AND category = 'Plat'").fetchall()
-    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Automne' AND category = 'Dessert'").fetchall()
+    plats = conn.execute("SELECT * FROM Recette WHERE saison = 'Automne' AND category = 'Plat'").fetchall()
+    desserts = conn.execute("SELECT * FROM Recette WHERE saison = 'Automne' AND category = 'Dessert'").fetchall()
     conn.close()
     return render_template('automne.html', plats=plats, desserts=desserts)
 
@@ -157,8 +159,8 @@ def automne():
 def hiver():
     conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Hiver' AND category = 'Plat'").fetchall()
-    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Hiver' AND category = 'Dessert'").fetchall()
+    plats = conn.execute("SELECT * FROM Recette WHERE saison = 'Hiver' AND category = 'Plat'").fetchall()
+    desserts = conn.execute("SELECT * FROM Recette WHERE saison = 'Hiver' AND category = 'Dessert'").fetchall()
     conn.close()
     return render_template('hiver.html', plats=plats, desserts=desserts)
 
@@ -166,8 +168,8 @@ def hiver():
 def printemps():
     conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Printemps' AND category = 'Plat'").fetchall()
-    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Été' AND category = 'Dessert'").fetchall()
+    plats = conn.execute("SELECT * FROM Recette WHERE saison = 'Printemps' AND category = 'Plat'").fetchall()
+    desserts = conn.execute("SELECT * FROM Recette WHERE saison = 'Printemps' AND category = 'Dessert'").fetchall()
     conn.close()
     return render_template('printemps.html', plats=plats, desserts=desserts)
 
