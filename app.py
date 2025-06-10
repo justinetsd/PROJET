@@ -34,34 +34,20 @@ def recettes():
     recipes = get_recipes()
     return render_template('recettes.html', recipes=recipes)
 #ce bout de code permet de récupérer l'une des recettes sur laquelle on a cliqué
-@app.route('/recette/<int:recipe_id>')
+
+
+
+@app.route('/recette/<int:recipe_id>') #route d'une recette
 def recette(recipe_id):
     conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-
-    # Récupère la recette
-    recipe = conn.execute('SELECT * FROM Recettes WHERE Recette_id = ?', (recipe_id,)).fetchone()
-
-    # Récupère les étapes (steps)
-    steps = conn.execute('SELECT Num_step, Contenu FROM Steps WHERE Recette_id = ? ORDER BY Num_step', (recipe_id,)).fetchall()
-
-    # Récupère les équipements (Name)
-    equipements = conn.execute('SELECT Name FROM Equipment WHERE id_equipement IN (SELECT id_equipement FROM Recette_Equipment WHERE Recette_id = ?)', (recipe_id,)).fetchall()
-
+    recipe = conn.execute('SELECT * FROM recettes WHERE Recette_id = ?', (recipe_id,)).fetchone()
     conn.close()
-
-    if recipe is None:
-        return "recette not found", 404
-
-    return render_template(
-        'Unerecette.html',
-        recipe=recipe,
-        steps=steps,
-        equipements=equipements
-    )
     
-
-
+    if recipe is None:
+        return "recettes not found", 404
+    
+    return render_template('Unerecette.html', recipe=recipe)
 
 
 def hashage(password, rand, salt):
@@ -146,19 +132,35 @@ def ete():
     plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Été' AND category = 'Plat'").fetchall()
     desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Été' AND category = 'Dessert'").fetchall()
     conn.close()
-    return render_template('été.html', plats=plats, desserts=desserts)
+    return render_template('ete.html', plats=plats, desserts=desserts)
 
 @app.route('/automne')
 def automne():
-    return render_template('automne.html')
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Automne' AND category = 'Plat'").fetchall()
+    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Automne' AND category = 'Dessert'").fetchall()
+    conn.close()
+    return render_template('automne.html', plats=plats, desserts=desserts)
 
 @app.route('/hiver')
 def hiver():
-    return render_template('hiver.html')
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Hiver' AND category = 'Plat'").fetchall()
+    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Hiver' AND category = 'Dessert'").fetchall()
+    conn.close()
+    return render_template('hiver.html', plats=plats, desserts=desserts)
 
 @app.route('/printemps')
 def printemps():
-    return render_template('printemps.html')
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Printemps' AND category = 'Plat'").fetchall()
+    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Printemps' AND category = 'Dessert'").fetchall()
+    conn.close()
+    return render_template('printemps.html', plats=plats, desserts=desserts)
+
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
