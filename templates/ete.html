@@ -12,7 +12,7 @@
 {% if plats %}
     {% for plat in plats %}
         <div class="encadre-nom-recette">
-            <a href="{{ url_for('recette', recipe_id=plat['Recette_id']) }}">{{ plat['Title'] }}</a>
+            <a href="{{ url_for('recette', recette_id=plat['Recette_id']) }}">{{ plat['Title'] }}</a>
         </div>
     {% endfor %}
 {% else %}
@@ -23,7 +23,7 @@
 {% if desserts %}
     {% for dessert in desserts %}
         <div class="encadre-nom-recette">
-            <a href="{{ url_for('recette', recipe_id=dessert['Recette_id']) }}">{{ dessert['Title'] }}</a>
+            <a href="{{ url_for('recette', recette_id=dessert['Recette_id']) }}">{{ dessert['Title'] }}</a>
         </div>
     {% endfor %}
 {% else %}

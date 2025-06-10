@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>{{ recipe['title'] }}</h1>
-    <p><strong>Temps de préparation :</strong> {{ recipe['Preptime'] }}</p>
-    <p><strong>Temps de cuisson :</strong> {{ recipe['Cooktime'] }}</p>
-    <p><strong>Catégorie :</strong> {{ recipe['Categorie'] }}</p>
+    <p><strong>Préparation :</strong> {{ recipe['Preptime'] }}</p>
+    <p><strong>Cuisson :</strong> {{ recipe['Cooktime'] }}</p>
+    <p><strong>Catégorie :</strong> {{ recipe['category'] }}</p>
     <p><strong>Description :</strong> {{ recipe['description'] }}</p>
 
     <h2>Équipements nécessaires</h2>
@@ -12,13 +12,13 @@
             <li>{{ eq['Name'] }}</li>
         {% endfor %}
     </ul>
-
     <h2>Étapes</h2>
-    <ol>
-        {% for step in steps %}
-            <li>
-                <strong>Étape {{ step['Num_step'] }} :</strong> {{ step['Contenu'] }}
-            </li>
-        {% endfor %}
-    </ol>
+<ol>
+    {% for step in steps %}
+        <li>
+            <strong>Étape {{ step['Num_step'] }} :</strong><br>
+            {{ step['Contenu'] }}
+        </li>
+    {% endfor %}
+</ol>
 {% endblock %}
