@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Inscription{% endblock %}
+{% block content %}
+{% if success %}
+    <p style="color:green; margin-top:10px;">{{ success }}</p>
+{% endif %}
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; margin-bottom: 120px;">
+    <h2 style="text-align: center; font-size: 2em; margin-bottom: 30px;">Inscription</h2>
+    <form method="post" style="display: flex; flex-direction: column; align-items: stretch; min-width: 300px;">
+        <label for="LastName" style="margin-bottom: 4px; text-align: left;">Nom :</label>
+        <input type="text" name="LastName" id="LastName" required style="margin-bottom: 16px; padding: 8px; width: 100%; border-radius: 5px; border: 1px solid #ccc;">
+        <label for="FirstName" style="margin-bottom: 4px; text-align: left;">Prénom :</label>
+        <input type="text" name="FirstName" id="FirstName" required style="margin-bottom: 16px; padding: 8px; width: 100%; border-radius: 5px; border: 1px solid #ccc;">
+        <label for="Username" style="margin-bottom: 4px; text-align: left;">Identifiant :</label>
+        <input type="text" name="Username" id="Username" required style="margin-bottom: 4px; padding: 8px; width: 100%; border-radius: 5px; border: 1px solid #ccc;">
+        {% if error %}
+            <p id="username-error" style="color:red; margin: 2px 0 12px 0; font-size: 0.95em;">{{ error }}</p>
+        {% else %}
+            <div style="margin-bottom: 12px;"></div>
+        {% endif %}
+        <label for="EmailAddress" style="margin-bottom: 4px; text-align: left;">Email :</label>
+        <input type="email" name="EmailAddress" id="EmailAddress" required style="margin-bottom: 16px; padding: 8px; width: 100%; border-radius: 5px; border: 1px solid #ccc;">
+        <label for="password" style="margin-bottom: 4px; text-align: left;">Mot de passe :</label>
+        <input type="password" name="password" id="password" required style="margin-bottom: 20px; padding: 8px; width: 100%; border-radius: 5px; border: 1px solid #ccc;">
+        <button type="submit" style="background: #c2185b; color: white; border: none; border-radius: 5px; padding: 10px 30px; font-weight: bold; cursor: pointer;">S'inscrire</button>
+    </form>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const errorMsg = document.getElementById('username-error');
+    const usernameInput = document.getElementById('Username');
+    if (usernameInput && errorMsg) {
+        usernameInput.addEventListener('input', function() {
+            errorMsg.style.display = 'none';
+        });
+        usernameInput.addEventListener('focus', function() {
+            errorMsg.style.display = 'none';
+        });
+    }
+});
+</script>
+{% endblock %}
