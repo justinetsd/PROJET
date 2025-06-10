@@ -3,7 +3,6 @@ import hashlib
 import os
 import sqlite3
 from flask_mail import Mail, Message
-from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = "votre_cle_secrete"
@@ -35,85 +34,59 @@ def recettes():
     recipes = get_recipes()
     return render_template('recettes.html', recipes=recipes)
 #ce bout de code permet de récupérer l'une des recettes sur laquelle on a cliqué
-@app.route('/recette/<int:recipe_id>')
+
+@app.route('/recettes/ete')
+def recettes_ete():
+
+
+@app.route('/recette/<int:recipe_id>') #route d'une recette
 def recette(recipe_id):
     conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-
-    # Récupère la recette
-    recipe = conn.execute('SELECT * FROM Recettes WHERE Recette_id = ?', (recipe_id,)).fetchone()
-
-    # Récupère les étapes (steps)
-    steps = conn.execute('SELECT Num_step, Contenu FROM Steps WHERE Recette_id = ? ORDER BY Num_step', (recipe_id,)).fetchall()
-
-    # Récupère les équipements (Name)
-    equipements = conn.execute('SELECT Name FROM Equipment WHERE id_equipement IN (SELECT id_equipement FROM Recette_Equipment WHERE Recette_id = ?)', (recipe_id,)).fetchall()
-
+    recipe = conn.execute('SELECT * FROM recettes WHERE id = ?', (recipe_id,)).fetchone()
     conn.close()
-
-    if recipe is None:
-        return "recette not found", 404
-
-    return render_template(
-        'Unerecette.html',
-        recipe=recipe,
-        steps=steps,
-        equipements=equipements
-    )
     
-
-
+    if recipe is None:
+        return "recettes not found", 404
+    
+    return render_template('Unerecette.html', recipe=recipe)
 
 
 def hashage(password, rand, salt):
     combined = f"{password}{rand}{salt}"
     return hashlib.sha256(combined.encode()).hexdigest()
 
-import random
+@app.route('/signin', methods=['GET', 'POST']) #route d'inscription
+def signin(db_name="BDD.db"):
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
 
-from flask import session
+        conn = sqlite3.connect(db_name)
+        cur = conn.cursor()
 
-@app.route('/signin', methods=['GET', 'POST'])
-def signin():
-    error = None
-    success = None
-    if request.method == 'POST':
-        nom = request.form['LastName']
-        prenom = request.form['FirstName']
-        username = request.form['Username']
-        email = request.form['EmailAddress']
-        password = request.form['password']
-
-        conn = sqlite3.connect('BDD.db')
-        c = conn.cursor()
-
-        c.execute("SELECT * FROM Users WHERE Username=?", (username,))
-        if c.fetchone():
-            session['signin_error'] = "Cet identifiant est déjà utilisé."
+        # Check if the username already exists
+        cur.execute("SELECT * FROM users WHERE username = ?", (username,))
+        if cur.fetchone():
             conn.close()
-            return redirect(url_for('signin'))
-        else:
-            # Générer un user_id unique à 5 chiffres
-            while True:
-                user_id = str(random.randint(10000, 99999))
-                c.execute("SELECT * FROM Users WHERE user_id = ?", (user_id,))
-                if not c.fetchone():
-                    break
-            rand = os.urandom(16).hex()
-            salt = os.urandom(16).hex()
-            hashed_password = hashlib.sha256(password.encode()).hexdigest()
-            c.execute("INSERT INTO Users (User_id, Username, FirstName, LastName, EmailAddress, Salt, Random, Hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                      (user_id, username, prenom, nom, email, salt, rand, hashed_password))
-            conn.commit()
-            conn.close()
-            session['signin_success'] = "Inscription réussie ! Vous pouvez maintenant vous connecter."
-            return redirect(url_for('signin'))
+            return render_template("signin.html", error="Username already exists")
 
-    # Ici, on affiche la page en GET (après redirection)
-    error = session.pop('signin_error', None)
-    success = session.pop('signin_success', None)
-    return render_template('signin.html', error=error, success=success)
+        # Generate random values for salt and rand
+        rand = os.urandom(16).hex()
+        salt = os.urandom(16).hex()
 
+        # Hash the password with the random values
+        hashed_password = hashage(password, rand, salt)
+
+        # Insert the new user into the database
+        cur.execute("INSERT INTO users (username, rand, salt, hash) VALUES (?, ?, ?, ?)",
+                    (username, rand, salt, hashed_password))
+        conn.commit()
+        conn.close()
+
+        return redirect("/login")
+
+    return render_template("signin.html")
 
 @app.route('/login', methods=['GET', 'POST']) #route de connexion
 def login():
@@ -147,59 +120,25 @@ def ete():
     plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Été' AND category = 'Plat'").fetchall()
     desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Été' AND category = 'Dessert'").fetchall()
     conn.close()
-    return render_template('été.html', plats=plats, desserts=desserts)
+    return render_template('ete.html', plats=plats, desserts=desserts)
 
 @app.route('/automne')
 def automne():
-    conn = sqlite3.connect('BDD.db')
-    conn.row_factory = sqlite3.Row
-    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Automne' AND category = 'Plat'").fetchall()
-    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Automne' AND category = 'Dessert'").fetchall()
-    conn.close()
-    return render_template('automne.html', plats=plats, desserts=desserts)
-
+    return render_template('automne.html')
 
 @app.route('/hiver')
 def hiver():
-    conn = sqlite3.connect('BDD.db')
-    conn.row_factory = sqlite3.Row
-    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Hiver' AND category = 'Plat'").fetchall()
-    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Hiver' AND category = 'Dessert'").fetchall()
-    conn.close()
-    return render_template('hiver.html', plats=plats, desserts=desserts)
-
+    return render_template('hiver.html')
 
 @app.route('/printemps')
 def printemps():
-    conn = sqlite3.connect('BDD.db')
-    conn.row_factory = sqlite3.Row
-    plats = conn.execute("SELECT * FROM recettes WHERE saison = 'Printemps' AND category = 'Plat'").fetchall()
-    desserts = conn.execute("SELECT * FROM recettes WHERE saison = 'Printemps' AND category = 'Dessert'").fetchall()
-    conn.close()
-    return render_template('printemps.html', plats=plats, desserts=desserts)
-
-
-
+    return render_template('printemps.html')
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
         email = request.form["email"]
         objet = request.form["objet"]
         message = request.form["message"]
-        image = request.files.get("image")
-
-        # Si une image est envoyée, on vérifie format et taille
-        if image and image.filename:
-            filename = secure_filename(image.filename)
-            if not (filename.lower().endswith(('.jpg', '.jpeg', '.png'))):
-                flash("Format d'image non supporté. Utilisez JPG ou PNG.")
-                return redirect(url_for("contact"))
-            image.seek(0, 2)
-            size = image.tell()
-            image.seek(0)
-            if size > 2 * 1024 * 1024:
-                flash("Image trop lourde (max 2 Mo).")
-                return redirect(url_for("contact"))
 
         msg = Message(
             subject=f"Contact ENAC'ppetit : {objet}",
@@ -207,12 +146,11 @@ def contact():
             recipients=["enacppetit@gmail.com"],
             body=f"Adresse mail de l'expéditeur : {email}\n\nObjet : {objet}\n\nMessage :\n{message}"
         )
-        if image and image.filename:
-            msg.attach(filename, image.mimetype, image.read())
         mail.send(msg)
         flash("Votre message a bien été envoyé, merci !")
         return redirect(url_for("contact"))
     return render_template("contact.html")
+
 
 # Configuration Flask-Mail (exemple avec Gmail)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -230,24 +168,9 @@ def apropos():
 @app.route('/recherche', methods=['GET'])
 def recherche():
     query = request.args.get('q', '')
-    recettes = []
-    if query:
-        # Sépare les ingrédients par espace ou virgule
-        ingredients = [i.strip() for i in query.replace(',', ' ').split() if i.strip()]
-        if ingredients:
-            conn = sqlite3.connect('BDD.db')
-            conn.row_factory = sqlite3.Row
-            # Jointure entre Recettes et Ingrédients
-            sql = f"""
-                SELECT DISTINCT r.*
-                FROM Recettes r
-                JOIN Ingredients i ON r.Recette_id = i.Recette_id
-                WHERE {" OR ".join(["i.Name LIKE ?"] * len(ingredients))}
-            """
-            params = [f"%{ing}%" for ing in ingredients]
-            recettes = conn.execute(sql, params).fetchall()
-            conn.close()
-    return render_template('recherche.html', recettes=recettes, query=query)
+    # Ajoute ici le code pour traiter la recherche et afficher les résultats
+    return render_template('recherche.html', query=query)
+
 if __name__ == '__main__':
     app.run(debug=True)
 
