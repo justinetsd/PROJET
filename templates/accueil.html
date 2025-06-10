@@ -2,7 +2,7 @@
 {% block title %}Accueil{% endblock %}
 {% block content %}
 <div class="accueil-image-container">
-    <img src="{{ url_for('static', filename='imageacc.jpg') }}" alt="Image d'accueil" class="accueil-image">
+    <img src="{{ url_for('static', filename='pleinrepas.jpg') }}" alt="Image d'accueil" class="accueil-image">
     <div class="accueil-overlay">
         <h1 class="accueil-titre">Bienvenue sur ENAC'ppétit !</h1>
         <div class="accueil-slogan">
@@ -16,21 +16,15 @@
 </div>
 
 <div class="bloc-recettes-avec-image">
-    <div>
+    <div class="bloc-texte-recettes">
         <h1 class="titre-section">Nos recettes</h1>
-       <div class="encadre-apropos align-droite">
-    Venez découvrir nos recettes et le menu du jour conseillé..<br><br>
-    </div>
-
-        
-        <div class="encadre-recettes">
-            <a href="{{ url_for('recettes') }}" class="lien-recettes">Voir toutes les recettes</a>
+        <div class="encadre-apropos align-droite">
+            Venez découvrir nos recettes et le menu du jour conseillé..<br><br>
         </div>
     </div>
-    <img src="{{ url_for('static', filename='imageacc.jpg') }}" 
-         alt="Description de l'image"
-         class="image-recette-droite">
+    <img src="{{ url_for('static', filename='imageacc.jpg') }}" alt="Recette" class="image-recette-droite">
 </div>
+
 <br><br>
 
 <div class="apropos-layout">

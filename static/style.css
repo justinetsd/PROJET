@@ -214,6 +214,7 @@ html {
 }
 
 .accueil-image {
+
     width: 100vw;
     height: 550px;
     object-fit: cover;
@@ -576,14 +577,15 @@ html {
     flex: 1;
     min-width: 220px;
     font-size: 1.15em;
+    margin-left: 60px;
 }
 
 .image-recette-droite {
-    max-width: 380px;      /* un peu plus grande */
-    height: 280px;         /* un peu plus grande */
+    max-width: 380px;
+    height: 280px;
     object-fit: cover;
-    border-radius: 16px;
-    margin-left: 100px;     /* à peine décalée sur la droite */
+    border-radius: 0;   /* Plus de coins arrondis */
+    margin-left: 100px;
     margin-right: 0;
 }
 
