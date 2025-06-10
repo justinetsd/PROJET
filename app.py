@@ -3,6 +3,7 @@ import hashlib
 import os
 import sqlite3
 from flask_mail import Mail, Message
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = "votre_cle_secrete"
@@ -159,12 +160,28 @@ def hiver():
 @app.route('/printemps')
 def printemps():
     return render_template('printemps.html')
+
+
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
         email = request.form["email"]
         objet = request.form["objet"]
         message = request.form["message"]
+        image = request.files.get("image")
+
+        # Si une image est envoyée, on vérifie format et taille
+        if image and image.filename:
+            filename = secure_filename(image.filename)
+            if not (filename.lower().endswith(('.jpg', '.jpeg', '.png'))):
+                flash("Format d'image non supporté. Utilisez JPG ou PNG.")
+                return redirect(url_for("contact"))
+            image.seek(0, 2)
+            size = image.tell()
+            image.seek(0)
+            if size > 2 * 1024 * 1024:
+                flash("Image trop lourde (max 2 Mo).")
+                return redirect(url_for("contact"))
 
         msg = Message(
             subject=f"Contact ENAC'ppetit : {objet}",
@@ -172,11 +189,12 @@ def contact():
             recipients=["enacppetit@gmail.com"],
             body=f"Adresse mail de l'expéditeur : {email}\n\nObjet : {objet}\n\nMessage :\n{message}"
         )
+        if image and image.filename:
+            msg.attach(filename, image.mimetype, image.read())
         mail.send(msg)
         flash("Votre message a bien été envoyé, merci !")
         return redirect(url_for("contact"))
     return render_template("contact.html")
-
 
 # Configuration Flask-Mail (exemple avec Gmail)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
