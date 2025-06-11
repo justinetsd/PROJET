@@ -208,8 +208,28 @@ def apropos():
 @app.route('/recherche', methods=['GET'])
 def recherche():
     query = request.args.get('q', '')
-    # Ajoute ici le code pour traiter la recherche et afficher les résultats
-    return render_template('recherche.html', query=query)
+    recettes = []
+    if query:
+        ingredients = [i.strip() for i in query.replace(',', ' ').split() if i.strip()]
+        conn = sqlite3.connect('BDD.db')
+        conn.row_factory = sqlite3.Row
+        where = ["r.Title LIKE ?"]
+        params = [f"%{query}%"]
+        if ingredients:
+            where += ["i.Name LIKE ?"] * len(ingredients)
+            params += [f"%{ing}%" for ing in ingredients]
+        sql = f"""
+            SELECT DISTINCT r.*
+            FROM Recette r
+            LEFT JOIN Quantity q ON r.Recette_id = q.Recette_id
+            LEFT JOIN Ingredient i ON q.Id_ingredient = i.Id_ingredient
+            WHERE {' OR '.join(where)}
+            ORDER BY CASE WHEN r.Title LIKE ? THEN 1 ELSE 2 END, r.Title
+        """
+        params.append(f"%{query}%")
+        recettes = conn.execute(sql, params).fetchall()
+        conn.close()
+    return render_template('recherche.html', recettes=recettes, query=query)
 
 if __name__ == '__main__':
     app.run(debug=True)
