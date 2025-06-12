@@ -165,7 +165,8 @@ desserts = [
             "Mettre les fruits, le yaourt et le sucre dans le mixeur.",
             "Mixer jusqu'à consistance lisse.",
             "Verser dans des verres et servir frais."
-        ]
+        ],
+        "image": "Smoothie pêche abricot.jpg"
     },
     {
         "title": "Pastèque glacée",
