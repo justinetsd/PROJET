@@ -98,7 +98,7 @@ def signin():
                     break
             rand = os.urandom(16).hex()
             salt = os.urandom(16).hex()
-            hashed_password = hashlib.sha256(password.encode()).hexdigest()
+            hashed_password = hashage(password, rand, salt)
             c.execute("INSERT INTO User (User_id, Username, FirstName, LastName, EmailAddress, Salt, Random, Hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                       (user_id, username, prenom, nom, email, salt, rand, hashed_password))
             conn.commit()
@@ -118,10 +118,10 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        conn = sqlite3.connect("users.db")
+        conn = sqlite3.connect("BDD.db")
         cur = conn.cursor()
 
-        cur.execute("SELECT rand, salt, hash FROM User WHERE username = ?", (username,))
+        cur.execute("SELECT Random, Salt, Hash FROM User WHERE username = ?", (username,))
         row = cur.fetchone()
         conn.close()
 
