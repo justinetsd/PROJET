@@ -20,8 +20,11 @@
         {% endif %}
         <label for="EmailAddress" style="margin-bottom: 4px; text-align: left;">Email :</label>
         <input type="email" name="EmailAddress" id="EmailAddress" required style="margin-bottom: 16px; padding: 8px; width: 100%; border-radius: 5px; border: 1px solid #ccc;">
-        <label for="password" style="margin-bottom: 4px; text-align: left;">Mot de passe :</label>
-        <input type="password" name="password" id="password" required style="margin-bottom: 20px; padding: 8px; width: 100%; border-radius: 5px; border: 1px solid #ccc;">
+        <label for="password" style="margin-bottom: 8px;">Mot de passe :</label>
+        <div style="position: relative; width: 300px;">
+            <input type="password" name="password" id="password" required style="margin-bottom: 20px; padding: 8px 36px 8px 8px; width: 100%; border-radius: 5px; border: 1px solid #ccc;">
+            <span id="toggle-password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; display: none; font-size: 1.2em;">👁️</span>
+        </div>
         <button type="submit" style="background: #c2185b; color: white; border: none; border-radius: 5px; padding: 10px 30px; font-weight: bold; cursor: pointer;">S'inscrire</button>
     </form>
 </div>

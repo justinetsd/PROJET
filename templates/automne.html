@@ -4,15 +4,15 @@
 <h1>Automne</h1>
 
 <div class="categories-links">
-    <a href="#plats">Plats</a>
-    <a href="#desserts">Desserts</a>
+    <a href="#plats" class="lien-recettes">Plats</a>
+    <a href="#desserts" class="lien-recettes">Desserts</a>
 </div>
 
 <h2 id="plats">Plats</h2>
 {% if plats %}
     {% for plat in plats %}
         <div class="encadre-nom-recette">
-            <a href="{{ url_for('recette', recette_id=plat['Recette_id']) }}">{{ plat['Title'] }}</a>
+            <a href="{{ url_for('recette', recette_id=plat['Recette_id']) }}" class="lien-recettes">{{ plat['Title'] }}</a>
         </div>
     {% endfor %}
 {% else %}
@@ -23,7 +23,7 @@
 {% if desserts %}
     {% for dessert in desserts %}
         <div class="encadre-nom-recette">
-            <a href="{{ url_for('recette', recette_id=dessert['Recette_id']) }}">{{ dessert['Title'] }}</a>
+            <a href="{{ url_for('recette', recette_id=dessert['Recette_id']) }}" class="lien-recettes">{{ dessert['Title'] }}</a>
         </div>
     {% endfor %}
 {% else %}

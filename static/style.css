@@ -640,3 +640,31 @@ html {
 .categories-links a:hover {
     background: #f0f0f0;
 }
+
+.page-legal {
+    font-family: Arial, sans-serif;
+    line-height: 1.7;
+    padding: 40px;
+    max-width: 900px;
+    margin: 40px auto 60px auto;
+    background: #f9f9f9;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.page-legal h1, .page-legal h2 {
+    color: #2c3e50;
+}
+.page-legal h1 {
+    font-size: 2em;
+    border-bottom: 2px solid #2c3e50;
+    padding-bottom: 0.3em;
+}
+.page-legal h2 {
+    margin-top: 1.5em;
+}
+.page-legal p {
+    margin: 0.5em 0;
+}
+.page-legal ul {
+    margin-left: 1.5em;
+}
