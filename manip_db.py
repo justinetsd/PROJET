@@ -82,15 +82,7 @@ CREATE TABLE Recette_Favori (
     FOREIGN KEY (User_id) REFERENCES User(User_id),
     FOREIGN KEY (Recette_id) REFERENCES Recette(Recette_id)
 );
-            
-CREATE TABLE Recette_Ingredient (
-    Recette_id INTEGER,
-    Id_ingredient INTEGER,
-    PRIMARY KEY (Recette_id, Id_ingredient),
-    FOREIGN KEY (Recette_id) REFERENCES Recette(Recette_id),
-    FOREIGN KEY (Id_ingredient) REFERENCES Ingredient(Id_ingredient)
-);
-                     
+                              
 CREATE TABLE Recette_Equipment (
     Recette_id INTEGER,
     Id_equipement INTEGER,
