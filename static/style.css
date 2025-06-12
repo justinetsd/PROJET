@@ -668,3 +668,21 @@ html {
 .page-legal ul {
     margin-left: 1.5em;
 }
+
+.etoiles-notation {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+}
+.etoiles-notation input[type="radio"] {
+    display: none;
+}
+.etoiles-notation label {
+    color: #ccc;
+    font-size: 2em;
+    cursor: pointer;
+}
+.etoiles-notation input[type="radio"]:checked ~ label,
+.etoiles-notation label:hover,
+.etoiles-notation label:hover ~ label {
+    color: gold;
+}

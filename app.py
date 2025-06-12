@@ -143,7 +143,7 @@ def login():
             computed_hash = hashage(password, rand, salt)
 
             if computed_hash == stored_hash:
-                session["username"] = username
+                session["user"] = username
                 return redirect("/")
         
         return render_template("login.html", error="Invalid credentials")
@@ -243,6 +243,20 @@ def recherche():
         recettes = conn.execute(sql, params).fetchall()
         conn.close()
     return render_template('recherche.html', recettes=recettes, query=query)
+
+@app.route('/noter_recette/<int:recette_id>', methods=['POST'])
+def noter_recette(recette_id):
+    if "user" not in session:
+        return redirect(url_for('login'))
+    note = int(request.form.get('note', 0))
+    user = session["user"]
+    conn = sqlite3.connect('BDD.db')
+    # À adapter selon ta table de notes (exemple: Recette_Note avec Recette_id, user, note)
+    conn.execute("INSERT INTO Recette_Note (Recette_id, user, note) VALUES (?, ?, ?)", (recette_id, user, note))
+    conn.commit()
+    conn.close()
+    flash("Merci pour votre note !")
+    return redirect(url_for('recette', recette_id=recette_id))
 
 if __name__ == '__main__':
     app.run(debug=True)

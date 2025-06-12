@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>{{ recipe['title'] }}</h1>
+    {% if session.user %}
+<form action="{{ url_for('noter_recette', recette_id=recipe['Recette_id']) }}" method="post" class="etoiles-notation">
+    {% for i in range(5, 0, -1) %}
+        <input type="radio" id="star{{ i }}" name="note" value="{{ i }}">
+        <label for="star{{ i }}">&#9733;</label>
+    {% endfor %}
+    <button type="submit">Noter</button>
+</form>
+{% endif %}
     <p><strong>Préparation :</strong> {{ recipe['Preptime'] }}</p>
     <p><strong>Cuisson :</strong> {{ recipe['Cooktime'] }}</p>
     <p><strong>Catégorie :</strong> {{ recipe['category'] }}</p>
@@ -21,4 +30,5 @@
         </li>
     {% endfor %}
 </ol>
+
 {% endblock %}
