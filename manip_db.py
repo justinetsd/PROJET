@@ -26,7 +26,7 @@ CREATE TABLE Users (
     Hash TEXT
 );
 
-CREATE TABLE Recettes (
+CREATE TABLE Recette (
     Recette_id INTEGER PRIMARY KEY,
     Title TEXT,
     Preptime INTEGER,
@@ -161,7 +161,7 @@ desserts = [
             "Servir frais."
         
         ],
-        "image": "Salade fraises menthe.jpg"
+        "image": "Salade de fraises menthe.jpg"
     },
     {
         "title": "Smoothie pêche-abricot",
