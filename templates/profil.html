@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Profil{% endblock %}
+{% block content %}
+<div style="max-width:400px; margin:40px auto; background:#fff; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.06); padding:32px;">
+    <h2 style="color:#c2185b;">Mon profil</h2>
+    <p><strong>Identifiant :</strong> {{ username }}</p>
+    <p><strong>Prénom :</strong> {{ firstname }}</p>
+    <p><strong>Nom :</strong> {{ lastname }}</p>
+</div>
+{% endblock %}
