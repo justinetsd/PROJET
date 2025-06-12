@@ -252,7 +252,7 @@ def noter_recette(recette_id):
     user = session["user"]
     conn = sqlite3.connect('BDD.db')
     # À adapter selon ta table de notes (exemple: Recette_Note avec Recette_id, user, note)
-    conn.execute("INSERT INTO Recette_Note (Recette_id, user, note) VALUES (?, ?, ?)", (recette_id, user, note))
+    conn.execute("INSERT INTO Rating (Recette_id, Id-user, Rating) VALUES (?, ?, ?)", (recette_id, Id_user, Rating))
     conn.commit()
     conn.close()
     flash("Merci pour votre note !")
@@ -265,7 +265,20 @@ def politique():
 @app.route('/conditions')
 def conditions():
     return render_template('conditions.html')
-
+@app.route('/ajouter_favori/<int:recette_id>', methods=['POST'])
+def ajouter_favori(recette_id):
+    if "user" not in session:
+        return redirect(url_for('login'))
+    username = session["user"]
+    conn = sqlite3.connect('BDD.db')
+    cur = conn.cursor()
+    user_id = cur.execute("SELECT User_id FROM User WHERE Username = ?", (username,)).fetchone()
+    if user_id:
+        user_id = user_id[0]
+        cur.execute("INSERT OR IGNORE INTO Recette_Favori (User_id, Recette_id) VALUES (?, ?)", (user_id, recette_id))
+        conn.commit()
+    conn.close()
+    return redirect(url_for('recette', recette_id=recette_id))
 
 if __name__ == '__main__':
     app.run(debug=True)
