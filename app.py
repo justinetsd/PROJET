@@ -231,6 +231,7 @@ def recherche():
         conn.close()
     return render_template('recherche.html', recettes=recettes, query=query)
 
+
 if __name__ == '__main__':
     app.run(debug=True)
 
