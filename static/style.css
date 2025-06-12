@@ -596,7 +596,7 @@ html {
 }
 
 .encadre-apropos {
-    text-align: left;             /* texte du cadre aligné à gauche */
+    text-align: justify;             /* texte du cadre aligné à gauche */
     margin: 0 auto;
     width: 100%;
     background: #fffdfc; /* blanc transparent */
