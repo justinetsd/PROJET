@@ -4,7 +4,7 @@
     {% if recettes %}
         {% for recette in recettes %}
             <div class="encadre-nom-recette">
-                <a href="{{ url_for('recette', recette_id=recette['Recette_id']) }}">
+                <a href="{{ url_for('recette', recette_id=recette['Recette_id']) }}"class="lien-recettes">
                     {{ recette['title'] }}
                 </a>
             </div>
