@@ -79,8 +79,16 @@ CREATE TABLE Rating (
 CREATE TABLE Recette_Favoris (
     User_id INTEGER,
     Recette_id INTEGER,
-    FOREIGN KEY (User_id) REFERENCES Users(User_id),
-    FOREIGN KEY (Recette_id) REFERENCES Recettes(Recette_id)
+    FOREIGN KEY (User_id) REFERENCES User(User_id),
+    FOREIGN KEY (Recette_id) REFERENCES Recette(Recette_id)
+);
+            
+CREATE TABLE Recette_Ingredient (
+    Recette_id INTEGER,
+    Id_ingredient INTEGER,
+    PRIMARY KEY (Recette_id, Id_ingredient),
+    FOREIGN KEY (Recette_id) REFERENCES Recette(Recette_id),
+    FOREIGN KEY (Id_ingredient) REFERENCES Ingredient(Id_ingredient)
 );
                      
 CREATE TABLE Recette_Equipment (

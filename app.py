@@ -36,14 +36,12 @@ def recettes():
 #ce bout de code permet de récupérer l'une des recettes sur laquelle on a cliqué
 
 
-
 @app.route('/recette/<int:recette_id>')
 def recette(recette_id):
     conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
-    recipe = conn.execute('SELECT * FROM Recette WHERE Recette_id = ?', (recipe_id,)).fetchone()
-    conn.close()
-    
+    recipe = conn.execute('SELECT * FROM Recette WHERE Recette_id = ?', (recette_id,)).fetchone()
+
     if recipe is None:
         conn.close()
         return "Recette non trouvée", 404
@@ -56,12 +54,14 @@ def recette(recette_id):
     ).fetchall()
 
     steps = conn.execute(
-        "SELECT Num_step,Contenu FROM Steps WHERE Recette_id = ? ORDER BY Num_step",
+        "SELECT Num_step,Contenu FROM Step WHERE Recette_id = ? ORDER BY Num_step",
         (recette_id,)
     ).fetchall()
 
     conn.close()
     return render_template('Unerecette.html', recipe=recipe, equipements=equipements, steps=steps)
+
+
 def hashage(password, rand, salt):
     combined = f"{password}{rand}{salt}"
     return hashlib.sha256(combined.encode()).hexdigest()
@@ -208,8 +208,28 @@ def apropos():
 @app.route('/recherche', methods=['GET'])
 def recherche():
     query = request.args.get('q', '')
-    # Ajoute ici le code pour traiter la recherche et afficher les résultats
-    return render_template('recherche.html', query=query)
+    recettes = []
+    if query:
+        ingredients = [i.strip() for i in query.replace(',', ' ').split() if i.strip()]
+        conn = sqlite3.connect('BDD.db')
+        conn.row_factory = sqlite3.Row
+        where = ["r.Title LIKE ?"]
+        params = [f"%{query}%"]
+        if ingredients:
+            where += ["i.Name LIKE ?"] * len(ingredients)
+            params += [f"%{ing}%" for ing in ingredients]
+        sql = f"""
+            SELECT DISTINCT r.*
+            FROM Recette r
+            LEFT JOIN Quantity q ON r.Recette_id = q.Recette_id
+            LEFT JOIN Ingredient i ON q.Id_ingredient = i.Id_ingredient
+            WHERE {' OR '.join(where)}
+            ORDER BY CASE WHEN r.Title LIKE ? THEN 1 ELSE 2 END, r.Title
+        """
+        params.append(f"%{query}%")
+        recettes = conn.execute(sql, params).fetchall()
+        conn.close()
+    return render_template('recherche.html', recettes=recettes, query=query)
 
 if __name__ == '__main__':
     app.run(debug=True)
