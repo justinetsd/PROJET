@@ -16,9 +16,8 @@ app.config['MAIL_PASSWORD'] = 'klqn uabr phum njms'    # Ton mot de passe Gmail 
 
 mail = Mail(app)
 
-def get_recipes(): #recette
+def get_recipes():
     conn = sqlite3.connect('BDD.db')
-    
     conn.row_factory = sqlite3.Row
     recipes = conn.execute('SELECT * FROM Recette').fetchall()
     conn.close()
@@ -83,6 +82,12 @@ def profil():
         return redirect(url_for('login'))
     return render_template('profil.html', username=user['Username'], firstname=user['FirstName'], lastname=user['LastName'])
 
+@app.route('/logout')
+def logout():
+    from flask import session, redirect, url_for
+    session.pop('username', None)
+    return redirect(url_for('login'))
+
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
     error = None
@@ -143,12 +148,14 @@ def login():
             computed_hash = hashage(password, rand, salt)
 
             if computed_hash == stored_hash:
-                session["user"] = username
+                session["username"] = username
                 return redirect("/")
         
         return render_template("login.html", error="Invalid credentials")
 
     return render_template("login.html")
+
+
 
 @app.route('/ete')
 def ete():
@@ -246,10 +253,10 @@ def recherche():
 
 @app.route('/noter_recette/<int:recette_id>', methods=['POST'])
 def noter_recette(recette_id):
-    if "user" not in session:
+    if "username" not in session:
         return redirect(url_for('login'))
     note = int(request.form.get('note', 0))
-    user = session["user"]
+    user = session["username"]
     conn = sqlite3.connect('BDD.db')
     # À adapter selon ta table de notes (exemple: Recette_Note avec Recette_id, user, note)
     conn.execute("INSERT INTO Rating (Recette_id, Id-user, Rating) VALUES (?, ?, ?)", (recette_id, Id_user, Rating))

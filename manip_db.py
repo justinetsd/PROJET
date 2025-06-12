@@ -165,7 +165,8 @@ desserts = [
             "Mettre les fruits, le yaourt et le sucre dans le mixeur.",
             "Mixer jusqu'à consistance lisse.",
             "Verser dans des verres et servir frais."
-        ]
+        ],
+        "image": "Smoothie pêche abricot.jpg"
     },
     {
         "title": "Pastèque glacée",
@@ -178,7 +179,9 @@ desserts = [
             "Ciseler la menthe.",
             "Mélanger et placer au congélateur 30 minutes.",
             "Servir très frais."
-        ]
+        ],
+        
+        "image": "Pastèque glacée.jpg"
     },
     {
         "title": "Abricots rôtis au yaourt",
@@ -190,7 +193,8 @@ desserts = [
             "Couper les abricots en deux et les saupoudrer de sucre.",
             "Les faire rôtir au four 10 minutes.",
             "Servir avec du yaourt."
-        ]
+        ],
+        "image": "Abricots rôtis au yaourt.jpg"
     },
     {
         "title": "Myrtilles à la crème",
@@ -201,7 +205,8 @@ desserts = [
         "steps": [
             "Mélanger les myrtilles avec la crème et le sucre.",
             "Servir frais."
-        ]
+        ],
+        "image": "Myrtilles à la crème.jpg"
     }
 ]
 
@@ -228,7 +233,8 @@ for idx, dessert in enumerate(desserts):
         "Été",
         dessert["description"],
         4,
-        ""
+        dessert["image"]
+        
     ))
 
     # Ajout étapes
@@ -308,7 +314,8 @@ desserts_automne = [
             "Disposez les pommes tranchées et parsemez de noix.",
             "Saupoudrez de sucre.",
             "Faites cuire au four 35 minutes à 180°C."
-        ]
+        ],
+        "image": "Tarte aux pommes et noix.jpg"
     },
     {
         "title": "Poêlée de poires aux raisins et noix",
@@ -322,7 +329,8 @@ desserts_automne = [
             "Ajoutez les poires, raisins, noix et sucre.",
             "Saupoudrez de cannelle et faites revenir 10 minutes.",
             "Servez tiède."
-        ]
+        ],
+        "image": "Poêlée de poires aux raisins et noix.jpg"
     },
     {
         "title": "Moelleux aux châtaignes",
@@ -336,7 +344,8 @@ desserts_automne = [
             "Versez dans un moule beurré.",
             "Faites cuire 30 minutes à 180°C.",
             "Laissez tiédir avant de démouler."
-        ]
+        ],
+        "image": "Moelleux aux châtaignes.jpg"
     },
     {
         "title": "Pommes rôties à la crème",
@@ -349,7 +358,8 @@ desserts_automne = [
             "Saupoudrez de sucre.",
             "Faites rôtir 25 minutes à 180°C.",
             "Servez avec la crème fraîche sucrée."
-        ]
+        ],
+        "image": "Pommes rôties à la crème.jpg"
     },
     {
         "title": "Clafoutis aux raisins",
@@ -363,7 +373,8 @@ desserts_automne = [
             "Versez dans un moule beurré.",
             "Faites cuire 35 minutes à 180°C.",
             "Servez tiède ou froid."
-        ]
+        ],
+        "image": "Clafoutis aux raisins.jpg"
     }
 ]
 
@@ -391,7 +402,7 @@ for idx, dessert in enumerate(desserts_automne):
         "Automne",
         dessert["description"],
         4,
-        ""
+        dessert["image"]
     ))
 
     # Ajout étapes
@@ -473,7 +484,8 @@ desserts_hiver = [
             "Versez dans un moule beurré.",
             "Faites cuire 20 minutes à 180°C.",
             "Servez tiède."
-        ]
+        ],
+        "image": "Moelleux au chocolat.jpg"
     },
     {
         "title": "Compote de pommes et poires à la cannelle",
@@ -487,7 +499,8 @@ desserts_hiver = [
             "Faites cuire à feu doux 25 minutes.",
             "Écrasez ou mixez selon la texture désirée.",
             "Servez tiède ou froid."
-        ]
+        ],
+        "image": "Compote de pommes et poires à la cannelle.jpg"
     },
     {
         "title": "Crêpes à l'orange",
@@ -501,7 +514,8 @@ desserts_hiver = [
             "Faites cuire les crêpes dans une poêle chaude.",
             "Préparez un sirop avec le jus d'orange et un peu de sucre.",
             "Servez les crêpes nappées de sirop d'orange."
-        ]
+        ],
+        "image": "Crêpes à l'orange.jpg"
     },
     {
         "title": "Riz au lait à la cannelle",
@@ -515,7 +529,8 @@ desserts_hiver = [
             "Ajoutez le sucre et la cannelle en fin de cuisson.",
             "Versez dans un saladier.",
             "Servez tiède ou froid."
-        ]
+        ],
+        "image": "Riz au lait à la cannelle.jpg"
     },
     {
         "title": "Gâteau noisettes et pommes",
@@ -529,7 +544,8 @@ desserts_hiver = [
             "Versez dans un moule beurré.",
             "Faites cuire 35 minutes à 180°C.",
             "Laissez tiédir avant de démouler."
-        ]
+        ],
+        "image": "Gâteau noisettes et pommes.jpg"
     }
 ]
 
@@ -557,7 +573,7 @@ for idx, dessert in enumerate(desserts_hiver):
         "Hiver",
         dessert["description"],
         4,
-        ""
+        dessert["image"]
     ))
 
     # Ajout étapes
@@ -660,7 +676,8 @@ desserts_printemps = [
             "Disposez la rhubarbe en tronçons et les fraises coupées.",
             "Saupoudrez de sucre.",
             "Faites cuire au four 35 minutes à 180°C."
-        ]
+        ],
+        "image": "Tarte fraises-rhubarbe.jpg"
     },
     {
         "title": "Clafoutis fraises-menthe",
@@ -674,7 +691,8 @@ desserts_printemps = [
             "Versez dans un moule beurré.",
             "Faites cuire 30 minutes à 180°C.",
             "Servez tiède ou froid."
-        ]
+        ],
+        "image": "Clafoutis fraises-menthe.jpg"
     },
     {
         "title": "Compote rhubarbe-vanille",
@@ -688,7 +706,8 @@ desserts_printemps = [
             "Laissez compoter 20 minutes à feu doux.",
             "Retirez la gousse de vanille.",
             "Servez frais."
-        ]
+        ],
+        "image": "Compote rhubarbe-vanille.jpg"
     },
     {
         "title": "Verrines fromage blanc, fraises et citron",
@@ -702,7 +721,8 @@ desserts_printemps = [
             "Alternez couches de fromage blanc et fraises dans des verrines.",
             "Terminez par un peu de zeste de citron.",
             "Servez bien frais."
-        ]
+        ],
+        "image": "Verrines fromage blanc, fraises et citron.jpg"
     },
     {
         "title": "Gâteau moelleux citron-menthe",
@@ -716,7 +736,8 @@ desserts_printemps = [
             "Versez dans un moule beurré.",
             "Faites cuire 30 minutes à 180°C.",
             "Laissez tiédir avant de démouler."
-        ]
+        ],
+        "image": "Gâteau moelleux citron-menthe.jpg"
     }
 ]
 
@@ -747,7 +768,7 @@ for idx, dessert in enumerate(desserts_printemps):
         "Printemps",
         dessert["description"],
         4,
-        ""
+        dessert["image"]
     ))
 
     # Ajout étapes
@@ -853,7 +874,8 @@ plats_ete = [
             "Mélangez tous les légumes, ajoutez le thon émietté et les olives.",
             "Ajoutez les œufs coupés en quartiers.",
             "Servez frais."
-        ]
+        ],
+        "image": "Salade niçoise.jpg"
     },
     {
         "title": "Taboulé libanais",
@@ -867,7 +889,8 @@ plats_ete = [
             "Mélangez boulgour égoutté, herbes, tomates en dés et jus de citron.",
             "Assaisonnez d'huile d'olive, sel et poivre.",
             "Réfrigérez avant de servir."
-        ]
+        ],
+        "image": "Taboulé libanais.jpg"
     },
     {
         "title": "Tian de légumes",
@@ -880,7 +903,8 @@ plats_ete = [
             "Arrosez d'huile d'olive et parsemez d'herbes de Provence.",
             "Cuisez au four à 180°C pendant 1 heure.",
             "Servez chaud ou tiède."
-        ]
+        ],
+        "image": "Tian de légumes.jpg"
     },
     {
         "title": "Brochettes de poulet marinées",
@@ -893,7 +917,8 @@ plats_ete = [
             "Enfilez les cubes de poulet sur des brochettes.",
             "Faites griller au barbecue 15 minutes.",
             "Servez avec une salade verte."
-        ]
+        ],
+        "image": "Brochettes de poulet marinées.jpg"
     },
     {
         "title": "Gaspacho andalou",
@@ -905,7 +930,8 @@ plats_ete = [
             "Mixez tous les légumes avec le pain rassis, huile d'olive et vinaigre.",
             "Salez, poivrez et réfrigérez pendant au moins 2 heures.",
             "Servez très frais."
-        ]
+        ],
+        "image": "Gaspacho andalou.jpg"
     },
     {
         "title": "Ratatouille",
@@ -919,7 +945,8 @@ plats_ete = [
             "Ajoutez les légumes et laissez mijoter 45 minutes.",
             "Assaisonnez avec thym, laurier et basilic.",
             "Servez chaud."
-        ]
+        ],
+        "image": "Ratatouille.jpg"
     },
     {
         "title": "Poke bowl au saumon",
@@ -932,7 +959,8 @@ plats_ete = [
             "Coupez avocat et concombre en dés.",
             "Disposez riz, saumon, légumes et maïs dans un bol.",
             "Ajoutez graines de sésame et sauce soja."
-        ]
+        ],
+        "image": "Poke bowl au saumon.jpg"
     },
     {
         "title": "Quiche aux légumes d'été",
@@ -946,7 +974,8 @@ plats_ete = [
             "Étalez la pâte dans un moule, ajoutez légumes et mélange œufs-crème.",
             "Cuisez au four à 180°C pendant 35 minutes.",
             "Laissez tiédir avant de servir."
-        ]
+        ],
+        "image": "Quiche aux légumes d'été.jpg"
     },
     {
         "title": "Salade de pâtes méditerranéenne",
@@ -959,7 +988,8 @@ plats_ete = [
             "Mélangez tous les ingrédients avec de l'huile d'olive.",
             "Assaisonnez sel, poivre et basilic.",
             "Servez frais."
-        ]
+        ],
+        "image": "Salade de pâtes méditerranéenne.jpg"
     },
     {
         "title": "Pizza Margherita maison",
@@ -972,7 +1002,8 @@ plats_ete = [
             "Cuisez au four à 220°C pendant 12-15 minutes.",
             "Parsemez de feuilles de basilic frais.",
             "Servez chaud."
-        ]
+        ],
+        "image": "Pizza Margherita maison.jpg"
     }
 ]
 
@@ -1004,7 +1035,7 @@ for idx, plat in enumerate(plats_ete):
         "Été",
         plat["description"],
         4,
-        ""
+        plat["image"]
     ))
 
     # Ajout étapes
@@ -1108,7 +1139,8 @@ plats_automne = [
             "Versez progressivement le bouillon en remuant.",
             "Incorporez le fromage râpé en fin de cuisson.",
             "Servez chaud et crémeux."
-        ]
+        ],
+        "image": "Risotto aux champignons.jpg"
     },
     {
         "title": "Velouté de potiron",
@@ -1121,7 +1153,8 @@ plats_automne = [
             "Ajoutez le potiron et couvrez d’eau.",
             "Laissez cuire 30 minutes puis mixez.",
             "Ajoutez la crème et assaisonnez."
-        ]
+        ],
+        "image": "Velouté de potiron.jpg"
     },
     {
         "title": "Tarte aux poireaux",
@@ -1134,7 +1167,8 @@ plats_automne = [
             "Battez œufs et crème, salez, poivrez.",
             "Garnissez une pâte brisée avec poireaux et appareil.",
             "Enfournez 35 min à 180°C."
-        ]
+        ],
+        "image": "Tarte aux poireaux.jpg"
     },
     {
         "title": "Civet de sanglier",
@@ -1147,7 +1181,8 @@ plats_automne = [
             "Ajoutez la marinade filtrée et laissez mijoter 3h.",
             "Ajoutez les champignons en fin de cuisson.",
             "Servez bien chaud avec des pâtes fraîches."
-        ]
+        ],
+        "image": "Civet de sanglier.jpg"
     },
     {
         "title": "Gratin de courge butternut",
@@ -1160,7 +1195,8 @@ plats_automne = [
             "Mélangez avec crème, fromage râpé, sel, poivre.",
             "Versez dans un plat à gratin et enfournez 45 min.",
             "Servez doré et chaud."
-        ]
+        ],
+        "image": "Gratin de courge butternut.jpg"
     },
     {
         "title": "Quiche aux champignons et noisettes",
@@ -1173,7 +1209,8 @@ plats_automne = [
             "Concassez les noisettes grossièrement.",
             "Garnissez une pâte avec champignons, noisettes et appareil œufs/crème.",
             "Enfournez 40 min à 180°C."
-        ]
+        ],
+        "image": "Quiche aux champignons et noisettes.jpg"
     },
     {
         "title": "Poêlée de châtaignes et lardons",
@@ -1185,7 +1222,8 @@ plats_automne = [
             "Ajoutez les châtaignes et laissez dorer.",
             "Assaisonnez avec poivre et herbes de Provence.",
             "Servez chaud en accompagnement ou plat principal."
-        ]
+        ],
+        "image": "Poêlée de châtaignes et lardons.jpg"
     },
     {
         "title": "Gratin de macaronis au potiron",
@@ -1198,7 +1236,8 @@ plats_automne = [
             "Ajoutez crème et épices, mixez en purée.",
             "Mélangez avec les pâtes, versez dans un plat.",
             "Ajoutez fromage râpé et gratinez 20 min."
-        ]
+        ],
+        "image": "Gratin de macaronis au potiron.jpg"
     },
     {
         "title": "Soupe de lentilles corail et carottes",
@@ -1211,7 +1250,8 @@ plats_automne = [
             "Couvrez d’eau et assaisonnez.",
             "Laissez cuire 30 min à feu doux.",
             "Mixez selon la texture souhaitée."
-        ]
+        ],
+        "image": "Soupe de lentilles corail et carottes.jpg"
     },
     {
         "title": "Filet mignon aux pommes",
@@ -1224,7 +1264,8 @@ plats_automne = [
             "Versez un peu de vin rouge pour la cuisson.",
             "Laissez mijoter 40 min à feu doux.",
             "Servez nappé de sauce aux pommes."
-        ]
+        ],
+        "image": "Filet mignon aux pommes.jpg"
     }
 ]
 
@@ -1257,7 +1298,7 @@ for idx, plat in enumerate(plats_automne):
         "Automne",
         plat["description"],
         4,
-        ""
+        plat["image"]
     ))
 
     # Ajout étapes
@@ -1363,7 +1404,8 @@ plats_hiver = [
             "Ajoutez les légumes et recouvrez d'eau.",
             "Laissez mijoter à feu doux pendant 2 heures.",
             "Servez chaud avec de la moutarde."
-        ]
+        ],
+        "image": "Potée auvergnate.jpg"
     },
     {
         "title": "Gratin dauphinois",
@@ -1376,7 +1418,8 @@ plats_hiver = [
             "Disposez les pommes de terre en couches dans le plat.",
             "Versez la crème et ajoutez sel, poivre et muscade.",
             "Faites cuire au four à 160°C pendant 1h30."
-        ]
+        ],
+        "image": "Gratin dauphinois.jpg"
     },
     {
         "title": "Soupe à l'oignon gratinée",
@@ -1389,7 +1432,8 @@ plats_hiver = [
             "Versez la soupe dans des bols.",
             "Disposez des tranches de pain grillé et du gruyère râpé dessus.",
             "Passez sous le gril du four jusqu'à gratinage."
-        ]
+        ],
+        "image": "Soupe à l'oignon gratinée.jpg"
     },
     {
         "title": "Bœuf bourguignon",
@@ -1402,7 +1446,8 @@ plats_hiver = [
             "Laissez mijoter doucement 3 heures.",
             "Ajoutez les champignons en fin de cuisson.",
             "Servez bien chaud."
-        ]
+        ], 
+        "image": "Bœuf bourguignon.jpg"
     },
     {
         "title": "Tartiflette savoyarde",
@@ -1415,7 +1460,8 @@ plats_hiver = [
             "Dans un plat, alternez pommes de terre, lardons, oignons et reblochon.",
             "Cuisez au four à 180°C pendant 1 heure.",
             "Servez chaud."
-        ]
+        ],
+        "image": "Tartiflette savoyarde.jpg"
     },
     {
         "title": "Chili con carne",
@@ -1427,7 +1473,8 @@ plats_hiver = [
             "Ajoutez les haricots rouges, tomates et laissez mijoter 1 heure.",
             "Rectifiez l'assaisonnement.",
             "Servez avec du riz."
-        ]
+        ],
+        "image": "Chili con carne.jpg"
     },
     {
         "title": "Cassoulet traditionnel",
@@ -1439,7 +1486,8 @@ plats_hiver = [
             "Faites cuire les viandes et haricots séparément.",
             "Assemblez dans une grande cocotte et laissez mijoter 4 heures.",
             "Servez très chaud."
-        ]
+        ],
+        "image": "Cassoulet traditionnel.jpg"
     },
     {
         "title": "Velouté de potimarron",
@@ -1452,7 +1500,8 @@ plats_hiver = [
             "Ajoutez bouillon et laissez cuire 30 minutes.",
             "Mixez la soupe, ajoutez crème et assaisonnez.",
             "Servez chaud."
-        ]
+        ],
+        "image": "Velouté de potimarron.jpg"
     },
     {
         "title": "Parmentier de confit de canard",
@@ -1465,7 +1514,8 @@ plats_hiver = [
             "Dans un plat, mettez le confit puis recouvrez de purée.",
             "Faites gratiner au four 20 minutes.",
             "Servez chaud."
-        ]
+        ],
+        "image": "Parmentier de confit de canard.jpg"
     },
     {
         "title": "Raclette traditionnelle",
@@ -1477,7 +1527,8 @@ plats_hiver = [
             "Disposez le fromage à raclette sur un appareil chauffant.",
             "Faites fondre le fromage et servez avec charcuterie et cornichons.",
             "Chacun compose son assiette."
-        ]
+        ],
+        "image": "Raclette traditionnelle.jpg"
     }
 ]
 
@@ -1511,7 +1562,7 @@ for idx, plat in enumerate(plats_hiver):
         "Hiver",
         plat["description"],
         4,
-        ""
+        plat["image"]
     ))
 
     # Ajout étapes
@@ -1613,7 +1664,8 @@ plats_printemps = [
             "Mélangez tous les légumes dans un saladier.",
             "Préparez une vinaigrette au citron.",
             "Servez frais."
-        ]
+        ],
+        "image": "Salade de printemps.jpg"
     },
     {
         "title": "Risotto aux asperges et petits pois",
@@ -1626,7 +1678,8 @@ plats_printemps = [
             "Ajoutez les asperges coupées et les petits pois.",
             "Versez le bouillon petit à petit jusqu'à cuisson du riz.",
             "Ajoutez le parmesan en fin de cuisson."
-        ]
+        ],
+        "image": "Risotto aux asperges et petits pois.jpg"
     },
     {
         "title": "Tarte aux épinards et fromage frais",
@@ -1639,7 +1692,8 @@ plats_printemps = [
             "Étalez la pâte dans un moule et garnissez avec la préparation.",
             "Faites cuire 30 min à 180°C.",
             "Servez tiède."
-        ]
+        ],
+        "image": "Tarte aux épinards et fromage frais.jpg"
     },
     {
         "title": "Poulet au citron et aux herbes",
@@ -1651,7 +1705,8 @@ plats_printemps = [
             "Faites mariner le poulet 20 minutes.",
             "Faites cuire à la poêle jusqu'à ce qu'il soit doré.",
             "Servez avec une salade verte."
-        ]
+        ],
+        "image": "Poulet au citron et aux herbes.jpg"
     },
     {
         "title": "Pâtes aux courgettes et basilic",
@@ -1663,7 +1718,8 @@ plats_printemps = [
             "Faites revenir les courgettes en dés dans une poêle.",
             "Ajoutez les pâtes égouttées et le basilic.",
             "Parsemez de parmesan avant de servir."
-        ]
+        ],
+        "image": "Pâtes aux courgettes et basilic.jpg"
     },
     {
         "title": "Saumon en papillote",
@@ -1675,7 +1731,8 @@ plats_printemps = [
             "Ajoutez des rondelles de citron et les herbes.",
             "Fermez la papillote et enfournez 20 min à 180°C.",
             "Servez avec du riz ou des légumes."
-        ]
+        ],
+        "image": "Saumon en papillote.jpg"
     },
     {
         "title": "Poêlée de fèves et carottes",
@@ -1688,7 +1745,8 @@ plats_printemps = [
             "Ajoutez les fèves et la menthe.",
             "Laissez cuire 15 minutes.",
             "Servez chaud."
-        ]
+        ],
+        "image": "Poêlée de fèves et carottes.jpg"
     },
     {
         "title": "Omelette aux herbes fraîches",
@@ -1700,7 +1758,8 @@ plats_printemps = [
             "Faites revenir l'oignon émincé.",
             "Versez les œufs battus et laissez cuire doucement.",
             "Servez chaud ou froid."
-        ]
+        ],
+        "image": "Omelette aux herbes fraîches.jpg"
     },
     {
         "title": "Salade de pommes de terre et radis",
@@ -1712,7 +1771,8 @@ plats_printemps = [
             "Émincez les radis.",
             "Mélangez avec la menthe et le jus de citron.",
             "Servez frais."
-        ]
+        ],
+        "image": "Salade de pommes de terre et radis.jpg"
     },
     {
         "title": "Gratin de courgettes et pommes de terre",
@@ -1725,7 +1785,8 @@ plats_printemps = [
             "Ajoutez la crème et le parmesan.",
             "Faites cuire 35 min à 180°C.",
             "Servez chaud."
-        ]
+        ],
+        "image": "Gratin de courgettes et pommes de terre.jpg"
     },
     {
         "title": "Riz aux petits pois et menthe",
@@ -1737,7 +1798,8 @@ plats_printemps = [
             "Faites revenir l'oignon émincé.",
             "Mélangez le tout avec la menthe ciselée.",
             "Servez chaud ou froid."
-        ]
+        ],
+        "image": "Riz aux petits pois et menthe.jpg"
     }
 ]
 
@@ -1772,7 +1834,7 @@ for idx, plat in enumerate(plats_printemps):
         "Printemps",
         plat["description"],
         4,
-        ""
+        plat["image"]
     ))
 
     # Ajout étapes
