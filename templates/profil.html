@@ -7,4 +7,11 @@
     <p><strong>Prénom :</strong> {{ firstname }}</p>
     <p><strong>Nom :</strong> {{ lastname }}</p>
 </div>
+<div style="display: flex; justify-content: center; margin-top: 30px; margin-bottom: 4cm;">
+    <a href="{{ url_for('logout') }}">
+        <button style="background:#c2185b; color:white; border:none; border-radius:5px; padding:10px 30px; font-weight:bold; cursor:pointer;">
+            Se déconnecter
+        </button>
+    </a>
+</div>
 {% endblock %}
