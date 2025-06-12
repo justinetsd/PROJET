@@ -258,6 +258,15 @@ def noter_recette(recette_id):
     flash("Merci pour votre note !")
     return redirect(url_for('recette', recette_id=recette_id))
 
+@app.route('/politique')
+def politique():
+    return render_template('politique.html')
+
+@app.route('/conditions')
+def conditions():
+    return render_template('conditions.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 

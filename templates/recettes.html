@@ -11,7 +11,7 @@
     {% for recette in recipes %}
         {% if recette['title'] not in noms_vus %}
             <div class="encadre-nom-recette">
-                <a href="{{ url_for('recette', recette_id=recette['Recette_id']) }}" class="lien-recette-nom">
+                <a href="{{ url_for('recette', recette_id=recette['Recette_id']) }}" class="lien-recettes">
                     {{ recette['title'] }}
                 </a>
                 {% if recette['image'] %}
