@@ -29,10 +29,17 @@
                 </li>
             </ul>
         </nav>
+            {% if session.get('username') %}
+        <a href="{{ url_for('profil') }}" style="margin-left:auto; margin-right:30px; color:#c2185b; font-weight:bold; font-size:1.1em; text-decoration:none; display:flex; align-items:center; font-family:'Open Sans',Arial,sans-serif;">
+            <img src="{{ url_for('static', filename='logoconnexion.png') }}" alt="Logo Utilisateur" style="height:0.9cm; margin-right:8px;">
+            {{ session['username'] }}
+        </a>
+    {% else %}
         <a href="{{ url_for('login') }}" style="margin-left:auto; margin-right:30px; color:#c2185b; font-weight:bold; font-size:1.1em; text-decoration:none; display:flex; align-items:center; font-family:'Open Sans',Arial,sans-serif;">
             <img src="{{ url_for('static', filename='logoconnexion.png') }}" alt="Logo Connexion" style="height:0.9cm; margin-right:8px;">
             CONNEXION
         </a>
+    {% endif %}
     </div>
     
     <div class="content">

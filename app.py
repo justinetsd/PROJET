@@ -70,6 +70,19 @@ import random
 
 from flask import session
 
+@app.route('/profil')
+def profil():
+    from flask import session, redirect, url_for
+    if not session.get('username'):
+        return redirect(url_for('login'))
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    user = conn.execute("SELECT * FROM User WHERE Username = ?", (session['username'],)).fetchone()
+    conn.close()
+    if not user:
+        return redirect(url_for('login'))
+    return render_template('profil.html', username=user['Username'], firstname=user['FirstName'], lastname=user['LastName'])
+
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
     error = None
@@ -130,7 +143,7 @@ def login():
             computed_hash = hashage(password, rand, salt)
 
             if computed_hash == stored_hash:
-                session["user"] = username
+                session["username"] = username
                 return redirect("/")
         
         return render_template("login.html", error="Invalid credentials")
