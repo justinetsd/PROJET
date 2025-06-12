@@ -6,15 +6,15 @@ cursor = conn.cursor()
 
 # Supprime les anciennes tables si elles existent
 tables = [
-    "User", "Recette", "Step", "Ingredient", "Quantity", "Equipment", "Rating",
-    "Recette_Ingredient", "Recette_Equipment", "Recette_Favori"
+    "Users", "Recettes", "Steps", "Ingredients", "Quantity", "Equipment", "Rating",
+    "Recette_Ingredients", "Recette_Equipment", "Recette_Favoris", "User_Recette_Rating"
 ]
 for table in tables:
     cursor.execute(f"DROP TABLE IF EXISTS {table}")
 
 # Crée les tables
 cursor.executescript("""
-CREATE TABLE User (
+CREATE TABLE Users (
     User_id INTEGER PRIMARY KEY,
     Username TEXT,
     FirstName TEXT,
@@ -26,7 +26,7 @@ CREATE TABLE User (
     Hash TEXT
 );
 
-CREATE TABLE Recette (
+CREATE TABLE Recettes (
     Recette_id INTEGER PRIMARY KEY,
     Title TEXT,
     Preptime INTEGER,
@@ -38,15 +38,15 @@ CREATE TABLE Recette (
     Image TEXT
 );
 
-CREATE TABLE Step (
+CREATE TABLE Steps (
     Recette_id INTEGER,
     Num_step INTEGER,
     Contenu TEXT,
     PRIMARY KEY (Recette_id, Num_step),
-    FOREIGN KEY (Recette_id) REFERENCES Recette(Recette_id)
+    FOREIGN KEY (Recette_id) REFERENCES Recettes(Recette_id)
 );
 
-CREATE TABLE Ingredient (
+CREATE TABLE Ingredients (
     Id_ingredient INTEGER PRIMARY KEY,
     Name TEXT UNIQUE,
     Allergene BOOLEAN
@@ -57,8 +57,8 @@ CREATE TABLE Quantity (
     Id_ingredient INTEGER,
     Valeur INTEGER,
     Unite TEXT,
-    FOREIGN KEY (Recette_id) REFERENCES Recette(Recette_id),
-    FOREIGN KEY (Id_ingredient) REFERENCES Ingredient(Id_ingredient)
+    FOREIGN KEY (Recette_id) REFERENCES Recettes(Recette_id),
+    FOREIGN KEY (Id_ingredient) REFERENCES Ingredients(Id_ingredient)
 );
 
 CREATE TABLE Equipment (
@@ -72,30 +72,22 @@ CREATE TABLE Rating (
     Rating INTEGER,
     Commentaire TEXT,
     PRIMARY KEY (User_id, Recette_id),
-    FOREIGN KEY (User_id) REFERENCES User(User_id),
-    FOREIGN KEY (Recette_id) REFERENCES Recette(Recette_id)
+    FOREIGN KEY (User_id) REFERENCES Users(User_id),
+    FOREIGN KEY (Recette_id) REFERENCES Recettes(Recette_id)
 );
 
-CREATE TABLE Recette_Favori (
+CREATE TABLE Recette_Favoris (
     User_id INTEGER,
     Recette_id INTEGER,
-    FOREIGN KEY (User_id) REFERENCES User(User_id),
-    FOREIGN KEY (Recette_id) REFERENCES Recette(Recette_id)
-);
-            
-CREATE TABLE Recette_Ingredient (
-    Recette_id INTEGER,
-    Id_ingredient INTEGER,
-    PRIMARY KEY (Recette_id, Id_ingredient),
-    FOREIGN KEY (Recette_id) REFERENCES Recette(Recette_id),
-    FOREIGN KEY (Id_ingredient) REFERENCES Ingredient(Id_ingredient)
+    FOREIGN KEY (User_id) REFERENCES Users(User_id),
+    FOREIGN KEY (Recette_id) REFERENCES Recettes(Recette_id)
 );
                      
 CREATE TABLE Recette_Equipment (
     Recette_id INTEGER,
     Id_equipement INTEGER,
     PRIMARY KEY (Recette_id, Id_equipement),
-    FOREIGN KEY (Recette_id) REFERENCES Recette(Recette_id),
+    FOREIGN KEY (Recette_id) REFERENCES Recettes(Recette_id),
     FOREIGN KEY (Id_equipement) REFERENCES Equipment(Id_equipement)
 );
 
@@ -126,7 +118,7 @@ for name in ingredients:
             ingredient_ids[name] = new_id
             break
     cursor.execute(
-        "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+        "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
         (ingredient_ids[name], name, allergenes.get(name, 0))
     )
 
@@ -159,7 +151,9 @@ desserts = [
             "Ciseler la menthe.",
             "Mélanger fraises, sucre, menthe et jus de citron dans un saladier.",
             "Servir frais."
+        
         ]
+        "image": "Salade fraises menthe.jpg"
     },
     {
         "title": "Smoothie pêche-abricot",
@@ -173,6 +167,7 @@ desserts = [
             "Mixer jusqu'à consistance lisse.",
             "Verser dans des verres et servir frais."
         ]
+        "image": "Smoothie pêche-abricot.jpg"
     },
     {
         "title": "Pastèque glacée",
@@ -186,6 +181,7 @@ desserts = [
             "Mélanger et placer au congélateur 30 minutes.",
             "Servir très frais."
         ]
+        "image": "Pastèque glacée.jpg"
     },
     {
         "title": "Abricots rôtis au yaourt",
@@ -198,6 +194,7 @@ desserts = [
             "Les faire rôtir au four 10 minutes.",
             "Servir avec du yaourt."
         ]
+        "image": "Abricots rôtis au yaourt.jpg"
     },
     {
         "title": "Myrtilles à la crème",
@@ -209,6 +206,7 @@ desserts = [
             "Mélanger les myrtilles avec la crème et le sucre.",
             "Servir frais."
         ]
+        "image": "Myrtilles à la crème.jpg"
     }
 ]
 
@@ -224,7 +222,7 @@ for idx, dessert in enumerate(desserts):
 
     # Ajout recette
     cursor.execute("""
-        INSERT INTO Recette (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
+        INSERT INTO Recettes (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         recette_id,
@@ -235,13 +233,14 @@ for idx, dessert in enumerate(desserts):
         "Été",
         dessert["description"],
         4,
+        dessert["image"]
         ""
     ))
 
     # Ajout étapes
     for num, step in enumerate(dessert["steps"], start=1):
         cursor.execute("""
-            INSERT INTO Step (Recette_id, Num_step, Contenu)
+            INSERT INTO Steps (Recette_id, Num_step, Contenu)
             VALUES (?, ?, ?)
         """, (recette_id, num, step))
 
@@ -284,7 +283,7 @@ for name in ingredients_automne:
                 ingredient_ids[name] = new_id
                 break
         cursor.execute(
-            "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+            "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
             (ingredient_ids[name], name, allergenes_automne.get(name, 0))
         )
 
@@ -316,6 +315,7 @@ desserts_automne = [
             "Saupoudrez de sucre.",
             "Faites cuire au four 35 minutes à 180°C."
         ]
+        "image": "Tarte aux pommes et noix.jpg" 
     },
     {
         "title": "Poêlée de poires aux raisins et noix",
@@ -330,6 +330,7 @@ desserts_automne = [
             "Saupoudrez de cannelle et faites revenir 10 minutes.",
             "Servez tiède."
         ]
+        "image": "Poêlée de poires aux raisins et noix.jpg" 
     },
     {
         "title": "Moelleux aux châtaignes",
@@ -344,6 +345,7 @@ desserts_automne = [
             "Faites cuire 30 minutes à 180°C.",
             "Laissez tiédir avant de démouler."
         ]
+        "image": "Moelleux aux châtaignes.jpg" 
     },
     {
         "title": "Pommes rôties à la crème",
@@ -357,6 +359,7 @@ desserts_automne = [
             "Faites rôtir 25 minutes à 180°C.",
             "Servez avec la crème fraîche sucrée."
         ]
+        "image": "Pommes rôties à la crème.jpg" 
     },
     {
         "title": "Clafoutis aux raisins",
@@ -371,6 +374,7 @@ desserts_automne = [
             "Faites cuire 35 minutes à 180°C.",
             "Servez tiède ou froid."
         ]
+        "image": "Clafoutis aux raisins.jpg" 
     }
 ]
 
@@ -387,7 +391,7 @@ for idx, dessert in enumerate(desserts_automne):
 
     # Ajout recette
     cursor.execute("""
-        INSERT INTO Recette (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
+        INSERT INTO Recettes (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         recette_id,
@@ -398,13 +402,14 @@ for idx, dessert in enumerate(desserts_automne):
         "Automne",
         dessert["description"],
         4,
+        dessert["image"]
         ""
     ))
 
     # Ajout étapes
     for num, step in enumerate(dessert["steps"], start=1):
         cursor.execute("""
-            INSERT INTO Step (Recette_id, Num_step, Contenu)
+            INSERT INTO Steps (Recette_id, Num_step, Contenu)
             VALUES (?, ?, ?)
         """, (recette_id, num, step))
 
@@ -449,7 +454,7 @@ for name in ingredients_hiver:
                 ingredient_ids[name] = new_id
                 break
         cursor.execute(
-            "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+            "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
             (ingredient_ids[name], name, allergenes_hiver.get(name, 0))
         )
 
@@ -481,6 +486,7 @@ desserts_hiver = [
             "Faites cuire 20 minutes à 180°C.",
             "Servez tiède."
         ]
+        "image": "Moelleux au chocolat.jpg" 
     },
     {
         "title": "Compote de pommes et poires à la cannelle",
@@ -495,6 +501,7 @@ desserts_hiver = [
             "Écrasez ou mixez selon la texture désirée.",
             "Servez tiède ou froid."
         ]
+        "image": "Compote de pommes et poires à la cannelle.jpg" 
     },
     {
         "title": "Crêpes à l'orange",
@@ -509,6 +516,7 @@ desserts_hiver = [
             "Préparez un sirop avec le jus d'orange et un peu de sucre.",
             "Servez les crêpes nappées de sirop d'orange."
         ]
+        "image": "Crêpes à l'orange.jpg" 
     },
     {
         "title": "Riz au lait à la cannelle",
@@ -523,6 +531,7 @@ desserts_hiver = [
             "Versez dans un saladier.",
             "Servez tiède ou froid."
         ]
+        "image": "Riz au lait à la cannelle.jpg" 
     },
     {
         "title": "Gâteau noisettes et pommes",
@@ -537,6 +546,7 @@ desserts_hiver = [
             "Faites cuire 35 minutes à 180°C.",
             "Laissez tiédir avant de démouler."
         ]
+        "image": "Gâteau noisettes et pommes.jpg" 
     }
 ]
 
@@ -553,7 +563,7 @@ for idx, dessert in enumerate(desserts_hiver):
 
     # Ajout recette
     cursor.execute("""
-        INSERT INTO Recette (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
+        INSERT INTO Recettes (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         recette_id,
@@ -564,13 +574,14 @@ for idx, dessert in enumerate(desserts_hiver):
         "Hiver",
         dessert["description"],
         4,
+        dessert["image"]
         ""
     ))
 
     # Ajout étapes
     for num, step in enumerate(dessert["steps"], start=1):
         cursor.execute("""
-            INSERT INTO Step (Recette_id, Num_step, Contenu)
+            INSERT INTO Steps (Recette_id, Num_step, Contenu)
             VALUES (?, ?, ?)
         """, (recette_id, num, step))
 
@@ -585,7 +596,7 @@ for idx, dessert in enumerate(desserts_hiver):
                     ingredient_ids[name] = new_id
                     break
             cursor.execute(
-                "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+                "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
                 (ingredient_ids[name], name, 0)
             )
         id_ing = ingredient_ids[name]
@@ -636,7 +647,7 @@ for name in ingredients_printemps:
                 ingredient_ids[name] = new_id
                 break
         cursor.execute(
-            "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+            "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
             (ingredient_ids[name], name, allergenes_printemps.get(name, 0))
         )
 
@@ -668,6 +679,7 @@ desserts_printemps = [
             "Saupoudrez de sucre.",
             "Faites cuire au four 35 minutes à 180°C."
         ]
+        "image": "Tarte fraises-rhubarbe.jpg" 
     },
     {
         "title": "Clafoutis fraises-menthe",
@@ -682,6 +694,7 @@ desserts_printemps = [
             "Faites cuire 30 minutes à 180°C.",
             "Servez tiède ou froid."
         ]
+        "image": "Clafoutis fraises-menthe.jpg" 
     },
     {
         "title": "Compote rhubarbe-vanille",
@@ -696,6 +709,7 @@ desserts_printemps = [
             "Retirez la gousse de vanille.",
             "Servez frais."
         ]
+        "image": "Compote rhubarbe-vanille.jpg" 
     },
     {
         "title": "Verrines fromage blanc, fraises et citron",
@@ -710,6 +724,7 @@ desserts_printemps = [
             "Terminez par un peu de zeste de citron.",
             "Servez bien frais."
         ]
+        "image": "Verrines fromage blanc, fraises et citron.jpg" 
     },
     {
         "title": "Gâteau moelleux citron-menthe",
@@ -724,6 +739,7 @@ desserts_printemps = [
             "Faites cuire 30 minutes à 180°C.",
             "Laissez tiédir avant de démouler."
         ]
+        "image": "Gâteau moelleux citron-menthe.jpg" 
     }
 ]
 
@@ -743,7 +759,7 @@ for idx, dessert in enumerate(desserts_printemps):
 
     # Ajout recette
     cursor.execute("""
-        INSERT INTO Recette (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
+        INSERT INTO Recettes (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         recette_id,
@@ -754,13 +770,14 @@ for idx, dessert in enumerate(desserts_printemps):
         "Printemps",
         dessert["description"],
         4,
+        dessert["image"]
         ""
     ))
 
     # Ajout étapes
     for num, step in enumerate(dessert["steps"], start=1):
         cursor.execute("""
-            INSERT INTO Step (Recette_id, Num_step, Contenu)
+            INSERT INTO Steps (Recette_id, Num_step, Contenu)
             VALUES (?, ?, ?)
         """, (recette_id, num, step))
 
@@ -774,7 +791,7 @@ for idx, dessert in enumerate(desserts_printemps):
                     ingredient_ids[name] = new_id
                     break
             cursor.execute(
-                "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+                "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
                 (ingredient_ids[name], name, allergenes_printemps.get(name, 0))
             )
         id_ing = ingredient_ids[name]
@@ -827,7 +844,7 @@ for name in ingredients_ete_plats:
                 ingredient_ids[name] = new_id
                 break
         cursor.execute(
-            "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+            "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
             (ingredient_ids[name], name, allergenes_ete_plats.get(name, 0))
         )
 
@@ -861,6 +878,7 @@ plats_ete = [
             "Ajoutez les œufs coupés en quartiers.",
             "Servez frais."
         ]
+        "image": "Salade niçoise.jpg" 
     },
     {
         "title": "Taboulé libanais",
@@ -875,6 +893,7 @@ plats_ete = [
             "Assaisonnez d'huile d'olive, sel et poivre.",
             "Réfrigérez avant de servir."
         ]
+        "image": "Taboulé libanais.jpg" 
     },
     {
         "title": "Tian de légumes",
@@ -888,6 +907,7 @@ plats_ete = [
             "Cuisez au four à 180°C pendant 1 heure.",
             "Servez chaud ou tiède."
         ]
+        "image": "Tian de légumes.jpg" 
     },
     {
         "title": "Brochettes de poulet marinées",
@@ -901,6 +921,7 @@ plats_ete = [
             "Faites griller au barbecue 15 minutes.",
             "Servez avec une salade verte."
         ]
+        "image": "Brochettes de poulet marinées.jpg" 
     },
     {
         "title": "Gaspacho andalou",
@@ -913,6 +934,7 @@ plats_ete = [
             "Salez, poivrez et réfrigérez pendant au moins 2 heures.",
             "Servez très frais."
         ]
+        "image": "Gaspacho andalou.jpg" 
     },
     {
         "title": "Ratatouille",
@@ -927,6 +949,7 @@ plats_ete = [
             "Assaisonnez avec thym, laurier et basilic.",
             "Servez chaud."
         ]
+        "image": "Ratatouille.jpg" 
     },
     {
         "title": "Poke bowl au saumon",
@@ -940,6 +963,7 @@ plats_ete = [
             "Disposez riz, saumon, légumes et maïs dans un bol.",
             "Ajoutez graines de sésame et sauce soja."
         ]
+        "image": "Poke bowl au saumon.jpg" 
     },
     {
         "title": "Quiche aux légumes d'été",
@@ -954,6 +978,7 @@ plats_ete = [
             "Cuisez au four à 180°C pendant 35 minutes.",
             "Laissez tiédir avant de servir."
         ]
+        "image": "Quiche aux légumes d'été.jpg" 
     },
     {
         "title": "Salade de pâtes méditerranéenne",
@@ -967,6 +992,7 @@ plats_ete = [
             "Assaisonnez sel, poivre et basilic.",
             "Servez frais."
         ]
+        "image": "Salade de pâtes méditerranéenne.jpg" 
     },
     {
         "title": "Pizza Margherita maison",
@@ -980,6 +1006,7 @@ plats_ete = [
             "Parsemez de feuilles de basilic frais.",
             "Servez chaud."
         ]
+        "image": "Pizza Margherita maison.jpg" 
     }
 ]
 
@@ -1000,7 +1027,7 @@ for idx, plat in enumerate(plats_ete):
 
     # Ajout recette
     cursor.execute("""
-        INSERT INTO Recette (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
+        INSERT INTO Recettes (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         recette_id,
@@ -1011,13 +1038,14 @@ for idx, plat in enumerate(plats_ete):
         "Été",
         plat["description"],
         4,
+        plat["image"]
         ""
     ))
 
     # Ajout étapes
     for num, step in enumerate(plat["steps"], start=1):
         cursor.execute("""
-            INSERT INTO Step (Recette_id, Num_step, Contenu)
+            INSERT INTO Steps (Recette_id, Num_step, Contenu)
             VALUES (?, ?, ?)
         """, (recette_id, num, step))
 
@@ -1031,7 +1059,7 @@ for idx, plat in enumerate(plats_ete):
                     ingredient_ids[name] = new_id
                     break
             cursor.execute(
-                "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+                "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
                 (ingredient_ids[name], name, allergenes_ete_plats.get(name, 0))
             )
         id_ing = ingredient_ids[name]
@@ -1083,7 +1111,7 @@ for name in ingredients_automne_plats:
                 ingredient_ids[name] = new_id
                 break
         cursor.execute(
-            "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+            "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
             (ingredient_ids[name], name, allergenes_automne_plats.get(name, 0))
         )
 
@@ -1116,6 +1144,7 @@ plats_automne = [
             "Incorporez le fromage râpé en fin de cuisson.",
             "Servez chaud et crémeux."
         ]
+        "image": "Risotto aux champignons.jpg" 
     },
     {
         "title": "Velouté de potiron",
@@ -1129,6 +1158,7 @@ plats_automne = [
             "Laissez cuire 30 minutes puis mixez.",
             "Ajoutez la crème et assaisonnez."
         ]
+        "image": "Velouté de potiron.jpg" 
     },
     {
         "title": "Tarte aux poireaux",
@@ -1142,6 +1172,7 @@ plats_automne = [
             "Garnissez une pâte brisée avec poireaux et appareil.",
             "Enfournez 35 min à 180°C."
         ]
+        "image": "Tarte aux poireaux.jpg" 
     },
     {
         "title": "Civet de sanglier",
@@ -1155,6 +1186,7 @@ plats_automne = [
             "Ajoutez les champignons en fin de cuisson.",
             "Servez bien chaud avec des pâtes fraîches."
         ]
+        "image": "Civet de sanglier.jpg" 
     },
     {
         "title": "Gratin de courge butternut",
@@ -1168,6 +1200,7 @@ plats_automne = [
             "Versez dans un plat à gratin et enfournez 45 min.",
             "Servez doré et chaud."
         ]
+        "image": "Gratin de courge butternut.jpg" 
     },
     {
         "title": "Quiche aux champignons et noisettes",
@@ -1181,6 +1214,7 @@ plats_automne = [
             "Garnissez une pâte avec champignons, noisettes et appareil œufs/crème.",
             "Enfournez 40 min à 180°C."
         ]
+        "image": "Quiche aux champignons et noisettes.jpg" 
     },
     {
         "title": "Poêlée de châtaignes et lardons",
@@ -1193,6 +1227,7 @@ plats_automne = [
             "Assaisonnez avec poivre et herbes de Provence.",
             "Servez chaud en accompagnement ou plat principal."
         ]
+        "image": "Poêlée de châtaignes et lardons.jpg" 
     },
     {
         "title": "Gratin de macaronis au potiron",
@@ -1206,6 +1241,7 @@ plats_automne = [
             "Mélangez avec les pâtes, versez dans un plat.",
             "Ajoutez fromage râpé et gratinez 20 min."
         ]
+        "image": "Gratin de macaronis au potiron.jpg" 
     },
     {
         "title": "Soupe de lentilles corail et carottes",
@@ -1219,6 +1255,7 @@ plats_automne = [
             "Laissez cuire 30 min à feu doux.",
             "Mixez selon la texture souhaitée."
         ]
+        "image": "Soupe de lentilles corail et carottes.jpg" 
     },
     {
         "title": "Filet mignon aux pommes",
@@ -1232,6 +1269,7 @@ plats_automne = [
             "Laissez mijoter 40 min à feu doux.",
             "Servez nappé de sauce aux pommes."
         ]
+        "image": "Filet mignon aux pommes.jpg" 
     }
 ]
 
@@ -1253,7 +1291,7 @@ for idx, plat in enumerate(plats_automne):
 
     # Ajout recette
     cursor.execute("""
-        INSERT INTO Recette (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
+        INSERT INTO Recettes (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         recette_id,
@@ -1264,13 +1302,14 @@ for idx, plat in enumerate(plats_automne):
         "Automne",
         plat["description"],
         4,
+        plat["image"]
         ""
     ))
 
     # Ajout étapes
     for num, step in enumerate(plat["steps"], start=1):
         cursor.execute("""
-            INSERT INTO Step (Recette_id, Num_step, Contenu)
+            INSERT INTO Steps (Recette_id, Num_step, Contenu)
             VALUES (?, ?, ?)
         """, (recette_id, num, step))
 
@@ -1284,7 +1323,7 @@ for idx, plat in enumerate(plats_automne):
                     ingredient_ids[name] = new_id
                     break
             cursor.execute(
-                "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+                "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
                 (ingredient_ids[name], name, allergenes_automne_plats.get(name, 0))
             )
         id_ing = ingredient_ids[name]
@@ -1338,7 +1377,7 @@ for name in ingredients_hiver_plats:
                 ingredient_ids[name] = new_id
                 break
         cursor.execute(
-            "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+            "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
             (ingredient_ids[name], name, allergenes_hiver_plats.get(name, 0))
         )
 
@@ -1371,6 +1410,7 @@ plats_hiver = [
             "Laissez mijoter à feu doux pendant 2 heures.",
             "Servez chaud avec de la moutarde."
         ]
+        "image": "Potée auvergnate.jpg" 
     },
     {
         "title": "Gratin dauphinois",
@@ -1384,6 +1424,7 @@ plats_hiver = [
             "Versez la crème et ajoutez sel, poivre et muscade.",
             "Faites cuire au four à 160°C pendant 1h30."
         ]
+        "image": "Gratin dauphinois.jpg" 
     },
     {
         "title": "Soupe à l'oignon gratinée",
@@ -1397,6 +1438,7 @@ plats_hiver = [
             "Disposez des tranches de pain grillé et du gruyère râpé dessus.",
             "Passez sous le gril du four jusqu'à gratinage."
         ]
+        "image": "Soupe à l'oignon gratinée.jpg" 
     },
     {
         "title": "Bœuf bourguignon",
@@ -1410,6 +1452,7 @@ plats_hiver = [
             "Ajoutez les champignons en fin de cuisson.",
             "Servez bien chaud."
         ]
+        "image": "Bœuf bourguignon.jpg" 
     },
     {
         "title": "Tartiflette savoyarde",
@@ -1423,6 +1466,7 @@ plats_hiver = [
             "Cuisez au four à 180°C pendant 1 heure.",
             "Servez chaud."
         ]
+        "image": "Tartiflette savoyarde.jpg" 
     },
     {
         "title": "Chili con carne",
@@ -1435,6 +1479,7 @@ plats_hiver = [
             "Rectifiez l'assaisonnement.",
             "Servez avec du riz."
         ]
+        "image": "Chili con carne.jpg" 
     },
     {
         "title": "Cassoulet traditionnel",
@@ -1447,6 +1492,7 @@ plats_hiver = [
             "Assemblez dans une grande cocotte et laissez mijoter 4 heures.",
             "Servez très chaud."
         ]
+        "image": "Chili con carne.jpg"
     },
     {
         "title": "Velouté de potimarron",
@@ -1460,6 +1506,7 @@ plats_hiver = [
             "Mixez la soupe, ajoutez crème et assaisonnez.",
             "Servez chaud."
         ]
+        "image": "Velouté de potimarron.jpg"
     },
     {
         "title": "Parmentier de confit de canard",
@@ -1473,6 +1520,7 @@ plats_hiver = [
             "Faites gratiner au four 20 minutes.",
             "Servez chaud."
         ]
+        "image": "Parmentier de confit de canard.jpg"
     },
     {
         "title": "Raclette traditionnelle",
@@ -1485,6 +1533,7 @@ plats_hiver = [
             "Faites fondre le fromage et servez avec charcuterie et cornichons.",
             "Chacun compose son assiette."
         ]
+        "image": "Raclette traditionnelle.jpg"
     }
 ]
 
@@ -1507,7 +1556,7 @@ for idx, plat in enumerate(plats_hiver):
 
     # Ajout recette
     cursor.execute("""
-        INSERT INTO Recette (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
+        INSERT INTO Recettes (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         recette_id,
@@ -1518,13 +1567,14 @@ for idx, plat in enumerate(plats_hiver):
         "Hiver",
         plat["description"],
         4,
+        plat["image"]
         ""
     ))
 
     # Ajout étapes
     for num, step in enumerate(plat["steps"], start=1):
         cursor.execute("""
-            INSERT INTO Step (Recette_id, Num_step, Contenu)
+            INSERT INTO Steps (Recette_id, Num_step, Contenu)
             VALUES (?, ?, ?)
         """, (recette_id, num, step))
 
@@ -1538,7 +1588,7 @@ for idx, plat in enumerate(plats_hiver):
                     ingredient_ids[name] = new_id
                     break
             cursor.execute(
-                "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+                "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
                 (ingredient_ids[name], name, allergenes_hiver_plats.get(name, 0))
             )
         id_ing = ingredient_ids[name]
@@ -1588,7 +1638,7 @@ for name in ingredients_printemps_plats:
                 ingredient_ids[name] = new_id
                 break
         cursor.execute(
-            "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+            "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
             (ingredient_ids[name], name, allergenes_printemps_plats.get(name, 0))
         )
 
@@ -1621,6 +1671,7 @@ plats_printemps = [
             "Préparez une vinaigrette au citron.",
             "Servez frais."
         ]
+        "image": "Salade de printemps.jpg"
     },
     {
         "title": "Risotto aux asperges et petits pois",
@@ -1634,6 +1685,7 @@ plats_printemps = [
             "Versez le bouillon petit à petit jusqu'à cuisson du riz.",
             "Ajoutez le parmesan en fin de cuisson."
         ]
+        "image": "Risotto aux asperges et petits pois.jpg"
     },
     {
         "title": "Tarte aux épinards et fromage frais",
@@ -1647,6 +1699,7 @@ plats_printemps = [
             "Faites cuire 30 min à 180°C.",
             "Servez tiède."
         ]
+        "image": "Tarte aux épinards et fromage frais.jpg"
     },
     {
         "title": "Poulet au citron et aux herbes",
@@ -1659,6 +1712,7 @@ plats_printemps = [
             "Faites cuire à la poêle jusqu'à ce qu'il soit doré.",
             "Servez avec une salade verte."
         ]
+        "image": "Poulet au citron et aux herbes.jpg"
     },
     {
         "title": "Pâtes aux courgettes et basilic",
@@ -1671,6 +1725,7 @@ plats_printemps = [
             "Ajoutez les pâtes égouttées et le basilic.",
             "Parsemez de parmesan avant de servir."
         ]
+        "image": "Pâtes aux courgettes et basilic.jpg"
     },
     {
         "title": "Saumon en papillote",
@@ -1683,6 +1738,7 @@ plats_printemps = [
             "Fermez la papillote et enfournez 20 min à 180°C.",
             "Servez avec du riz ou des légumes."
         ]
+        "image": "Saumon en papillote.jpg"
     },
     {
         "title": "Poêlée de fèves et carottes",
@@ -1696,6 +1752,7 @@ plats_printemps = [
             "Laissez cuire 15 minutes.",
             "Servez chaud."
         ]
+        "image": "Poêlée de fèves et carottes.jpg"
     },
     {
         "title": "Omelette aux herbes fraîches",
@@ -1708,6 +1765,7 @@ plats_printemps = [
             "Versez les œufs battus et laissez cuire doucement.",
             "Servez chaud ou froid."
         ]
+        "image": "Omelette aux herbes fraîches.jpg"
     },
     {
         "title": "Salade de pommes de terre et radis",
@@ -1720,6 +1778,7 @@ plats_printemps = [
             "Mélangez avec la menthe et le jus de citron.",
             "Servez frais."
         ]
+        "image": "Salade de pommes de terre et radis.jpg"
     },
     {
         "title": "Gratin de courgettes et pommes de terre",
@@ -1733,6 +1792,7 @@ plats_printemps = [
             "Faites cuire 35 min à 180°C.",
             "Servez chaud."
         ]
+        "image": "Gratin de courgettes et pommes de terre.jpg"
     },
     {
         "title": "Riz aux petits pois et menthe",
@@ -1745,6 +1805,7 @@ plats_printemps = [
             "Mélangez le tout avec la menthe ciselée.",
             "Servez chaud ou froid."
         ]
+        "image": "Riz aux petits pois et menthe.jpg"
     }
 ]
 
@@ -1768,7 +1829,7 @@ for idx, plat in enumerate(plats_printemps):
 
     # Ajout recette
     cursor.execute("""
-        INSERT INTO Recette (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
+        INSERT INTO Recettes (Recette_id, Title, Preptime, Cooktime, Category, Saison, Description, Servings, Image)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         recette_id,
@@ -1779,13 +1840,14 @@ for idx, plat in enumerate(plats_printemps):
         "Printemps",
         plat["description"],
         4,
+        plat["image"]
         ""
     ))
 
     # Ajout étapes
     for num, step in enumerate(plat["steps"], start=1):
         cursor.execute("""
-            INSERT INTO Step (Recette_id, Num_step, Contenu)
+            INSERT INTO Steps (Recette_id, Num_step, Contenu)
             VALUES (?, ?, ?)
         """, (recette_id, num, step))
 
@@ -1799,7 +1861,7 @@ for idx, plat in enumerate(plats_printemps):
                     ingredient_ids[name] = new_id
                     break
             cursor.execute(
-                "INSERT OR IGNORE INTO Ingredient (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
+                "INSERT OR IGNORE INTO Ingredients (Id_ingredient, Name, Allergene) VALUES (?, ?, ?)",
                 (ingredient_ids[name], name, allergenes_printemps_plats.get(name, 0))
             )
         id_ing = ingredient_ids[name]
