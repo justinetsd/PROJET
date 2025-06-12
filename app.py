@@ -143,7 +143,7 @@ def login():
             computed_hash = hashage(password, rand, salt)
 
             if computed_hash == stored_hash:
-                session["username"] = username
+                session["user"] = username
                 return redirect("/")
         
         return render_template("login.html", error="Invalid credentials")
