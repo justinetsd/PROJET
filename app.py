@@ -239,6 +239,20 @@ def politique():
 def conditions():
     return render_template('conditions.html')
 
+@app.route('/noter_recette/<int:recette_id>', methods=['POST'])
+def noter_recette(recette_id):
+    if "user" not in session:
+        return redirect(url_for('login'))
+    note = int(request.form.get('note', 0))
+    user = session["user"]
+    conn = sqlite3.connect('BDD.db')
+    # À adapter selon ta table de notes (exemple: Recette_Note avec Recette_id, user, note)
+    conn.execute("INSERT INTO Recette_Note (Recette_id, user, note) VALUES (?, ?, ?)", (recette_id, user, note))
+    conn.commit()
+    conn.close()
+    flash("Merci pour votre note !")
+    return redirect(url_for('recette', recette_id=recette_id))
+
 if __name__ == '__main__':
     app.run(debug=True)
 
