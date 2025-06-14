@@ -686,5 +686,28 @@ html {
 .etoiles-notation label:hover ~ label {
     color: gold;
 }
+.coeur {
+    color: #bbb;
+    font-size: 1.3em;
+    transition: color 0.2s;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0 0 0 10px;
+    vertical-align: middle;
+    
+}
+.coeur.actif {
+    color: #e75480; /* rose */
+}
+.coeur-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+.form-favori {
+    display: inline;
+}
 
 
