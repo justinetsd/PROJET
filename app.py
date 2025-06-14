@@ -3,6 +3,8 @@ import hashlib
 import os
 import sqlite3
 from flask_mail import Mail, Message
+import datetime
+import random
 
 app = Flask(__name__)
 app.secret_key = "votre_cle_secrete"
@@ -44,12 +46,27 @@ def accueil():
     best_recipes = get_best_rated_recipes(20)
     return render_template('accueil.html', recipes=recipes, best_recipes=best_recipes)
 
-@app.route('/recettes') #route des recettes
+@app.route('/recettes')
 def recettes():
-    recipes = get_recipes()
-    return render_template('recettes.html', recipes=recipes)
-#ce bout de code permet de récupérer l'une des recettes sur laquelle on a cliqué
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    recipes = conn.execute("SELECT * FROM Recette").fetchall()
+    plats = [r for r in recipes if r['Category'].lower() == 'plat']
+    desserts = [r for r in recipes if r['Category'].lower() == 'dessert']
 
+    today = datetime.date.today().isoformat()
+    random.seed(today + "plat")
+    plat_du_jour = random.choice(plats) if plats else None
+    random.seed(today + "dessert")
+    dessert_du_jour = random.choice(desserts) if desserts else None
+
+    conn.close()
+    return render_template(
+        'recettes.html',
+        recipes=recipes,
+        plat_du_jour=plat_du_jour,
+        dessert_du_jour=dessert_du_jour
+    )
 
 @app.route('/recette/<int:recette_id>')
 def recette(recette_id):
