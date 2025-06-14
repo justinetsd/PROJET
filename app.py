@@ -23,10 +23,26 @@ def get_recipes():
     conn.close()
     return recipes
 
+def get_best_rated_recipes(limit=20):
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    recettes = conn.execute("""
+        SELECT r.*, AVG(rt.Rating) as moyenne
+        FROM Recette r
+        JOIN Rating rt ON r.Recette_id = rt.Recette_id
+        GROUP BY r.Recette_id
+        HAVING COUNT(rt.Rating) > 0
+        ORDER BY moyenne DESC, r.Title ASC
+        LIMIT ?
+    """, (limit,)).fetchall()
+    conn.close()
+    return recettes
+
 @app.route('/') #route par défaut
 def accueil():
     recipes = get_recipes()
-    return render_template('accueil.html', recipes=recipes)
+    best_recipes = get_best_rated_recipes(20)
+    return render_template('accueil.html', recipes=recipes, best_recipes=best_recipes)
 
 @app.route('/recettes') #route des recettes
 def recettes():
@@ -64,9 +80,18 @@ def recette(recette_id):
             user_id = user_id[0]
             fav = conn.execute("SELECT 1 FROM Recette_Favori WHERE User_id = ? AND Recette_id = ?", (user_id, recette_id)).fetchone()
             est_favori = fav is not None
+    
+    avis = conn.execute(
+    "SELECT u.Username, r.Rating, r.Commentaire FROM Rating r JOIN User u ON r.User_id = u.User_id WHERE r.Recette_id = ?",
+    (recette_id,)
+).fetchall()
+    
+    moyenne = conn.execute(
+    "SELECT AVG(Rating) FROM Rating WHERE Recette_id = ?", (recette_id,)
+).fetchone()[0]
 
     conn.close()
-    return render_template('Unerecette.html', recipe=recipe, equipements=equipements, steps=steps, est_favori=est_favori)
+    return render_template('Unerecette.html', recipe=recipe, equipements=equipements, steps=steps, est_favori=est_favori, avis=avis, moyenne=moyenne)
 
 
 def hashage(password, rand, salt):
@@ -279,11 +304,19 @@ def noter_recette(recette_id):
     if "username" not in session:
         return redirect(url_for('login'))
     note = int(request.form.get('note', 0))
-    user = session["username"]
+    commentaire = request.form.get('commentaire', '').strip()
+    username = session["username"]
     conn = sqlite3.connect('BDD.db')
-    # À adapter selon ta table de notes (exemple: Recette_Note avec Recette_id, user, note)
-    conn.execute("INSERT INTO Rating (Recette_id, Id-user, Rating) VALUES (?, ?, ?)", (recette_id, Id_user, Rating))
-    conn.commit()
+    cur = conn.cursor()
+    user_id = cur.execute("SELECT User_id FROM User WHERE Username = ?", (username,)).fetchone()
+    if user_id:
+        user_id = user_id[0]
+        cur.execute("""
+            INSERT INTO Rating (User_id, Recette_id, Rating, Commentaire)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(User_id, Recette_id) DO UPDATE SET Rating=excluded.Rating, Commentaire=excluded.Commentaire
+        """, (user_id, recette_id, note, commentaire))
+        conn.commit()
     conn.close()
     flash("Merci pour votre note !")
     return redirect(url_for('recette', recette_id=recette_id))
