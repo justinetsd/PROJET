@@ -57,8 +57,16 @@ def recette(recette_id):
         (recette_id,)
     ).fetchall()
 
+    est_favori = False
+    if "username" in session:
+        user_id = conn.execute("SELECT User_id FROM User WHERE Username = ?", (session["username"],)).fetchone()
+        if user_id:
+            user_id = user_id[0]
+            fav = conn.execute("SELECT 1 FROM Recette_Favori WHERE User_id = ? AND Recette_id = ?", (user_id, recette_id)).fetchone()
+            est_favori = fav is not None
+
     conn.close()
-    return render_template('Unerecette.html', recipe=recipe, equipements=equipements, steps=steps)
+    return render_template('Unerecette.html', recipe=recipe, equipements=equipements, steps=steps, est_favori=est_favori)
 
 
 def hashage(password, rand, salt):
@@ -77,10 +85,25 @@ def profil():
     conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
     user = conn.execute("SELECT * FROM User WHERE Username = ?", (session['username'],)).fetchone()
+    # Récupère les recettes favorites de l'utilisateur
+    favoris = []
+    if user:
+        favoris = conn.execute("""
+            SELECT r.*
+            FROM Recette r
+            JOIN Recette_Favori f ON r.Recette_id = f.Recette_id
+            WHERE f.User_id = ?
+        """, (user['User_id'],)).fetchall()
     conn.close()
     if not user:
         return redirect(url_for('login'))
-    return render_template('profil.html', username=user['Username'], firstname=user['FirstName'], lastname=user['LastName'])
+    return render_template(
+        'profil.html',
+        username=user['Username'],
+        firstname=user['FirstName'],
+        lastname=user['LastName'],
+        favoris=favoris
+    )
 
 @app.route('/logout')
 def logout():
@@ -272,11 +295,12 @@ def politique():
 @app.route('/conditions')
 def conditions():
     return render_template('conditions.html')
+
 @app.route('/ajouter_favori/<int:recette_id>', methods=['POST'])
 def ajouter_favori(recette_id):
-    if "user" not in session:
+    if "username" not in session:  # <-- correction ici
         return redirect(url_for('login'))
-    username = session["user"]
+    username = session["username"]
     conn = sqlite3.connect('BDD.db')
     cur = conn.cursor()
     user_id = cur.execute("SELECT User_id FROM User WHERE Username = ?", (username,)).fetchone()
