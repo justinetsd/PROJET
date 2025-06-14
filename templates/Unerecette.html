@@ -2,15 +2,18 @@
 {% block content %}
     <h1>{{ recipe['title'] }}</h1>
  <form action="{{ url_for('ajouter_favori', recette_id=recipe['Recette_id']) }}" method="post" class="form-favori" style="margin-left: 15px;">
-        <button type="submit" class="coeur-btn">
-            <span class="coeur{% if est_favori %} actif{% endif %}">&#10084;</span>
-        </button>
-    </form>
+    <button type="submit" class="coeur-btn">
+        <span class="coeur{% if est_favori %} actif{% endif %}">&#10084;</span>
+    </button>
+</form>
 <form action="{{ url_for('noter_recette', recette_id=recipe['Recette_id']) }}" method="post" class="etoiles-notation">
     {% for i in range(5, 0, -1) %}
-        <input type="radio" id="star{{ i }}" name="" value="{{ i }}">
+        <input type="radio" id="star{{ i }}" name="note" value="{{ i }}">
         <label for="star{{ i }}">&#9733;</label>
     {% endfor %}
+    <br>
+    <textarea name="commentaire" placeholder="Laissez un commentaire (facultatif)" style="width:100%;margin-top:8px;"></textarea>
+    <br>
     <button type="submit">Noter</button>
 </form>
 
@@ -34,5 +37,25 @@
         </li>
     {% endfor %}
 </ol>
+<h3>Avis des utilisateurs</h3>
+{% if moyenne %}
+    <p>Note moyenne : {{ '%.1f'|format(moyenne) }}/5</p>
+{% else %}
+    <p>Pas encore de note pour cette recette.</p>
+{% endif %}
+{% if avis %}
+    <ul>
+    {% for a in avis %}
+        <li>
+            <strong>{{ a['Username'] }}</strong> : {{ a['Rating'] }}/5
+            {% if a['Commentaire'] %}
+                <br>{{ a['Commentaire'] }}
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Aucun avis pour cette recette.</p>
+{% endif %}
 
 {% endblock %}
