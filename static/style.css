@@ -709,5 +709,6 @@ html {
 .form-favori {
     display: inline;
 }
-
-
+h2[id] {
+    scroll-margin-top: 200px;
+}
