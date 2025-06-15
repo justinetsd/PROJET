@@ -11,6 +11,7 @@
             <input type="password" name="password" id="password" required style="margin-bottom: 20px; padding: 8px 36px 8px 8px; width: 100%; border-radius: 5px; border: 1px solid #ccc;">
             <span id="toggle-password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; display: none; font-size: 1.2em;">👁️</span>
         </div>
+        <a href="{{ url_for('forgot_password') }}" style="margin-bottom: 16px; color: #c2185b; font-size: 0.95em; text-align: right; display: block;">Mot de passe oublié&nbsp;?</a>
         <button type="submit" style="background: #c2185b; color: white; border: none; border-radius: 5px; padding: 10px 30px; font-weight: bold; cursor: pointer;">Se connecter</button>
         {% if error %}
             <p style="color:red; margin-top:10px;">{{ error }}</p>
