@@ -2,7 +2,10 @@
 {% block title %}Inscription{% endblock %}
 {% block content %}
 {% if success %}
-    <p style="color:green; margin-top:10px;">{{ success }}</p>
+    <div style="background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 6px; padding: 16px 24px; margin-bottom: 24px; font-size: 1.1em; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); max-width: 400px; margin-left: auto; margin-right: auto;">
+        <strong>Inscription réussie !</strong><br>
+        Vous pouvez maintenant vous connecter.
+    </div>
 {% endif %}
 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; margin-bottom: 120px;">
     <h2 style="text-align: center; font-size: 2em; margin-bottom: 30px;">Inscription</h2>

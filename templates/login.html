@@ -11,6 +11,7 @@
             <input type="password" name="password" id="password" required style="margin-bottom: 20px; padding: 8px 36px 8px 8px; width: 100%; border-radius: 5px; border: 1px solid #ccc;">
             <span id="toggle-password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; display: none; font-size: 1.2em;">👁️</span>
         </div>
+        <a href="{{ url_for('forgot_password') }}" style="margin-bottom: 16px; color: #c2185b; font-size: 0.95em; text-align: right; display: block;">Mot de passe oublié&nbsp;?</a>
         <button type="submit" style="background: #c2185b; color: white; border: none; border-radius: 5px; padding: 10px 30px; font-weight: bold; cursor: pointer;">Se connecter</button>
         {% if error %}
             <p style="color:red; margin-top:10px;">{{ error }}</p>
@@ -23,6 +24,36 @@
         </button>
     </a>
 </div>
-
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const errorMsg = document.querySelector('p[style*="color:red"]');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    if (errorMsg) {
+        if (usernameInput) {
+            usernameInput.addEventListener('input', function() {
+                errorMsg.style.display = 'none';
+            });
+            usernameInput.addEventListener('focus', function() {
+                errorMsg.style.display = 'none';
+            });
+        }
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
+                errorMsg.style.display = 'none';
+            });
+            passwordInput.addEventListener('focus', function() {
+                errorMsg.style.display = 'none';
+            });
+        }
+    }
+});
+</script>
 
 {% endblock %}
+
+{% if request.args.get('reset_success') %}
+    <div style="background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 6px; padding: 16px 24px; margin-bottom: 24px; font-size: 1.1em; text-align: center;">
+        Votre mot de passe a été réinitialisé avec succès. Vous pouvez vous connecter.
+    </div>
+{% endif %}

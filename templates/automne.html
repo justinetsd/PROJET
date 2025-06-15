@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Accueil{% endblock %}
+
 {% block content %}
-<h1>Automne</h1>
+<h1>Recettes d'automne</h1>
 
 <div class="categories-links">
     <a href="#plats" class="lien-recettes">Plats</a>
@@ -10,10 +11,23 @@
 
 <h2 id="plats">Plats</h2>
 {% if plats %}
+    {% set titres_vus_plats = [] %}
     {% for plat in plats %}
-        <div class="encadre-nom-recette">
-            <a href="{{ url_for('recette', recette_id=plat['Recette_id']) }}" class="lien-recettes">{{ plat['Title'] }}</a>
-        </div>
+        {% if plat['Title'] not in titres_vus_plats %}
+            <div class="encadre-nom-recette">
+                <a href="{{ url_for('recette', recette_id=plat['Recette_id']) }}" class="lien-recettes">
+                    {{ plat['Title'] }}
+                </a>
+                {% if plat['image'] %}
+                    <div class="photo-recette">
+                        <img src="{{ url_for('static', filename=plat['image']) }}"
+                             alt="Image de {{ plat['Title'] }}"
+                             style="width: 300px; height: auto; display: block; margin: 0 auto;">
+                    </div>
+                {% endif %}
+            </div>
+            {% set _ = titres_vus_plats.append(plat['Title']) %}
+        {% endif %}
     {% endfor %}
 {% else %}
     <p>Aucun plat d'automne trouvé.</p>
@@ -21,10 +35,23 @@
 
 <h2 id="desserts">Desserts</h2>
 {% if desserts %}
+    {% set titres_vus_desserts = [] %}
     {% for dessert in desserts %}
-        <div class="encadre-nom-recette">
-            <a href="{{ url_for('recette', recette_id=dessert['Recette_id']) }}" class="lien-recettes">{{ dessert['Title'] }}</a>
-        </div>
+        {% if dessert['Title'] not in titres_vus_desserts %}
+            <div class="encadre-nom-recette">
+                <a href="{{ url_for('recette', recette_id=dessert['Recette_id']) }}" class="lien-recettes">
+                    {{ dessert['Title'] }}
+                </a>
+                {% if dessert['image'] %}
+                    <div class="photo-recette">
+                        <img src="{{ url_for('static', filename=dessert['image']) }}"
+                             alt="Image de {{ dessert['Title'] }}"
+                             style="width: 300px; height: auto; display: block; margin: 0 auto;">
+                    </div>
+                {% endif %}
+            </div>
+            {% set _ = titres_vus_desserts.append(dessert['Title']) %}
+        {% endif %}
     {% endfor %}
 {% else %}
     <p>Aucun dessert d'automne trouvé.</p>
