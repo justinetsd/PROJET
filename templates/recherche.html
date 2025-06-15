@@ -1,13 +1,25 @@
 {% extends "base.html" %}
+
 {% block content %}
     <h1>Résultats pour "{{ query }}"</h1>
     {% if recettes %}
+        {% set noms_vus = [] %}
         {% for recette in recettes %}
-            <div class="encadre-nom-recette">
-                <a href="{{ url_for('recette', recette_id=recette['Recette_id']) }}"class="lien-recettes">
-                    {{ recette['title'] }}
-                </a>
-            </div>
+            {% if recette['title'] not in noms_vus %}
+                <div class="encadre-nom-recette">
+                    <a href="{{ url_for('recette', recette_id=recette['Recette_id']) }}" class="lien-recettes">
+                        {{ recette['title'] }}
+                    </a>
+                    {% if recette['image'] %}
+                        <div class="photo-recette">
+                            <img src="{{ url_for('static', filename=recette['image']) }}"
+                                 alt="Image de {{ recette['title'] }}"
+                                 style="width: 300px; height: auto; display: block; margin: 0 auto;">
+                        </div>
+                    {% endif %}
+                </div>
+                {% set _ = noms_vus.append(recette['title']) %}
+            {% endif %}
         {% endfor %}
     {% else %}
         <p>Aucune recette trouvée.</p>
