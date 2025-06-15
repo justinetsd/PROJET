@@ -1,6 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Liste des recettes</h1>
+    
+    <div class="du-jour-block encadre-jaune" style="max-width:400px; margin: 0 auto 30px auto; background:#f8f8f8; border-radius:10px; padding:18px; text-align:center;">
+    <h2>Menu du jour:</h2>
+    <h3>Plat du jour</h3>
+    {% if plat_du_jour %}
+        <div class="titre-du-jour">
+            <a href="{{ url_for('recette', recette_id=plat_du_jour['Recette_id']) }}" class="lien-recette-nom">
+                {{ plat_du_jour['Title'] }}
+            </a>
+        </div>
+    {% else %}
+        <p>Aucun plat disponible.</p>
+    {% endif %}
+
+    <h3 style="margin-top: 20px;">Dessert du jour</h3>
+    {% if dessert_du_jour %}
+        <div class="titre-du-jour">
+            <a href="{{ url_for('recette', recette_id=dessert_du_jour['Recette_id']) }}" class="lien-recette-nom">
+                {{ dessert_du_jour['Title'] }}
+            </a>
+        </div>
+    {% else %}
+        <p>Aucun dessert disponible.</p>
+    {% endif %}
+</div>
     <div class="saisons-links">
         <a href="{{ url_for('automne') }}">Automne</a>
         <a href="{{ url_for('hiver') }}">Hiver</a>

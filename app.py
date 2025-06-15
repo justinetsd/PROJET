@@ -3,6 +3,8 @@ import hashlib
 import os
 import sqlite3
 from flask_mail import Mail, Message
+import datetime
+import random
 
 app = Flask(__name__)
 app.secret_key = "votre_cle_secrete"
@@ -44,12 +46,27 @@ def accueil():
     best_recipes = get_best_rated_recipes(20)
     return render_template('accueil.html', recipes=recipes, best_recipes=best_recipes)
 
-@app.route('/recettes') #route des recettes
+@app.route('/recettes')
 def recettes():
-    recipes = get_recipes()
-    return render_template('recettes.html', recipes=recipes)
-#ce bout de code permet de récupérer l'une des recettes sur laquelle on a cliqué
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    recipes = conn.execute("SELECT * FROM Recette").fetchall()
+    plats = [r for r in recipes if r['Category'].lower() == 'plat']
+    desserts = [r for r in recipes if r['Category'].lower() == 'dessert']
 
+    today = datetime.date.today().isoformat()
+    random.seed(today + "plat")
+    plat_du_jour = random.choice(plats) if plats else None
+    random.seed(today + "dessert")
+    dessert_du_jour = random.choice(desserts) if desserts else None
+
+    conn.close()
+    return render_template(
+        'recettes.html',
+        recipes=recipes,
+        plat_du_jour=plat_du_jour,
+        dessert_du_jour=dessert_du_jour
+    )
 
 @app.route('/recette/<int:recette_id>')
 def recette(recette_id):
@@ -203,7 +220,56 @@ def login():
 
     return render_template("login.html")
 
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    message = None
+    if request.method == 'POST':
+        email = request.form['email']
+        conn = sqlite3.connect('BDD.db')
+        conn.row_factory = sqlite3.Row  # <-- Ajoute ceci
+        user = conn.execute("SELECT * FROM User WHERE EmailAddress = ?", (email,)).fetchone()
+        conn.close()
+        if user:
+            # Génère un token unique (ici simple, à sécuriser en prod)
+            import secrets
+            token = secrets.token_urlsafe(32)
+            # Stocke le token temporairement (à améliorer pour la prod)
+            with open(f"reset_{token}.txt", "w") as f:
+                f.write(user['Username'])
+            # Envoie le mail
+            reset_link = url_for('reset_password', token=token, _external=True)
+            from flask_mail import Message
+            msg = Message("Réinitialisation de votre mot de passe", recipients=[email])
+            msg.body = f"Pour réinitialiser votre mot de passe, cliquez sur ce lien : {reset_link}"
+            mail.send(msg)
+            message = "Un email de réinitialisation a été envoyé."
+        else:
+            message = "Adresse email inconnue."
+    return render_template('forgot_password.html', message=message)
 
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    import os
+    username_file = f"reset_{token}.txt"
+    if not os.path.exists(username_file):
+        return "Lien invalide ou expiré.", 400
+    with open(username_file, "r") as f:
+        username = f.read()
+    if request.method == 'POST':
+        new_password = request.form['new_password']
+        # Récupère le salt et random de l'utilisateur
+        conn = sqlite3.connect('BDD.db')
+        user = conn.execute("SELECT Salt, Random FROM User WHERE Username = ?", (username,)).fetchone()
+        if user:
+            salt, rand = user
+            new_hash = hashage(new_password, rand, salt)
+            conn.execute("UPDATE User SET Hash = ? WHERE Username = ?", (new_hash, username))
+            conn.commit()
+            conn.close()
+            os.remove(username_file)
+            return redirect(url_for('login'))
+        conn.close()
+    return render_template('reset_password.html')
 
 @app.route('/ete')
 def ete():
