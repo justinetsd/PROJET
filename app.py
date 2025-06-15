@@ -410,8 +410,22 @@ def ajouter_favori(recette_id):
     conn.close()
     return redirect(url_for('recette', recette_id=recette_id))
 
+@app.route('/retirer_favori/<int:recette_id>', methods=['POST'])
+def retirer_favori(recette_id):
+    if "username" not in session:
+        return redirect(url_for('login'))
+    username = session["username"]
+    conn = sqlite3.connect('BDD.db')
+    cur = conn.cursor()
+    user_id = cur.execute("SELECT User_id FROM User WHERE Username = ?", (username,)).fetchone()
+    if user_id:
+        user_id = user_id[0]
+        cur.execute("DELETE FROM Recette_Favori WHERE User_id = ? AND Recette_id = ?", (user_id, recette_id))
+        conn.commit()
+    conn.close()
+    return redirect(url_for('recette', recette_id=recette_id))
+
 if __name__ == '__main__':
     app.run(debug=True)
-
 
 
