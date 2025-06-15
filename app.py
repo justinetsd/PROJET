@@ -216,7 +216,7 @@ def login():
                 session["username"] = username
                 return redirect("/")
         
-        return render_template("login.html", error="Invalid credentials")
+        return render_template("login.html", error="Identifiant ou mot de passe incorrect.")
 
     return render_template("login.html")
 
@@ -239,7 +239,11 @@ def forgot_password():
             # Envoie le mail
             reset_link = url_for('reset_password', token=token, _external=True)
             from flask_mail import Message
-            msg = Message("Réinitialisation de votre mot de passe", recipients=[email])
+            msg = Message(
+                "Réinitialisation de votre mot de passe",
+                sender=app.config['MAIL_USERNAME'],  # <-- ajoute ceci
+                recipients=[email]
+            )
             msg.body = f"Pour réinitialiser votre mot de passe, cliquez sur ce lien : {reset_link}"
             mail.send(msg)
             message = "Un email de réinitialisation a été envoyé."
@@ -255,21 +259,32 @@ def reset_password(token):
         return "Lien invalide ou expiré.", 400
     with open(username_file, "r") as f:
         username = f.read()
+    error = None
+    success = None
     if request.method == 'POST':
+        email = request.form['email']
         new_password = request.form['new_password']
-        # Récupère le salt et random de l'utilisateur
-        conn = sqlite3.connect('BDD.db')
-        user = conn.execute("SELECT Salt, Random FROM User WHERE Username = ?", (username,)).fetchone()
-        if user:
-            salt, rand = user
-            new_hash = hashage(new_password, rand, salt)
-            conn.execute("UPDATE User SET Hash = ? WHERE Username = ?", (new_hash, username))
-            conn.commit()
+        confirm_password = request.form['confirm_password']
+        if new_password != confirm_password:
+            error = "Les mots de passe ne correspondent pas."
+        else:
+            conn = sqlite3.connect('BDD.db')
+            conn.row_factory = sqlite3.Row
+            user = conn.execute("SELECT * FROM User WHERE Username = ? AND EmailAddress = ?", (username, email)).fetchone()
+            if not user:
+                error = "Adresse email incorrecte."
+            else:
+                salt, rand = user['Salt'], user['Random']
+                new_hash = hashage(new_password, rand, salt)
+                conn.execute("UPDATE User SET Hash = ? WHERE Username = ?", (new_hash, username))
+                conn.commit()
+                conn.close()
+                os.remove(username_file)
+                # Redirige vers la page de connexion avec un message de succès
+                return redirect(url_for('login', reset_success=1))
             conn.close()
-            os.remove(username_file)
-            return redirect(url_for('login'))
-        conn.close()
-    return render_template('reset_password.html')
+    # error sera None en GET, ou contiendra le message seulement après un POST
+    return render_template('reset_password.html', error=error, method=request.method)
 
 @app.route('/ete')
 def ete():

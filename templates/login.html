@@ -24,6 +24,36 @@
         </button>
     </a>
 </div>
-
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const errorMsg = document.querySelector('p[style*="color:red"]');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    if (errorMsg) {
+        if (usernameInput) {
+            usernameInput.addEventListener('input', function() {
+                errorMsg.style.display = 'none';
+            });
+            usernameInput.addEventListener('focus', function() {
+                errorMsg.style.display = 'none';
+            });
+        }
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
+                errorMsg.style.display = 'none';
+            });
+            passwordInput.addEventListener('focus', function() {
+                errorMsg.style.display = 'none';
+            });
+        }
+    }
+});
+</script>
 
 {% endblock %}
+
+{% if request.args.get('reset_success') %}
+    <div style="background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 6px; padding: 16px 24px; margin-bottom: 24px; font-size: 1.1em; text-align: center;">
+        Votre mot de passe a été réinitialisé avec succès. Vous pouvez vous connecter.
+    </div>
+{% endif %}
