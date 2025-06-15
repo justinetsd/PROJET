@@ -152,7 +152,7 @@ desserts = [
             "Servir frais."
         
         ],
-        "image": "Salade fraises menthe.jpg"
+        "image": "Salade de fraises à la menthe.jpg"
     },
     {
         "title": "Smoothie pêche-abricot",
@@ -166,7 +166,7 @@ desserts = [
             "Mixer jusqu'à consistance lisse.",
             "Verser dans des verres et servir frais."
         ],
-        "image": "Smoothie pêche abricot.jpg"
+        "image": "Smoothie pêche-abricot.jpg"
     },
     {
         "title": "Pastèque glacée",
@@ -500,7 +500,7 @@ desserts_hiver = [
             "Écrasez ou mixez selon la texture désirée.",
             "Servez tiède ou froid."
         ],
-        "image": "Compote de pommes et poires à la cannelle.jpg"
+        "image": "Compote de pommes et poires à la cannelle.png"
     },
     {
         "title": "Crêpes à l'orange",
@@ -890,7 +890,7 @@ plats_ete = [
             "Assaisonnez d'huile d'olive, sel et poivre.",
             "Réfrigérez avant de servir."
         ],
-        "image": "Taboulé libanais.jpg"
+        "image": "Taboulé libanais.png"
     },
     {
         "title": "Tian de légumes",
@@ -1679,7 +1679,7 @@ plats_printemps = [
             "Versez le bouillon petit à petit jusqu'à cuisson du riz.",
             "Ajoutez le parmesan en fin de cuisson."
         ],
-        "image": "Risotto aux asperges et petits pois.jpg"
+        "image": "Risotto aux asperges et petits pois.png"
     },
     {
         "title": "Tarte aux épinards et fromage frais",
