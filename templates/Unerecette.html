@@ -1,24 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>{{ recipe['title'] }}</h1>
- <form action="{{ url_for('ajouter_favori', recette_id=recipe['Recette_id']) }}" method="post" class="form-favori" style="margin-left: 15px;">
-    <button type="submit" class="coeur-btn">
-        <span class="coeur{% if est_favori %} actif{% endif %}">&#10084;</span>
-    </button>
-</form>
-<form action="{{ url_for('noter_recette', recette_id=recipe['Recette_id']) }}" method="post" class="etoiles-notation">
-    {% for i in range(5, 0, -1) %}
-        <input type="radio" id="star{{ i }}" name="note" value="{{ i }}">
-        <label for="star{{ i }}">&#9733;</label>
-    {% endfor %}
-    <br>
-    <textarea name="commentaire" placeholder="Laissez un commentaire (facultatif)" style="width:100%;margin-top:8px;"></textarea>
-    <br>
-    <button type="submit">Noter</button>
-</form>
+   {% if recipe['image'] %}
+    <div style="text-align: center; margin-bottom: 24px;">
+        <img src="{{ url_for('static', filename=recipe['image']) }}" alt="Image de la recette" style="max-width: 350px; border-radius: 12px;">
+    </div>
+{% endif %}
+ {% if est_favori %}
+    <form action="{{ url_for('retirer_favori', recette_id=recipe['Recette_id']) }}" method="post" class="form-favori" style="margin-left: 15px;">
+        <button type="submit" class="coeur-btn">
+            <span class="coeur actif">&#10084;</span>
+        </button>
+    </form>
+{% else %}
+    <form action="{{ url_for('ajouter_favori', recette_id=recipe['Recette_id']) }}" method="post" class="form-favori" style="margin-left: 15px;">
+        <button type="submit" class="coeur-btn">
+            <span class="coeur">&#10084;</span>
+        </button>
+    </form>
+{% endif %}
 
-    <p><strong>Préparation :</strong> {{ recipe['Preptime'] }}</p>
-    <p><strong>Cuisson :</strong> {{ recipe['Cooktime'] }}</p>
+    <p><strong>Préparation :</strong> {{ recipe['Preptime'] }} min</p>
+    <p><strong>Cuisson :</strong> {{ recipe['Cooktime'] }} min </p>
     <p><strong>Catégorie :</strong> {{ recipe['category'] }}</p>
     <p><strong>Description :</strong> {{ recipe['description'] }}</p>
 
@@ -37,15 +40,26 @@
         </li>
     {% endfor %}
 </ol>
+<form action="{{ url_for('noter_recette', recette_id=recipe['Recette_id']) }}" method="post" class="etoiles-notation">
+    {% for i in range(5, 0, -1) %}
+        <input type="radio" id="star{{ i }}" name="note" value="{{ i }}">
+        <label for="star{{ i }}">&#9733;</label>
+    {% endfor %}
+    <br>
+    <textarea name="commentaire" placeholder="Laissez un commentaire (facultatif)" style="width:100%;margin-top:8px;"></textarea>
+    <br>
+    <button type="submit">Noter</button>
+</form>
 <h3>Avis des utilisateurs</h3>
 {% if moyenne %}
     <p>Note moyenne : {{ '%.1f'|format(moyenne) }}/5</p>
 {% else %}
     <p>Pas encore de note pour cette recette.</p>
 {% endif %}
+
 {% if avis %}
-    <ul>
-    {% for a in avis %}
+    <ul id="avis-list">
+    {% for a in avis[:5] %}
         <li>
             <strong>{{ a['Username'] }}</strong> : {{ a['Rating'] }}/5
             {% if a['Commentaire'] %}
@@ -53,9 +67,32 @@
             {% endif %}
         </li>
     {% endfor %}
+    {% for a in avis[5:] %}
+        <li class="avis-cache" style="display:none;">
+            <strong>{{ a['Username'] }}</strong> : {{ a['Rating'] }}/5
+            {% if a['Commentaire'] %}
+                <br>{{ a['Commentaire'] }}
+            {% endif %}
+        </li>
+    {% endfor %}
     </ul>
+    {% if avis|length > 5 %}
+        <button id="voir-plus-btn" onclick="voirPlusAvis()">Voir plus</button>
+    {% endif %}
 {% else %}
     <p>Aucun avis pour cette recette.</p>
 {% endif %}
+
+<script>
+function voirPlusAvis() {
+    document.querySelectorAll('.avis-cache').forEach(function(li) {
+        li.style.display = '';
+    });
+    document.getElementById('voir-plus-btn').style.display = 'none';
+}
+</script>
+
+
+
 
 {% endblock %}
