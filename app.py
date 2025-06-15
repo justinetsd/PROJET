@@ -3,6 +3,8 @@ import hashlib
 import os
 import sqlite3
 from flask_mail import Mail, Message
+import datetime
+import random
 
 app = Flask(__name__)
 app.secret_key = "votre_cle_secrete"
@@ -23,17 +25,48 @@ def get_recipes():
     conn.close()
     return recipes
 
+def get_best_rated_recipes(limit=20):
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    recettes = conn.execute("""
+        SELECT r.*, AVG(rt.Rating) as moyenne
+        FROM Recette r
+        JOIN Rating rt ON r.Recette_id = rt.Recette_id
+        GROUP BY r.Recette_id
+        HAVING COUNT(rt.Rating) > 0
+        ORDER BY moyenne DESC, r.Title ASC
+        LIMIT ?
+    """, (limit,)).fetchall()
+    conn.close()
+    return recettes
+
 @app.route('/') #route par défaut
 def accueil():
     recipes = get_recipes()
-    return render_template('accueil.html', recipes=recipes)
+    best_recipes = get_best_rated_recipes(20)
+    return render_template('accueil.html', recipes=recipes, best_recipes=best_recipes)
 
-@app.route('/recettes') #route des recettes
+@app.route('/recettes')
 def recettes():
-    recipes = get_recipes()
-    return render_template('recettes.html', recipes=recipes)
-#ce bout de code permet de récupérer l'une des recettes sur laquelle on a cliqué
+    conn = sqlite3.connect('BDD.db')
+    conn.row_factory = sqlite3.Row
+    recipes = conn.execute("SELECT * FROM Recette").fetchall()
+    plats = [r for r in recipes if r['Category'].lower() == 'plat']
+    desserts = [r for r in recipes if r['Category'].lower() == 'dessert']
 
+    today = datetime.date.today().isoformat()
+    random.seed(today + "plat")
+    plat_du_jour = random.choice(plats) if plats else None
+    random.seed(today + "dessert")
+    dessert_du_jour = random.choice(desserts) if desserts else None
+
+    conn.close()
+    return render_template(
+        'recettes.html',
+        recipes=recipes,
+        plat_du_jour=plat_du_jour,
+        dessert_du_jour=dessert_du_jour
+    )
 
 @app.route('/recette/<int:recette_id>')
 def recette(recette_id):
@@ -57,8 +90,25 @@ def recette(recette_id):
         (recette_id,)
     ).fetchall()
 
+    est_favori = False
+    if "username" in session:
+        user_id = conn.execute("SELECT User_id FROM User WHERE Username = ?", (session["username"],)).fetchone()
+        if user_id:
+            user_id = user_id[0]
+            fav = conn.execute("SELECT 1 FROM Recette_Favori WHERE User_id = ? AND Recette_id = ?", (user_id, recette_id)).fetchone()
+            est_favori = fav is not None
+    
+    avis = conn.execute(
+    "SELECT u.Username, r.Rating, r.Commentaire FROM Rating r JOIN User u ON r.User_id = u.User_id WHERE r.Recette_id = ?",
+    (recette_id,)
+).fetchall()
+    
+    moyenne = conn.execute(
+    "SELECT AVG(Rating) FROM Rating WHERE Recette_id = ?", (recette_id,)
+).fetchone()[0]
+
     conn.close()
-    return render_template('Unerecette.html', recipe=recipe, equipements=equipements, steps=steps)
+    return render_template('Unerecette.html', recipe=recipe, equipements=equipements, steps=steps, est_favori=est_favori, avis=avis, moyenne=moyenne)
 
 
 def hashage(password, rand, salt):
@@ -77,10 +127,25 @@ def profil():
     conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
     user = conn.execute("SELECT * FROM User WHERE Username = ?", (session['username'],)).fetchone()
+    # Récupère les recettes favorites de l'utilisateur
+    favoris = []
+    if user:
+        favoris = conn.execute("""
+            SELECT r.*
+            FROM Recette r
+            JOIN Recette_Favori f ON r.Recette_id = f.Recette_id
+            WHERE f.User_id = ?
+        """, (user['User_id'],)).fetchall()
     conn.close()
     if not user:
         return redirect(url_for('login'))
-    return render_template('profil.html', username=user['Username'], firstname=user['FirstName'], lastname=user['LastName'])
+    return render_template(
+        'profil.html',
+        username=user['Username'],
+        firstname=user['FirstName'],
+        lastname=user['LastName'],
+        favoris=favoris
+    )
 
 @app.route('/logout')
 def logout():
@@ -305,11 +370,19 @@ def noter_recette(recette_id):
     if "username" not in session:
         return redirect(url_for('login'))
     note = int(request.form.get('note', 0))
-    user = session["username"]
+    commentaire = request.form.get('commentaire', '').strip()
+    username = session["username"]
     conn = sqlite3.connect('BDD.db')
-    # À adapter selon ta table de notes (exemple: Recette_Note avec Recette_id, user, note)
-    conn.execute("INSERT INTO Recette_Note (Recette_id, user, note) VALUES (?, ?, ?)", (recette_id, user, note))
-    conn.commit()
+    cur = conn.cursor()
+    user_id = cur.execute("SELECT User_id FROM User WHERE Username = ?", (username,)).fetchone()
+    if user_id:
+        user_id = user_id[0]
+        cur.execute("""
+            INSERT INTO Rating (User_id, Recette_id, Rating, Commentaire)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(User_id, Recette_id) DO UPDATE SET Rating=excluded.Rating, Commentaire=excluded.Commentaire
+        """, (user_id, recette_id, note, commentaire))
+        conn.commit()
     conn.close()
     flash("Merci pour votre note !")
     return redirect(url_for('recette', recette_id=recette_id))
@@ -322,6 +395,20 @@ def politique():
 def conditions():
     return render_template('conditions.html')
 
+@app.route('/ajouter_favori/<int:recette_id>', methods=['POST'])
+def ajouter_favori(recette_id):
+    if "username" not in session:  # <-- correction ici
+        return redirect(url_for('login'))
+    username = session["username"]
+    conn = sqlite3.connect('BDD.db')
+    cur = conn.cursor()
+    user_id = cur.execute("SELECT User_id FROM User WHERE Username = ?", (username,)).fetchone()
+    if user_id:
+        user_id = user_id[0]
+        cur.execute("INSERT OR IGNORE INTO Recette_Favori (User_id, Recette_id) VALUES (?, ?)", (user_id, recette_id))
+        conn.commit()
+    conn.close()
+    return redirect(url_for('recette', recette_id=recette_id))
 
 if __name__ == '__main__':
     app.run(debug=True)

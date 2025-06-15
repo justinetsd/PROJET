@@ -6,6 +6,22 @@
     <p><strong>Identifiant :</strong> {{ username }}</p>
     <p><strong>Prénom :</strong> {{ firstname }}</p>
     <p><strong>Nom :</strong> {{ lastname }}</p>
+    <!-- ...autres infos du profil... -->
+
+<h2>Mes recettes favorites</h2>
+{% if favoris %}
+    <ul>
+    {% for recette in favoris %}
+        <li>
+            <a href="{{ url_for('recette', recette_id=recette['Recette_id']) }}">
+                {{ recette['Title'] }}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Vous n'avez pas encore de recettes favorites.</p>
+{% endif %}
 </div>
 <div style="display: flex; justify-content: center; margin-top: 30px; margin-bottom: 4cm;">
     <a href="{{ url_for('logout') }}">

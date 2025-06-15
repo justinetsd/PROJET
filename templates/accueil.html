@@ -30,7 +30,23 @@
     <img src="{{ url_for('static', filename='imageacc.jpg') }}" alt="Recette" class="image-recette-droite">
 </div>
 
-<br><br>
+<br>
+<h2>Recettes les mieux notées</h2>
+{% if best_recipes %}
+    <ul>
+    {% for recette in best_recipes %}
+        <li>
+            <a href="{{ url_for('recette', recette_id=recette['Recette_id']) }}">
+                {{ recette['Title'] }}
+            </a>
+            — {{ '%.1f'|format(recette['moyenne']) }}/5
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Aucune recette notée pour le moment.</p>
+{% endif %}
+<br>
 
 <div class="apropos-layout" style="display: flex; align-items: center; justify-content: center; gap: 60px; margin: 60px auto; max-width: 1100px;">
     <img src="{{ url_for('static', filename='enacppetit - Copie.png') }}" alt="Logo ENAC'ppetit" class="apropos-logo-grand">
