@@ -2,58 +2,49 @@
 {% block title %}Accueil{% endblock %}
 
 {% block content %}
-<h1>Recettes d'automne</h1>
-
-<div class="categories-links">
-    <a href="#plats" class="lien-recettes">Plats</a>
-    <a href="#desserts" class="lien-recettes">Desserts</a>
+<div class="titre-saison">
+    <h1>Recettes d'automne</h1>
 </div>
 
-<h2 id="plats">Plats</h2>
-{% if plats %}
-    {% set titres_vus_plats = [] %}
+<div class="recettes-grid">
+    {% set titres_vus = [] %}
     {% for plat in plats %}
-        {% if plat['Title'] not in titres_vus_plats %}
+        {% if plat['Title'] not in titres_vus %}
             <div class="encadre-nom-recette">
-                <a href="{{ url_for('recette', recette_id=plat['Recette_id']) }}" class="lien-recettes">
-                    {{ plat['Title'] }}
-                </a>
                 {% if plat['image'] %}
                     <div class="photo-recette">
-                        <img src="{{ url_for('static', filename=plat['image']) }}"
-                             alt="Image de {{ plat['Title'] }}"
-                             style="width: 300px; height: auto; display: block; margin: 0 auto;">
+                        <a href="{{ url_for('recette', recette_id=plat['Recette_id']) }}">
+                            <img src="{{ url_for('static', filename=plat['image']) }}" alt="Image de {{ plat['Title'] }}">
+                        </a>
+                        <div class="titre-image-recette">
+                            <a href="{{ url_for('recette', recette_id=plat['Recette_id']) }}" class="lien-recette-nom">
+                                {{ plat['Title'] }}
+                            </a>
+                        </div>
                     </div>
                 {% endif %}
             </div>
-            {% set _ = titres_vus_plats.append(plat['Title']) %}
+            {% set _ = titres_vus.append(plat['Title']) %}
         {% endif %}
     {% endfor %}
-{% else %}
-    <p>Aucun plat d'automne trouvé.</p>
-{% endif %}
-
-<h2 id="desserts">Desserts</h2>
-{% if desserts %}
-    {% set titres_vus_desserts = [] %}
     {% for dessert in desserts %}
-        {% if dessert['Title'] not in titres_vus_desserts %}
+        {% if dessert['Title'] not in titres_vus %}
             <div class="encadre-nom-recette">
-                <a href="{{ url_for('recette', recette_id=dessert['Recette_id']) }}" class="lien-recettes">
-                    {{ dessert['Title'] }}
-                </a>
                 {% if dessert['image'] %}
                     <div class="photo-recette">
-                        <img src="{{ url_for('static', filename=dessert['image']) }}"
-                             alt="Image de {{ dessert['Title'] }}"
-                             style="width: 300px; height: auto; display: block; margin: 0 auto;">
+                        <a href="{{ url_for('recette', recette_id=dessert['Recette_id']) }}">
+                            <img src="{{ url_for('static', filename=dessert['image']) }}" alt="Image de {{ dessert['Title'] }}">
+                        </a>
+                        <div class="titre-image-recette">
+                            <a href="{{ url_for('recette', recette_id=dessert['Recette_id']) }}" class="lien-recette-nom">
+                                {{ dessert['Title'] }}
+                            </a>
+                        </div>
                     </div>
                 {% endif %}
             </div>
-            {% set _ = titres_vus_desserts.append(dessert['Title']) %}
+            {% set _ = titres_vus.append(dessert['Title']) %}
         {% endif %}
     {% endfor %}
-{% else %}
-    <p>Aucun dessert d'automne trouvé.</p>
-{% endif %}
+</div>
 {% endblock %}

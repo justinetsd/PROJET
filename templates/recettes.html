@@ -25,29 +25,32 @@
         <p>Aucun dessert disponible.</p>
     {% endif %}
 </div>
-    <div class="saisons-links">
-        <a href="{{ url_for('automne') }}">Automne</a>
-        <a href="{{ url_for('hiver') }}">Hiver</a>
-        <a href="{{ url_for('printemps') }}">Printemps</a>
-        <a href="{{ url_for('ete') }}">Été</a> <!-- Lien supplémentaire ajouté -->
+    <div class="saisons-links saisons-encadres">
+        <a href="{{ url_for('automne') }}" class="saison-encadre">Automne</a>
+        <a href="{{ url_for('hiver') }}" class="saison-encadre">Hiver</a>
+        <a href="{{ url_for('printemps') }}" class="saison-encadre">Printemps</a>
+        <a href="{{ url_for('ete') }}" class="saison-encadre">Été</a>
     </div>
-    {% set noms_vus = [] %}
-    {% for recette in recipes %}
-        {% if recette['title'] not in noms_vus %}
-            <div class="encadre-nom-recette">
-                <a href="{{ url_for('recette', recette_id=recette['Recette_id']) }}" class="lien-recettes">
-                    {{ recette['title'] }}
-                </a>
-                {% if recette['image'] %}
-                    <div class="photo-recette">
-                        <img src="{{ url_for('static', filename=recette['image']) }}" alt="Image de {{ recette['title'] }}" style="width: 300px; height: auto; display: block; margin: 0 auto;">
-                    </div>
-                {% endif %}
-            </div>
-            {% set _ = noms_vus.append(recette['title']) %}
-        {% endif %}
-    {% endfor %}
+    <div class="recettes-grid">
+        {% set noms_vus = [] %}
+        {% for recette in recipes %}
+            {% if recette['title'] not in noms_vus %}
+                <div class="encadre-nom-recette">
+                    {% if recette['image'] %}
+                        <div class="photo-recette">
+                            <a href="{{ url_for('recette', recette_id=recette['Recette_id']) }}">
+                                <img src="{{ url_for('static', filename=recette['image']) }}" alt="Image de {{ recette['title'] }}">
+                            </a>
+                            <div class="titre-image-recette">
+                                <a href="{{ url_for('recette', recette_id=recette['Recette_id']) }}" class="lien-recette-nom">
+                                    {{ recette['title'] }}
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                {% set _ = noms_vus.append(recette['title']) %}
+            {% endif %}
+        {% endfor %}
+</div>
 {% endblock %}
-
-
-

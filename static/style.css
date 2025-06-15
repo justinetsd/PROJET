@@ -317,26 +317,19 @@ html {
     /* NE PAS mettre de width ou min-width ici */
 }
 
-
-
-.lien-recettes,
-.lien-apropos {
-    color:#c2185b  !important;      /* noir */
-    font-weight: bold;
-    font-size: 1.15em;
-    text-decoration: none !important; /* pas de soulignement */
-    background: #fff;            /* fond blanc */
-    padding: 6px 18px;           /* un peu d'espace autour du texte */
-    border-radius: 8px;          /* coins arrondis pour l'esthétique */
-    transition: background 0.2s;
-}
-
-.lien-recettes:hover,
-.lien-contact:hover {
-    color: #c2185b!important;
+.lien-recette-nom,
+.lien-apropos  {
+    color: #222 !important;      /* noir ou adapte la couleur */
     text-decoration: none !important;
-    background: #fff;         /* léger fond au survol, optionnel */
 }
+
+.lien-recette-nom:hover,
+.lien-contact:hover  {
+    color: #c2185b !important;   /* couleur au survol, optionnel */
+    text-decoration: underline;
+}
+
+
 .nav-links {
     display: flex;
     align-items: center;
@@ -612,14 +605,94 @@ html {
 
 
 .encadre-nom-recette {
-    background: #fff;
-    border: 2px solid #c2185b;
-    border-radius: 12px;
-    padding: 16px 32px;
-    font-size: 1.3em;
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0 0 12px 0;
+    font-size: 1.1em;
     font-weight: bold;
-    display: inline-block;
-    margin: 20px 10px 10px 0;
+    margin: 0 0 0.5cm 0;
+    box-sizing: border-box;
+    width: 100%;
+    break-inside: avoid;
+}
+
+.fiche-recette-container {
+    max-width: 1000px;
+    margin: 32px auto;
+    padding: 0 12px;
+}
+.fiche-recette-ligne {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    align-items: flex-start;
+    margin-bottom: 32px;
+}
+
+.fiche-photo-recette {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.fiche-image-adapt {
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+    display: block;
+    min-width: 220px;
+    max-width: 100%;
+}
+
+.fiche-texte-recette {
+    flex: 1;
+    min-width: 220px;
+}
+
+@media (max-width: 800px) {
+    .fiche-recette-ligne {
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+    }
+    .fiche-photo-recette,
+    .fiche-texte-recette {
+        width: 100%;
+        min-width: 0;
+    }
+    .fiche-image-adapt {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+.fiche-avis-utilisateurs {
+    text-align: center;
+    margin-top: 32px;
+}
+
+.fiche-etapes {
+    margin-top: 24px;
+    text-align: left;
+}
+.separateur-etapes {
+    border: none;
+    border-top: 2px solid #ddd;
+    margin: 18px 0 16px 0;
+    width: 100%;
+}
+.liste-etapes {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+.liste-etapes li {
+    margin-bottom: 12px;
+    font-size: 1.08em;
+    position: relative;
+    padding-left: 0;
 }
 
 .categories-links {
@@ -727,4 +800,102 @@ h2[id] {
     background: #f9f9f9 !important; /* jaune-crème, adapte si besoin */
     border-radius: 10px;
     padding: 18px;
+}
+
+/* Masonry effect for recettes */
+.recettes-grid {
+    column-count: 3;
+    column-gap: 0.5cm; /* espace horizontal entre les colonnes */
+    width: 100%;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0;
+    display: block; /* important */
+}
+
+.encadre-nom-recette {
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0 0 12px 0; /* padding vertical minimal, plus de padding latéral */
+    font-size: 1.1em;
+    font-weight: bold;
+    margin: 0 0 0.5cm 0;
+    box-sizing: border-box;
+    width: 100%;
+    break-inside: avoid;
+}
+
+.photo-recette img {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 16px;
+}
+
+.titre-image-recette {
+    max-width: 250px;
+    margin: 8px auto 0 auto;
+    text-align: center;
+    font-size: 1em;
+    font-weight: bold;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    word-break: break-word;
+}
+
+/* Responsive masonry */
+@media (max-width: 900px) {
+    .recettes-grid {
+        column-count: 2;
+    }
+}
+@media (max-width: 600px) {
+    .recettes-grid {
+        column-count: 1;
+    }
+}
+
+.titre-saison {
+    background: #c85688; /* rose pale */
+    border-radius: 18px;
+    padding: 22px 0;
+    margin: 32px auto 38px auto;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(200, 24, 91, 0.07);
+}
+.titre-saison h1 {
+    color: #fff;
+    margin: 0;
+    font-size: 2.3em;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+.saisons-encadres {
+    display: flex;
+    justify-content: center;
+    gap: 2cm;
+    margin: 32px auto 38px auto;
+}
+
+.saison-encadre {
+    background: #c85688;
+    border-radius: 18px;
+    padding: 18px 36px;
+    color: #fff !important;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-decoration: none;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(200, 24, 91, 0.07);
+    transition: background 0.2s, color 0.2s;
+    display: block;
+}
+.saison-encadre:hover {
+    background: #fff;
+    color: #c2185b !important;
 }
