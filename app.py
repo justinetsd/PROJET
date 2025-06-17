@@ -25,7 +25,7 @@ def get_recipes():
     conn.close()
     return recipes
 
-def get_best_rated_recipes(limit=20):
+def get_best_rated_recipes(limit=5):
     conn = sqlite3.connect('BDD.db')
     conn.row_factory = sqlite3.Row
     recettes = conn.execute("""

@@ -17,7 +17,7 @@
 
 <div class="bloc-recettes-avec-image">
     <div class="bloc-texte-recettes">
-        <h1 class="titre-section centre-titre">Nos recettes</h1>
+        <h1 class="titre-section centre-titre ">Nos recettes</h1>
         <div class="encadre-apropos">
             Venez découvrir nos recettes et le menu du jour conseillé..<br><br>
         </div>
@@ -31,20 +31,33 @@
 </div>
 
 <br>
-<h2>Recettes les mieux notées</h2>
+<h1 class="titre-section centre-titre titre-marge-gauche">Recettes les mieux notées</h1>
 {% if best_recipes %}
-    <ul>
+<div class="recettes-grid">
     {% for recette in best_recipes %}
-        <li>
-            <a href="{{ url_for('recette', recette_id=recette['Recette_id']) }}">
-                {{ recette['Title'] }}
-            </a>
-            — {{ '%.1f'|format(recette['moyenne']) }}/5
-        </li>
+        <div class="encadre-nom-recette">
+            {% if recette['image'] %}
+                <div class="photo-recette">
+                    <a href="{{ url_for('recette', recette_id=recette['Recette_id']) }}">
+                        <img src="{{ url_for('static', filename=recette['image']) }}" alt="Image de {{ recette['Title'] }}">
+                    </a>
+                    <div class="titre-image-recette">
+                        <a href="{{ url_for('recette', recette_id=recette['Recette_id']) }}" class="lien-best-recette">
+                            {{ recette['Title'] }}
+                        </a>
+                        {% if recette['moyenne'] %}
+                            <div class="note-recette">
+                                {{ '%.1f'|format(recette['moyenne']) }}/5
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
     {% endfor %}
-    </ul>
+</div>
 {% else %}
-    <p>Aucune recette notée pour le moment.</p>
+    <p style="text-align:center;margin-top:40px;">Aucune recette notée pour le moment.</p>
 {% endif %}
 <br>
 

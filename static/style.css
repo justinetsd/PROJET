@@ -899,3 +899,23 @@ h2[id] {
     background: #fff;
     color: #c2185b !important;
 }
+
+.lien-best-recette {
+    color: #222 !important; /* noir */
+    text-decoration: none !important;
+    transition: color 0.2s;
+    font-weight: bold;
+}
+.lien-best-recette:hover {
+    color: #c2185b !important; /* rose */
+    text-decoration: underline;
+}
+.note-recette {
+    color: #888;
+    font-size: 1em;
+    margin-top: 2px;
+    text-align: left;
+}
+.titre-marge-gauche {
+    margin-left: 600px;
+}
