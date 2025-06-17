@@ -1882,6 +1882,50 @@ for idx, plat in enumerate(plats_printemps):
             VALUES (?, ?)
         """, (recette_id, id_equip))
 
+
+
+# 10 utilisateurs fictifs
+users = [
+    {"username": f"user{i}", "firstname": f"Prenom{i}", "lastname": f"Nom{i}", "email": f"user{i}@exemple.com",
+     "salt": f"salt{i}", "rand": f"rand{i}", "hash": f"hash{i}"} for i in range(1, 11)
+]
+
+user_ids = []
+for idx, user in enumerate(users):
+    user_id = 90000 + idx
+    user_ids.append(user_id)
+    cursor.execute("""
+        INSERT INTO User (User_id, Username, FirstName, LastName, EmailAddress, Salt, Random, Hash)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        user_id, user["username"], user["firstname"], user["lastname"], user["email"], user["salt"], user["rand"], user["hash"]
+    ))
+
+# Prends 6 recettes existantes pour varier les favoris et notes
+recette_ids = [row[0] for row in cursor.execute("SELECT Recette_id FROM Recette LIMIT 6").fetchall()]
+
+# Chaque utilisateur met 2 recettes en favoris (aléatoires)
+for user_id in user_ids:
+    favs = random.sample(recette_ids, 2)
+    for rid in favs:
+        cursor.execute("""
+            INSERT INTO Recette_Favori (User_id, Recette_id) VALUES (?, ?)
+        """, (user_id, rid))
+
+# Chaque utilisateur note 2 recettes (aléatoires, avec commentaire)
+commentaires = [
+    "Excellent !", "Très bon.", "Pas mal.", "Je referai.", "Un peu déçu.", "Top !", "Original.", "Simple et efficace.", "Trop sucré.", "Parfait pour la famille."
+]
+for idx, user_id in enumerate(user_ids):
+    notes_recettes = random.sample(recette_ids, 2)
+    for rid in notes_recettes:
+        rating = random.randint(2, 5)
+        commentaire = random.choice(commentaires)
+        cursor.execute("""
+            INSERT INTO Rating (User_id, Recette_id, Rating, Commentaire)
+            VALUES (?, ?, ?, ?)
+        """, (user_id, rid, rating, commentaire))
+
 # Sauvegarde les changements et ferme la connexion
 conn.commit()
 conn.close()
